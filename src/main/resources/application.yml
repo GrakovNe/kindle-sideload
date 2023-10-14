@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/kindle_sideload
+    username: kindle_sideload
+    password: kindle_sideload
+    driverClassName: org.postgresql.Driver
+
+periodic:
+  payment-cache-ttl-minutes: 5
+
+telegram:
+  token: 6586219940:AAH2ic2kDtHzVgJGl4_fOhhlqrl6P54Bl0g
+  level: DEBUG
+
+ads:
+  blockDelimiter: "\n\n_____\n\n"
+  creatives:

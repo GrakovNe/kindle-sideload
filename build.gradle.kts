@@ -21,6 +21,12 @@ repositories {
 }
 
 dependencies {
+	implementation("com.github.pengrad:java-telegram-bot-api:6.9.1")
+
+	implementation("io.arrow-kt:arrow-core:1.1.2")
+	implementation("org.apache.commons:commons-text:1.10.0")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "help_message",
+    "type": "HTML",
+    "template": "Unofficial Kindle Book Converter\n\nAuthor: @maxgrakov\n\nAvailable Commands:\n\n${items}\n\nPlease note that we don't collect any sensitive user information"
+  },
+  {
+    "name": "help_message_item",
+    "type": "HTML",
+    "template": "/${key} - ${description}"
+  }
+]

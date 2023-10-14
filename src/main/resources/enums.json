@@ -1,0 +1,8 @@
+[
+  {
+    "name": "CommandType",
+    "values": {
+      "SEND_HELP": "Prints help"
+    }
+  }
+]
