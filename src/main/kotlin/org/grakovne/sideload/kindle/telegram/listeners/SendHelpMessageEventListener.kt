@@ -1,10 +1,12 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
+import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.LogLevel
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
+import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.messaging.Help
@@ -16,7 +18,7 @@ class SendHelpMessageEventListener(
     private val incomingMessageEventListeners: List<IncomingMessageEventListener>,
     private val eventSender: EventSender,
     private val helpMessageSender: HelpMessageSender
-) : IncomingMessageEventListener {
+) : IncomingMessageEventListener() {
 
     override fun getDescription() = IncomingMessageDescription("help", CommandType.SEND_HELP)
 
@@ -35,5 +37,7 @@ class SendHelpMessageEventListener(
             }
 
     override fun acceptableEvents() = listOf(EventType.INCOMING_MESSAGE)
+
+    fun forceProcessEvent(event: IncomingMessageEvent) = processEvent(event)
 
 }

@@ -1,12 +1,15 @@
 package org.grakovne.sideload.kindle.telegram.configuration
 
 import arrow.core.Either
+import arrow.core.sequence
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.BotCommand
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.SetMyCommands
 import jakarta.annotation.PostConstruct
+import org.grakovne.sideload.kindle.common.ifTrue
+import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.LogLevel.WARN
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
@@ -15,6 +18,7 @@ import org.grakovne.sideload.kindle.localization.Language
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventHandler
 import org.grakovne.sideload.kindle.telegram.messaging.provideLanguage
 import org.grakovne.sideload.kindle.user.UserMessageReportService
 import org.grakovne.sideload.kindle.user.UserReferenceService
@@ -28,7 +32,8 @@ class MessageListenersConfiguration(
     private val eventSender: EventSender,
     private val userReferenceService: UserReferenceService,
     private val enumLocalizationService: EnumLocalizationService,
-    private val userMessageReportService: UserMessageReportService
+    private val userMessageReportService: UserMessageReportService,
+    private val unprocessedIncomingEventHandler: UnprocessedIncomingEventHandler
 ) {
 
     @PostConstruct
@@ -51,8 +56,12 @@ class MessageListenersConfiguration(
             language = update.message()?.from()?.languageCode() ?: "en"
         )
 
+        val incomingMessageEvent = IncomingMessageEvent(update, user)
+
         eventSender
-            .sendEvent(IncomingMessageEvent(update, user))
+            .sendEvent(incomingMessageEvent)
+            .sequence()
+            .tap { it.processedByNothing().ifTrue { unprocessedIncomingEventHandler.handle(incomingMessageEvent) } }
             .also { bot.execute(SetMyCommands(*messageListenersDescriptions(user.provideLanguage()))) }
             .also { userMessageReportService.createReportEntry(user.id, update.message()?.text()) }
 
@@ -72,4 +81,7 @@ class MessageListenersConfiguration(
             )
         }
         .toTypedArray()
+
+    private fun List<EventProcessingResult>.processedByNothing() =
+        this.all { result -> result == EventProcessingResult.SKIPPED }
 }
