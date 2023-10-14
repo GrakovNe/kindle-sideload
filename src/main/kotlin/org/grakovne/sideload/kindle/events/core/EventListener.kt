@@ -1,10 +1,9 @@
 package org.grakovne.sideload.kindle.events.core
 
-import org.grakovne.sideload.kindle.events.core.Event
-import org.grakovne.sideload.kindle.events.core.EventType
+import arrow.core.Either
 
-interface EventListener {
+interface EventListener<E: Event, T> {
     fun acceptableEvents(): List<EventType>
 
-    fun onEvent(event: Event)
+    fun onEvent(event: Event): Either<EventProcessingError<T>, Unit>
 }

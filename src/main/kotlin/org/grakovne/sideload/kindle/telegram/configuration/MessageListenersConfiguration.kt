@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.telegram.command
+package org.grakovne.sideload.kindle.telegram.configuration
 
 import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
@@ -13,6 +13,8 @@ import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.localization.EnumLocalizationService
 import org.grakovne.sideload.kindle.localization.Language
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
+import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
 import org.grakovne.sideload.kindle.telegram.messaging.provideLanguage
 import org.grakovne.sideload.kindle.user.UserMessageReportService
 import org.grakovne.sideload.kindle.user.UserReferenceService
@@ -20,10 +22,9 @@ import org.grakovne.sideload.kindle.user.domain.UserReferenceSource
 import org.springframework.stereotype.Service
 
 @Service
-class TelegramOnMessageConfiguration(
+class MessageListenersConfiguration(
     private val bot: TelegramBot,
-    private val unknownCommandProcessor: UnknownMessageCommandProcessingService,
-    private val commands: List<TelegramOnMessageCommand>,
+    private val incomingMessageEventListeners: List<IncomingMessageEventListener>,
     private val eventSender: EventSender,
     private val userReferenceService: UserReferenceService,
     private val enumLocalizationService: EnumLocalizationService,
@@ -50,29 +51,24 @@ class TelegramOnMessageConfiguration(
             language = update.message()?.from()?.languageCode() ?: "en"
         )
 
-        update
-            .findCommand()
-            .accept(update, user)
-            .tap { bot.execute(SetMyCommands(*commandsDescription(user.provideLanguage()))) }
-            .tap { userMessageReportService.createReportEntry(user.id, update.message()?.text()) }
+        eventSender
+            .sendEvent(IncomingMessageEvent(update, user))
+            .also { bot.execute(SetMyCommands(*messageListenersDescriptions(user.provideLanguage()))) }
+            .also { userMessageReportService.createReportEntry(user.id, update.message()?.text()) }
+
     } catch (ex: Exception) {
         eventSender.sendEvent(LoggingEvent(WARN, "Internal Exception. Message = ${ex.message}"))
         Either.Left(TelegramUpdateProcessingError.INTERNAL_ERROR)
     }
 
-    private fun Update.findCommand() =
-        commands
-            .find { command -> command.isAcceptable(this) }
-            ?: unknownCommandProcessor.findCommand(this)
-
     private fun Update.hasSender() = this.message()?.chat()?.id() != null
     private fun Update.hasMessage() = this.message()?.text() != null
 
-    private fun commandsDescription(targetLanguage: Language) = commands
+    private fun messageListenersDescriptions(targetLanguage: Language) = incomingMessageEventListeners
         .map {
             BotCommand(
-                it.getKey(),
-                enumLocalizationService.localize(it.getType(), targetLanguage)
+                it.getDescription().key,
+                enumLocalizationService.localize(it.getDescription().type, targetLanguage)
             )
         }
         .toTypedArray()
