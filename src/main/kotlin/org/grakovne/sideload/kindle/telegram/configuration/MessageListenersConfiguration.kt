@@ -8,13 +8,13 @@ import com.pengrad.telegrambot.model.BotCommand
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.SetMyCommands
 import jakarta.annotation.PostConstruct
+import org.grakovne.sideload.kindle.common.domain.Language
 import org.grakovne.sideload.kindle.common.ifTrue
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.LogLevel.WARN
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.localization.EnumLocalizationService
-import org.grakovne.sideload.kindle.localization.Language
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
@@ -22,7 +22,6 @@ import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventH
 import org.grakovne.sideload.kindle.telegram.messaging.provideLanguage
 import org.grakovne.sideload.kindle.user.UserMessageReportService
 import org.grakovne.sideload.kindle.user.UserReferenceService
-import org.grakovne.sideload.kindle.user.domain.UserReferenceSource
 import org.springframework.stereotype.Service
 
 @Service
@@ -52,7 +51,6 @@ class MessageListenersConfiguration(
     private fun onMessage(update: Update) = try {
         val user = userReferenceService.fetchUser(
             userId = update.message().chat().id().toString(),
-            source = UserReferenceSource.TELEGRAM,
             language = update.message()?.from()?.languageCode() ?: "en"
         )
 

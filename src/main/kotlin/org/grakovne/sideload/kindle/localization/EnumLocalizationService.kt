@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.localization
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.grakovne.sideload.kindle.common.domain.Language
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import java.io.FileNotFoundException

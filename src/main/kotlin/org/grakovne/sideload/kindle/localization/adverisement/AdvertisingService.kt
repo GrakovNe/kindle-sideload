@@ -1,6 +1,6 @@
 package org.grakovne.sideload.kindle.localization.adverisement
 
-import org.grakovne.sideload.kindle.localization.Language
+import org.grakovne.sideload.kindle.common.domain.Language
 import org.grakovne.swiftbot.localization.MessageTemplate
 import org.springframework.stereotype.Service
 

@@ -5,8 +5,8 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
+import org.grakovne.sideload.kindle.common.domain.Language
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
-import org.grakovne.sideload.kindle.localization.Language
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.swiftbot.localization.MessageType
 import org.grakovne.sideload.kindle.user.domain.UserReference

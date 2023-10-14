@@ -45,12 +45,10 @@ class HelpMessageSender(
             .flatMap { sendRawMessage(origin, it) }
     }
 
-    private fun buildCommandUsage(it: Help): String =
-        "${it.key} ${if (it.arguments.isEmpty()) "" else it.arguments + " "}"
+    private fun buildCommandUsage(it: Help): String = it.key
 }
 
 data class Help(
     val key: String,
-    val description: CommandType,
-    val arguments: String = ""
+    val description: CommandType
 )

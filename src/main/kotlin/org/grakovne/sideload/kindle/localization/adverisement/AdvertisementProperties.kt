@@ -1,6 +1,6 @@
 package org.grakovne.sideload.kindle.localization.adverisement
 
-import org.grakovne.sideload.kindle.localization.Language
+import org.grakovne.sideload.kindle.common.domain.Language
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import kotlin.properties.Delegates
