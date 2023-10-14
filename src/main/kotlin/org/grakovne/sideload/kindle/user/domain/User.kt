@@ -5,7 +5,8 @@ import java.time.Instant
 import java.util.*
 
 @Entity
-data class UserReference(
+@Table(name="\"user\"")
+data class User(
     @Id
     val id: String,
     val language: String?,

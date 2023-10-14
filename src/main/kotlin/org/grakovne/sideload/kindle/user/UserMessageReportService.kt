@@ -9,10 +9,10 @@ import java.util.*
 @Service
 class UserMessageReportService(private val repository: UserMessageReportRepository) {
 
-    fun createReportEntry(userReferenceId: String, text: String?) =
+    fun createReportEntry(userId: String, text: String?) =
         UserMessageReport(
             id = UUID.randomUUID(),
-            userReferenceId = userReferenceId,
+            userId = userId,
             createdAt = Instant.now(),
             text = text
         ).let(repository::save)

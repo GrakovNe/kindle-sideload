@@ -12,7 +12,7 @@ import org.grakovne.sideload.kindle.localization.HelpMessageItem
 import org.grakovne.sideload.kindle.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
-import org.grakovne.sideload.kindle.user.domain.UserReference
+import org.grakovne.sideload.kindle.user.domain.User
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,10 +24,10 @@ class HelpMessageSender(
 
     fun sendResponse(
         origin: Update,
-        userReference: UserReference,
+        user: User,
         helpMessage: List<Help>
     ): Either<TelegramUpdateProcessingError, Unit> {
-        val targetLanguage = userReference.provideLanguage()
+        val targetLanguage = user.language
 
         return helpMessage
             .map {

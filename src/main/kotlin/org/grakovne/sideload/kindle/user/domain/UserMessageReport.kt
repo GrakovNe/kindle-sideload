@@ -9,7 +9,7 @@ import java.util.*
 data class UserMessageReport (
     @Id
     val id: UUID,
-    val userReferenceId: String,
+    val userId: String,
     val createdAt: Instant,
     val text: String?
 )

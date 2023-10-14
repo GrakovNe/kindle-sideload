@@ -1,19 +1,18 @@
 package org.grakovne.sideload.kindle.user
 
 import org.grakovne.sideload.kindle.user.domain.Type
-import org.grakovne.sideload.kindle.user.domain.UserReference
-import org.grakovne.sideload.kindle.user.repository.UserReferenceRepository
+import org.grakovne.sideload.kindle.user.domain.User
+import org.grakovne.sideload.kindle.user.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.util.*
 
 @Service
-class UserReferenceService(private val userReferenceRepository: UserReferenceRepository) {
+class UserService(private val userRepository: UserRepository) {
 
-    fun fetchSuperUsers() = userReferenceRepository.findByType(Type.SUPER_USER)
+    fun fetchSuperUsers() = userRepository.findByType(Type.SUPER_USER)
 
-    fun fetchUser(userId: String, language: String): UserReference =
-        userReferenceRepository
+    fun fetchUser(userId: String, language: String): User =
+        userRepository
             .findById(userId)
             .orElseGet { persistUser(userId, language, Type.FREE_USER) }
             .copy(language = language)
@@ -24,10 +23,10 @@ class UserReferenceService(private val userReferenceRepository: UserReferenceRep
         id: String,
         language: String,
         type: Type
-    ): UserReference = UserReference(
+    ): User = User(
         id = id,
         language = language,
         type = type,
         lastActivityTimestamp = Instant.now()
-    ).let { userReferenceRepository.save(it) }
+    ).let { userRepository.save(it) }
 }

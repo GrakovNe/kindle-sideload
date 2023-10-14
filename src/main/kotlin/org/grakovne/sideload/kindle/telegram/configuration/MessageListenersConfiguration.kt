@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.model.BotCommand
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.SetMyCommands
 import jakarta.annotation.PostConstruct
-import org.grakovne.sideload.kindle.common.domain.Language
+import org.grakovne.sideload.kindle.common.Language
 import org.grakovne.sideload.kindle.common.ifTrue
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
@@ -19,9 +19,8 @@ import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventHandler
-import org.grakovne.sideload.kindle.telegram.messaging.provideLanguage
 import org.grakovne.sideload.kindle.user.UserMessageReportService
-import org.grakovne.sideload.kindle.user.UserReferenceService
+import org.grakovne.sideload.kindle.user.UserService
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,7 +28,7 @@ class MessageListenersConfiguration(
     private val bot: TelegramBot,
     private val incomingMessageEventListeners: List<IncomingMessageEventListener>,
     private val eventSender: EventSender,
-    private val userReferenceService: UserReferenceService,
+    private val userService: UserService,
     private val enumLocalizationService: EnumLocalizationService,
     private val userMessageReportService: UserMessageReportService,
     private val unprocessedIncomingEventHandler: UnprocessedIncomingEventHandler
@@ -49,7 +48,7 @@ class MessageListenersConfiguration(
             .forEach { update -> onMessage(update) }
 
     private fun onMessage(update: Update) = try {
-        val user = userReferenceService.fetchUser(
+        val user = userService.fetchUser(
             userId = update.message().chat().id().toString(),
             language = update.message()?.from()?.languageCode() ?: "en"
         )
@@ -60,7 +59,7 @@ class MessageListenersConfiguration(
             .sendEvent(incomingMessageEvent)
             .sequence()
             .tap { it.processedByNothing().ifTrue { unprocessedIncomingEventHandler.handle(incomingMessageEvent) } }
-            .also { bot.execute(SetMyCommands(*messageListenersDescriptions(user.provideLanguage()))) }
+            .also { bot.execute(SetMyCommands(*messageListenersDescriptions(user.language))) }
             .also { userMessageReportService.createReportEntry(user.id, update.message()?.text()) }
 
     } catch (ex: Exception) {
@@ -71,7 +70,7 @@ class MessageListenersConfiguration(
     private fun Update.hasSender() = this.message()?.chat()?.id() != null
     private fun Update.hasMessage() = this.message()?.text() != null
 
-    private fun messageListenersDescriptions(targetLanguage: Language) = incomingMessageEventListeners
+    private fun messageListenersDescriptions(targetLanguage: Language?) = incomingMessageEventListeners
         .map {
             BotCommand(
                 it.getDescription().key,

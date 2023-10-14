@@ -4,7 +4,7 @@ import arrow.core.Either
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.text.StringSubstitutor
-import org.grakovne.sideload.kindle.common.domain.Language
+import org.grakovne.sideload.kindle.common.Language
 import org.grakovne.sideload.kindle.localization.converter.toMessage
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.swiftbot.localization.MessageTemplate
@@ -12,6 +12,7 @@ import org.grakovne.sideload.kindle.localization.adverisement.AdvertisingService
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import java.io.FileNotFoundException
+import java.io.InputStream
 import java.time.Instant
 import kotlin.reflect.full.memberProperties
 
@@ -23,7 +24,7 @@ class MessageLocalizationService(
     private val advertisingService: AdvertisingService
 ) {
 
-    fun localize(message: Message, language: Language): Either<LocalizationError, PreparedMessage> {
+    fun localize(message: Message, language: Language?): Either<LocalizationError, PreparedMessage> {
         val messageTemplate: MessageTemplate = findLocalizationResources(language)
             .find { it.name == message.templateName }
             ?: return Either.Left(LocalizationError.TEMPLATE_NOT_FOUND)
@@ -40,20 +41,26 @@ class MessageLocalizationService(
             .let { Either.Right(it) }
     }
 
-    private fun findLocalizationResources(language: Language): List<MessageTemplate> {
+    private fun findLocalizationResources(language: Language?): List<MessageTemplate> {
         val content = getLocalizationResource(language)
             .readBytes()
 
         return objectMapper.readValue(content, object : TypeReference<List<MessageTemplate>>() {})
     }
 
-    private fun getLocalizationResource(language: Language) = try {
-        ClassPathResource("messages_${language.code}.json").inputStream
-    } catch (ex: FileNotFoundException) {
-        ClassPathResource("messages.json").inputStream
+    private fun getLocalizationResource(language: Language?): InputStream {
+        if (null == language) {
+            return ClassPathResource("messages.json").inputStream
+        }
+
+        return try {
+            ClassPathResource("messages_${language}.json").inputStream
+        } catch (ex: FileNotFoundException) {
+            ClassPathResource("messages.json").inputStream
+        }
     }
 
-    private fun Any.getField(fieldName: String, language: Language): String? {
+    private fun Any.getField(fieldName: String, language: Language?): String? {
         this::class.memberProperties.forEach { kCallable ->
             if (fieldName == kCallable.name) {
                 val rawValue = kCallable.getter.call(this)

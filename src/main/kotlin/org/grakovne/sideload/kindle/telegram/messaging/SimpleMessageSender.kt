@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.model.Update
 import org.grakovne.sideload.kindle.localization.Message
 import org.grakovne.sideload.kindle.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
-import org.grakovne.sideload.kindle.user.domain.UserReference
+import org.grakovne.sideload.kindle.user.domain.User
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,16 +17,16 @@ class SimpleMessageSender(
 
     fun <T : Message> sendResponse(
         chatId: String,
-        userReference: UserReference,
+        user: User,
         message: T
     ) = localizationService
-        .localize(message, userReference.provideLanguage())
+        .localize(message, user.language)
         .mapLeft { TelegramUpdateProcessingError.INTERNAL_ERROR }
         .flatMap { sendRawMessage(chatId, it) }
 
     fun <T : Message> sendResponse(
         origin: Update,
-        userReference: UserReference,
+        user: User,
         message: T
-    ) = sendResponse(origin.message().chat().id().toString(), userReference, message)
+    ) = sendResponse(origin.message().chat().id().toString(), user, message)
 }
