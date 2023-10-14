@@ -6,7 +6,7 @@ import java.time.Instant
 import java.util.*
 
 @Entity
-data class UserMessageReport (
+data class UserMessageReport(
     @Id
     val id: UUID,
     val userId: String,

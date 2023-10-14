@@ -5,7 +5,7 @@ import java.time.Instant
 import java.util.*
 
 @Entity
-@Table(name="\"user\"")
+@Table(name = "\"user\"")
 data class User(
     @Id
     val id: String,

@@ -16,7 +16,7 @@ class UserService(private val userRepository: UserRepository) {
             .findById(userId)
             .orElseGet { persistUser(userId, language, Type.FREE_USER) }
             .copy(language = language)
-            .let { persistUser(it.id,it.language ?: "en", it.type) }
+            .let { persistUser(it.id, it.language ?: "en", it.type) }
 
 
     private fun persistUser(

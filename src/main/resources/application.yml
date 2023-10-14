@@ -9,9 +9,6 @@ spring:
     password: kindle_sideload
     driverClassName: org.postgresql.Driver
 
-periodic:
-  payment-cache-ttl-minutes: 5
-
 telegram:
   token: 6586219940:AAH2ic2kDtHzVgJGl4_fOhhlqrl6P54Bl0g
   level: DEBUG
@@ -19,3 +16,9 @@ telegram:
 ads:
   blockDelimiter: "\n\n_____\n\n"
   creatives:
+
+converter:
+  binary:
+    releasesUrl: "https://api.github.com/repos/rupor-github/fb2converter/releases/latest"
+    extension: ".zip"
+    binaryPersistencePath: "fb2_converter"

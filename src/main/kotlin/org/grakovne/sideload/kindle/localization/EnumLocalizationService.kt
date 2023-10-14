@@ -28,7 +28,7 @@ class EnumLocalizationService(val objectMapper: ObjectMapper) {
 
     private fun getLocalizationResource(language: Language?): InputStream {
         if (language == null) {
-            return  ClassPathResource("enums.json").inputStream
+            return ClassPathResource("enums.json").inputStream
         }
 
         return try {
