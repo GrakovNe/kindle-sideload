@@ -17,8 +17,13 @@ ads:
   blockDelimiter: "\n\n_____\n\n"
   creatives:
 
+user:
+  environment:
+    temporaryFolder: "user_environments"
+
 converter:
   binary:
     releasesUrl: "https://api.github.com/repos/rupor-github/fb2converter/releases/latest"
     extension: ".zip"
     binaryPersistencePath: "fb2_converter"
+    converterFileName: "fb2c"

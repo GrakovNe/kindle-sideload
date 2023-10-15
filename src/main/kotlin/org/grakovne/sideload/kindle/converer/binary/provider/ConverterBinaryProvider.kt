@@ -9,6 +9,12 @@ import java.nio.file.Path
 class ConverterBinaryProvider(
     private val sourceProperties: ConverterBinarySourceProperties
 ) {
+
+    fun provideBinaryConverter(): File = provideBinaryFolder()
+        .toPath()
+        .resolve(sourceProperties.converterFileName)
+        .toFile()
+
     fun provideBinaryFolder(): File = Path
         .of(sourceProperties.binaryPersistencePath)
         .toFile()

@@ -10,4 +10,6 @@ class ConverterBinarySourceProperties {
     var releasesUrl: String by Delegates.notNull()
     var extension: String by Delegates.notNull()
     var binaryPersistencePath: String by Delegates.notNull()
+
+    var converterFileName: String by Delegates.notNull()
 }
