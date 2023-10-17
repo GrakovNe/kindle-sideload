@@ -32,3 +32,4 @@ converter:
     extension: ".zip"
     binaryPersistencePath: "fb2_converter"
     converterFileName: "fb2c"
+  sourceFileExtensions: "fb2"
