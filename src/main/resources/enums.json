@@ -4,5 +4,11 @@
     "values": {
       "SEND_HELP": "Prints help"
     }
+  },
+  {
+    "name": "UserConfigurationFailedReason",
+    "values": {
+      "FILE_IS_TOO_LARGE": "Sorry, but your file must be below 20MB to be applied as configuration"
+    }
   }
 ]

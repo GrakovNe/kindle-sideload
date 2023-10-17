@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.user.preferences
+package org.grakovne.sideload.kindle.user.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
@@ -8,6 +8,7 @@ import kotlin.properties.Delegates
 @ConfigurationProperties(prefix = "user.converter.configuration")
 class UserConverterConfigurationProperties {
 
-    var configurationsPath: String by Delegates.notNull()
-    val configurationFileName: String by Delegates.notNull()
+    var path: String by Delegates.notNull()
+    var fileName: String by Delegates.notNull()
+    var maxSize: Long by Delegates.notNull()
 }

@@ -18,6 +18,11 @@ ads:
   creatives:
 
 user:
+  converter:
+    configuration:
+      path: "user_configurations"
+      file-name: "configuration.zip"
+      max-size: 20000000
   environment:
     temporaryFolder: "user_environments"
 

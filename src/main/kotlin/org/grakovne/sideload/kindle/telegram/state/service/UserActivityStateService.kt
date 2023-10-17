@@ -18,6 +18,8 @@ class UserActivityStateService(
         .firstOrNull()
         ?.activityState
 
+    fun dropCurrentState(userId: String) = setCurrentState(userId, ActivityState.NOT_SPECIFIED)
+
     fun setCurrentState(userId: String, state: ActivityState): Either<UserActivityStateError, Unit> {
         val entity = UserActivityState(
             id = UUID.randomUUID(),

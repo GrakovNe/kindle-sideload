@@ -10,4 +10,9 @@ data class HelpMessageItem(
     val arguments: List<String> = emptyList()
 ) : Message("help_message_item")
 
-object UserConfigurationRequestedMessage: Message("user_configuration_requested")
+data object UserConfigurationRequestedMessage: Message("user_configuration_requested")
+data object UserConfigurationSubmittedMessage: Message("user_configuration_submitted")
+
+data class UserConfigurationFailedMessage(
+    val reason:  UserConfigurationFailedReason
+): Message("user_configuration_failed")

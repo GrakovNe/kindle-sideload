@@ -13,10 +13,12 @@ data class UserActivityState(
     val id: UUID,
     val userId: String,
     @Enumerated(EnumType.STRING)
-    val activityState: ActivityState?,
+    val activityState: ActivityState = ActivityState.NOT_SPECIFIED,
     val createdAt: Instant
 )
 
 enum class ActivityState {
+    NOT_SPECIFIED,
+
     UPLOADING_CONFIGURATION_REQUESTED
 }

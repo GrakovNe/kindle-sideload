@@ -1,7 +1,7 @@
-package org.grakovne.sideload.kindle.user.preferences
+package org.grakovne.sideload.kindle.user.configuration
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.user.preferences.domain.UserConverterConfigurationError
+import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
@@ -36,11 +36,11 @@ class UserConverterConfigurationService(
     }
 
     private fun provideConfigurationAsset(user: User) = Path
-        .of(properties.configurationsPath)
+        .of(properties.path)
         .resolve(user.id)
         .toFile()
         .also { it.mkdirs() }
         .toPath()
-        .resolve(properties.configurationFileName)
+        .resolve(properties.fileName)
         .toFile()
 }

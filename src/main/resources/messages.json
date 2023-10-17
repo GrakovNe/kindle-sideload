@@ -12,6 +12,16 @@
   {
     "name": "user_configuration_requested",
     "type": "HTML",
-    "template": "You're welcome to upload the configuration .zip archive in the next message"
+    "template": "You're welcome to upload a configuration .zip archive in the next message"
+  },
+  {
+    "name": "user_configuration_submitted",
+    "type": "HTML",
+    "template": "Your configuration has been saved and will be applied every time when book is converting"
+  },
+  {
+    "name": "user_configuration_failed",
+    "type": "HTML",
+    "template": "${reason}"
   }
 ]
