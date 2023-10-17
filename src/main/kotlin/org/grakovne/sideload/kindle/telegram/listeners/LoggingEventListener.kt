@@ -9,7 +9,7 @@ import org.grakovne.sideload.kindle.events.internal.LogLevel.Companion.isWorseOr
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
-import org.grakovne.sideload.kindle.user.UserService
+import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 
 @Service

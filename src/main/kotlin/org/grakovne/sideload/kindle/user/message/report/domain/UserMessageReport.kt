@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.user.domain
+package org.grakovne.sideload.kindle.user.message.report.domain
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

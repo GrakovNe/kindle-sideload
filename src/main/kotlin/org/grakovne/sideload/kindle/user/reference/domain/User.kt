@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.user.domain
+package org.grakovne.sideload.kindle.user.reference.domain
 
 import jakarta.persistence.*
 import java.time.Instant

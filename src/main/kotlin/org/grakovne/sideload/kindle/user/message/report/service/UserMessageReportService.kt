@@ -1,7 +1,7 @@
-package org.grakovne.sideload.kindle.user
+package org.grakovne.sideload.kindle.user.message.report.service
 
-import org.grakovne.sideload.kindle.user.domain.UserMessageReport
-import org.grakovne.sideload.kindle.user.repository.UserMessageReportRepository
+import org.grakovne.sideload.kindle.user.message.report.domain.UserMessageReport
+import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.*

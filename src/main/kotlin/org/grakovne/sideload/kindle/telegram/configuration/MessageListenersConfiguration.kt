@@ -19,8 +19,8 @@ import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventHandler
-import org.grakovne.sideload.kindle.user.UserMessageReportService
-import org.grakovne.sideload.kindle.user.UserService
+import org.grakovne.sideload.kindle.user.message.report.service.UserMessageReportService
+import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 
 @Service

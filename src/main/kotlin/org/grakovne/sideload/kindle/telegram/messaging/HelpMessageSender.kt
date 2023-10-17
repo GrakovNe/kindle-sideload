@@ -12,7 +12,7 @@ import org.grakovne.sideload.kindle.localization.HelpMessageItem
 import org.grakovne.sideload.kindle.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
-import org.grakovne.sideload.kindle.user.domain.User
+import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 
 @Service

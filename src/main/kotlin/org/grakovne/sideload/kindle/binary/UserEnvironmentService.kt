@@ -1,7 +1,7 @@
 package org.grakovne.sideload.kindle.binary
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.user.domain.User
+import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.grakovne.sideload.kindle.binary.configuration.EnvironmentProperties
 import org.springframework.stereotype.Service
 import java.io.File

@@ -1,8 +1,8 @@
-package org.grakovne.sideload.kindle.user
+package org.grakovne.sideload.kindle.user.reference.service
 
-import org.grakovne.sideload.kindle.user.domain.Type
-import org.grakovne.sideload.kindle.user.domain.User
-import org.grakovne.sideload.kindle.user.repository.UserRepository
+import org.grakovne.sideload.kindle.user.reference.domain.Type
+import org.grakovne.sideload.kindle.user.reference.domain.User
+import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 

@@ -1,7 +1,8 @@
 package org.grakovne.sideload.kindle.user.preferences
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.user.domain.User
+import org.grakovne.sideload.kindle.user.preferences.domain.UserConverterConfigurationError
+import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import java.io.File
