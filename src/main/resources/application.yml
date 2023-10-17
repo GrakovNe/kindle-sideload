@@ -10,7 +10,7 @@ spring:
     driverClassName: org.postgresql.Driver
 
 telegram:
-  token: 6586219940:AAH2ic2kDtHzVgJGl4_fOhhlqrl6P54Bl0g
+  token: 6586219940:AAGHD_H2nsepHAvtrSTg5-V0lZQFAJ_umIQ
   level: DEBUG
 
 ads:

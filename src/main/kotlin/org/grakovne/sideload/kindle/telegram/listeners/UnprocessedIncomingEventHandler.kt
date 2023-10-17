@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UnprocessedIncomingEventHandler(
-    private val sender: SendHelpMessageEventListener
+    private val sender: SendHelpMessageListener
 ) {
 
     fun handle(incomingMessageEvent: IncomingMessageEvent) = sender.forceProcessEvent(incomingMessageEvent)

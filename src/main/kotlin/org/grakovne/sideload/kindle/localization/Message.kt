@@ -9,3 +9,5 @@ data class HelpMessageItem(
     val description: String,
     val arguments: List<String> = emptyList()
 ) : Message("help_message_item")
+
+object UserConfigurationRequestedMessage: Message("user_configuration_requested")

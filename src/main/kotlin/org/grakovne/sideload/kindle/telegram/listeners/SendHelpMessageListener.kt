@@ -1,12 +1,10 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
-import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.LogLevel
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
-import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.messaging.Help
@@ -14,7 +12,7 @@ import org.grakovne.sideload.kindle.telegram.messaging.HelpMessageSender
 import org.springframework.stereotype.Service
 
 @Service
-class SendHelpMessageEventListener(
+class SendHelpMessageListener(
     private val incomingMessageEventListeners: List<IncomingMessageEventListener>,
     private val eventSender: EventSender,
     private val helpMessageSender: HelpMessageSender

@@ -8,5 +8,10 @@
     "name": "help_message_item",
     "type": "HTML",
     "template": "/${key} - ${description}"
+  },
+  {
+    "name": "user_configuration_requested",
+    "type": "HTML",
+    "template": "You're welcome to upload the configuration .zip archive in the next message"
   }
 ]
