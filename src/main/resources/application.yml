@@ -33,3 +33,6 @@ converter:
     binaryPersistencePath: "fb2_converter"
     converterFileName: "fb2c"
   sourceFileExtensions: "fb2"
+
+environment:
+  temporaryFolder: "temporary_user_environments"

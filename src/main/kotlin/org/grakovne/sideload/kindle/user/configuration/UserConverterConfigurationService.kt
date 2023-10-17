@@ -14,8 +14,8 @@ class UserConverterConfigurationService(
     private val properties: UserConverterConfigurationProperties
 ) {
 
-    fun fetchConverterConfiguration(user: User): Either<UserConverterConfigurationError, File> {
-        val asset = provideConfigurationAsset(user)
+    fun fetchConverterConfiguration(userId: String): Either<UserConverterConfigurationError, File> {
+        val asset = provideConfigurationAsset(userId)
 
         return when (asset.exists()) {
             true -> Either.Right(asset)
@@ -24,7 +24,7 @@ class UserConverterConfigurationService(
     }
 
     fun updateConverterConfiguration(user: User, configuration: File): Either<UserConverterConfigurationError, File> {
-        val asset = provideConfigurationAsset(user)
+        val asset = provideConfigurationAsset(user.id)
 
          return try {
              FileCopyUtils
@@ -35,9 +35,9 @@ class UserConverterConfigurationService(
          }
     }
 
-    private fun provideConfigurationAsset(user: User) = Path
+    private fun provideConfigurationAsset(userId: String) = Path
         .of(properties.path)
-        .resolve(user.id)
+        .resolve(userId)
         .toFile()
         .also { it.mkdirs() }
         .toPath()

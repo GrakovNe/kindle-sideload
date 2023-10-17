@@ -1,15 +1,18 @@
 package org.grakovne.sideload.kindle.binary
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.grakovne.sideload.kindle.binary.configuration.EnvironmentProperties
+import org.grakovne.sideload.kindle.common.ZipArchiveService
+import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Path
 
 @Service
 class UserEnvironmentService(
-    private val environmentProperties: EnvironmentProperties
+    private val userConverterConfigurationService: UserConverterConfigurationService,
+    private val environmentProperties: EnvironmentProperties,
+    private val zipArchiveService: ZipArchiveService
 ) {
 
     private fun provideBinaryFolder(): File = Path
@@ -17,11 +20,29 @@ class UserEnvironmentService(
         .toFile()
         .also { it.mkdirs() }
 
-    fun deployEnvironment(user: User): Either<EnvironmentError, File> {
+    fun deployEnvironment(userId: String): Either<EnvironmentError, File> {
         val temporaryFolder = provideBinaryFolder()
+            .toPath()
+            .resolve(userId)
+            .toFile()
+            .also { it.mkdirs() }
 
-        TODO()
+        return userConverterConfigurationService
+            .fetchConverterConfiguration(userId)
+            .map { zipArchiveService.unpack(it, temporaryFolder) }
+            .map { temporaryFolder }
+            .mapLeft { EnvironmentError.UNABLE_TO_DEPLOY }
     }
 
-    fun terminateEnvironment(user: User): Either<EnvironmentError, File> = TODO()
+    fun terminateEnvironment(userId: String): Either<EnvironmentError, Unit> {
+        val temporaryFolder = provideBinaryFolder()
+            .toPath()
+            .resolve(userId)
+            .toFile()
+            .also { it.mkdirs() }
+
+        return temporaryFolder
+            .delete()
+            .let { Either.Right(Unit) }
+    }
 }
