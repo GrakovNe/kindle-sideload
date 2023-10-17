@@ -22,7 +22,9 @@ class SendHelpMessageListener(
 
     override fun processEvent(event: IncomingMessageEvent) =
         incomingMessageEventListeners
-            .map { listener -> listener.getDescription().let { Help(it.key, it.type) } }
+            .filter { it !is SilentEventListener }
+            .mapNotNull { it.getDescription() }
+            .map { Help(it.key, it.type) }
             .let { helpMessageSender.sendResponse(event.update, event.user, it) }
             .mapLeft { EventProcessingError(it) }
             .tap {

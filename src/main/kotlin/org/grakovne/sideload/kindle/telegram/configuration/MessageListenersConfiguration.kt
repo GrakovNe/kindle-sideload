@@ -41,11 +41,10 @@ class MessageListenersConfiguration(
             UpdatesListener.CONFIRMED_UPDATES_ALL
         }
 
-    private fun onMessageBatch(batch: List<Update>) =
+    private fun onMessageBatch(batch: List<Update>) {
         batch
-            .filter { update -> update.hasSender() }
-            .filter { update -> update.hasMessage() }
             .forEach { update -> onMessage(update) }
+    }
 
     private fun onMessage(update: Update) = try {
         val user = userService.fetchUser(
@@ -67,14 +66,12 @@ class MessageListenersConfiguration(
         Either.Left(TelegramUpdateProcessingError.INTERNAL_ERROR)
     }
 
-    private fun Update.hasSender() = this.message()?.chat()?.id() != null
-    private fun Update.hasMessage() = this.message()?.text() != null
-
     private fun messageListenersDescriptions(targetLanguage: Language?) = incomingMessageEventListeners
+        .mapNotNull { it.getDescription() }
         .map {
             BotCommand(
-                it.getDescription().key,
-                enumLocalizationService.localize(it.getDescription().type, targetLanguage)
+                it.key,
+                enumLocalizationService.localize(it.type, targetLanguage)
             )
         }
         .toTypedArray()
