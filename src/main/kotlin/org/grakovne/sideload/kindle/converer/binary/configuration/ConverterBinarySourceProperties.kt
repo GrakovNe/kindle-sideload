@@ -11,5 +11,8 @@ class ConverterBinarySourceProperties {
     var extension: String by Delegates.notNull()
     var binaryPersistencePath: String by Delegates.notNull()
 
+    var shell: String by Delegates.notNull()
+    var shellArgs: String by Delegates.notNull()
+    var runCommand: String by Delegates.notNull()
     var converterFileName: String by Delegates.notNull()
 }

@@ -32,6 +32,9 @@ converter:
     extension: ".zip"
     binaryPersistencePath: "fb2_converter"
     converterFileName: "fb2c"
+    shell: "/bin/bash"
+    shellArgs: "-c"
+    runCommand: "-c configuration.toml convert --stk"
   sourceFileExtensions: "fb2"
 
 environment:

@@ -52,6 +52,6 @@ class ConvertSourceFilePeriodicService(
             ?: return Either.Left(ConvertationError.UNABLE_TO_FETCH_FILE)
 
 
-        return converterService.convertBook(task.userId, file)
+        return converterService.processAndCollect(task.userId, file)
     }
 }
