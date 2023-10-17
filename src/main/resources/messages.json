@@ -23,5 +23,10 @@
     "name": "user_configuration_failed",
     "type": "HTML",
     "template": "${reason}"
+  },
+  {
+    "name": "file_convertation_requested_message",
+    "type": "HTML",
+    "template": "Your file has been submitted to queue and shall be processed shortly."
   }
 ]
