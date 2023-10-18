@@ -45,7 +45,7 @@ class GithubConverterBinaryFetchService(
         val downloadLink = releases
             .tap { logger.info { "Fetching latest version of Binary for $platform" } }
             .map { it.assets }
-            .map { it.filter { asset -> asset.browserDownloadUrl.endsWith(sourceProperties.extension) } }
+            .map { it.filter { asset -> asset.browserDownloadUrl.endsWith(binaryFileExtension) } }
             .map {
                 it
                     .find { asset -> asset.browserDownloadUrl.contains(platform) }
@@ -66,7 +66,7 @@ class GithubConverterBinaryFetchService(
                 HttpMethod.GET,
                 null,
                 {
-                    val file = File.createTempFile("kindle_sideload_binary", sourceProperties.extension)
+                    val file = File.createTempFile("kindle_sideload_binary", binaryFileExtension)
                     StreamUtils.copy(it.body, FileOutputStream(file))
                     file
                 }
@@ -81,6 +81,7 @@ class GithubConverterBinaryFetchService(
     }
 
     companion object {
+        private val binaryFileExtension = ".zip"
         private val logger = KotlinLogging.logger { }
     }
 }
