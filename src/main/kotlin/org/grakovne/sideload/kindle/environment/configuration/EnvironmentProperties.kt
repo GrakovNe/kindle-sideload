@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.binary.configuration
+package org.grakovne.sideload.kindle.environment.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration

@@ -8,9 +8,13 @@ import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
+import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
+import org.grakovne.sideload.kindle.events.internal.LogLevel
+import org.grakovne.sideload.kindle.events.internal.LoggingEvent
+import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.localization.FileConvertarionFailed
 import org.grakovne.sideload.kindle.localization.FileConvertarionSuccess
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
@@ -23,7 +27,8 @@ import org.springframework.stereotype.Service
 class BookConversionFinishListener(
     private val bot: TelegramBot,
     private val messageSender: SimpleMessageSender,
-    private val userService: UserService
+    private val userService: UserService,
+    private val eventSender: EventSender
 ) : EventListener<ConvertationFinishedEvent, TelegramUpdateProcessingError>,
     SilentEventListener {
 
@@ -79,6 +84,13 @@ class BookConversionFinishListener(
             it.find { item -> !item.isOk }
                 ?.let { Either.Left(EventProcessingError(TelegramUpdateProcessingError.RESPONSE_NOT_SENT)) }
                 ?: Either.Right(EventProcessingResult.PROCESSED)
+        }
+        .also {
+            eventSender.sendEvent(
+                UserEnvironmentUnnecessaryEvent(
+                    environmentId = event.environmentId
+                )
+            )
         }
 
 }

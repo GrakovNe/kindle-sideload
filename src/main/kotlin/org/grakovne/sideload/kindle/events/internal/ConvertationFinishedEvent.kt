@@ -8,7 +8,8 @@ data class ConvertationFinishedEvent(
     val userId: String,
     val status: ConvertationFinishedStatus,
     val log: String,
-    val output: List<File>
+    val output: List<File>,
+    val environmentId: String?
 ) : Event(EventType.CONVERTATION_FINISHED)
 
 enum class ConvertationFinishedStatus {

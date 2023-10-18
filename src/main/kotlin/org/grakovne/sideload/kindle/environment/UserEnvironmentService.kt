@@ -1,8 +1,8 @@
-package org.grakovne.sideload.kindle.binary
+package org.grakovne.sideload.kindle.environment
 
 import arrow.core.Either
 import org.apache.commons.lang3.RandomStringUtils
-import org.grakovne.sideload.kindle.binary.configuration.EnvironmentProperties
+import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.common.ZipArchiveService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
 import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
@@ -23,11 +23,7 @@ class UserEnvironmentService(
         .also { it.mkdirs() }
 
     fun deployEnvironment(userId: String): Either<EnvironmentError, File> {
-        val temporaryFolder = provideBinaryFolder()
-            .toPath()
-            .resolve(RandomStringUtils.randomAlphabetic(8))
-            .toFile()
-            .also { it.mkdirs() }
+        val temporaryFolder = provideEnvironmentFolder(RandomStringUtils.randomAlphabetic(8))
 
         return userConverterConfigurationService
             .fetchConverterConfiguration(userId)
@@ -46,15 +42,14 @@ class UserEnvironmentService(
             .mapLeft { EnvironmentError.UNABLE_TO_DEPLOY }
     }
 
-    fun terminateEnvironment(userId: String): Either<EnvironmentError, Unit> {
-        val temporaryFolder = provideBinaryFolder()
-            .toPath()
-            .resolve(userId)
-            .toFile()
-            .also { it.mkdirs() }
-
-        return temporaryFolder
-            .delete()
+    fun terminateEnvironment(environmentId: String): Either<EnvironmentError, Unit> =
+        provideEnvironmentFolder(environmentId)
+            .deleteRecursively()
             .let { Either.Right(Unit) }
-    }
+
+    private fun provideEnvironmentFolder(environmentId: String) = provideBinaryFolder()
+        .toPath()
+        .resolve(environmentId)
+        .toFile()
+        .also { it.mkdirs() }
 }

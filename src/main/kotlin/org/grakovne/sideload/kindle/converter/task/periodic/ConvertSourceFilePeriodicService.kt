@@ -55,7 +55,8 @@ class ConvertSourceFilePeriodicService(
                         userId = task.userId,
                         status = ConvertationFinishedStatus.FAILED,
                         log = it.details ?: "",
-                        output = emptyList()
+                        output = emptyList(),
+                        environmentId = it.environmentId
                     )
                 },
                 ifRight = {
@@ -63,7 +64,8 @@ class ConvertSourceFilePeriodicService(
                         userId = task.userId,
                         status = ConvertationFinishedStatus.SUCCESS,
                         log = it.log,
-                        output = it.output
+                        output = it.output,
+                        environmentId = it.environmentId
                     )
                 }
             )
@@ -74,7 +76,6 @@ class ConvertSourceFilePeriodicService(
     private fun processTask(task: ConvertationTask): Either<ConvertationError, ConversionResult> {
         val file = downloadService.download(task.sourceFileUrl)
             ?: return Either.Left(UnableFetchFile)
-
 
         return converterService.processAndCollect(task.userId, file)
     }

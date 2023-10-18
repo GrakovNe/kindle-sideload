@@ -1,7 +1,7 @@
 package org.grakovne.sideload.kindle.converter
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.binary.UserEnvironmentService
+import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.common.CliRunner
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
@@ -31,14 +31,13 @@ class ConverterService(
             )
             .also { deployContent(it, book) }
 
-
         val environmentFiles = environment.snapshotDirectory()
         val result = convertBook(environment)
         val outputFiles = environment.snapshotDirectory() - environmentFiles.toSet()
 
         return result
-            .map { ConversionResult(it, outputFiles) }
-            .mapLeft { UnableConvertFile(it) }
+            .map { ConversionResult(it, environment.name, outputFiles) }
+            .mapLeft { UnableConvertFile(it, environment.name) }
     }
 
     private fun File.fetchConfigurationFileName(): String? = this
@@ -92,5 +91,6 @@ class ConverterService(
 
 data class ConversionResult(
     val log: String,
+    val environmentId: String,
     val output: List<File>
 )
