@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converter
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.CliRunner
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
@@ -18,15 +19,21 @@ class ConverterService(
     private val properties: ConverterBinarySourceProperties
 ) {
 
-    fun processAndCollect(
+    fun convertAndCollect(
         userId: String,
         book: File
     ): Either<ConvertationError, ConversionResult> {
+        logger.info { "Processing the convertation of ${book.name} for user id: $userId" }
 
         val environment = userEnvironmentService
+            .also { logger.debug { "Deploying temporary environment for $userId" } }
             .deployEnvironment(userId)
             .fold(
-                ifLeft = { return Either.Left(UnableDeployEnvironment) },
+                ifLeft = { error ->
+                    return Either
+                        .Left(UnableDeployEnvironment)
+                        .also { logger.error { "Unable to deploy environment for $userId. See details: $error" } }
+                },
                 ifRight = { it }
             )
             .also { deployContent(it, book) }
@@ -36,8 +43,12 @@ class ConverterService(
         val outputFiles = environment.snapshotDirectory() - environmentFiles.toSet()
 
         return result
+            .tap { logger.info { "The convertation of ${book.name} for user id: $userId finished successfully. Output files are: ${outputFiles.map { it.name }}" } }
             .map { ConversionResult(it, environment.name, outputFiles) }
-            .mapLeft { UnableConvertFile(it, environment.name) }
+            .mapLeft {
+                UnableConvertFile(it, environment.name)
+                    .also { logger.error { "The convertation of ${book.name} for user id: $userId failed. See details: $it" } }
+            }
     }
 
     private fun File.fetchConfigurationFileName(): String? = this
@@ -49,8 +60,8 @@ class ConverterService(
         val path = binaryProvider.provideBinaryConverter().absolutePath
         val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
 
-        val result = "$path $configurationKey convert $sourceFileInputName"
-        return result
+        return "$path $configurationKey convert $sourceFileInputName"
+            .also { logger.debug { "Shell command build: $it" } }
     }
 
     private fun File.snapshotDirectory() = this.listFiles()?.toList() ?: emptyList()
@@ -59,7 +70,7 @@ class ConverterService(
         environment: File,
         input: File
     ) = environment
-
+        .also { logger.debug { "Deploying the environment content from ${it.path} to the environment ${environment.path}" } }
         .also {
             it
                 .toPath()
@@ -76,16 +87,20 @@ class ConverterService(
 
     private fun convertBook(environment: File) = environment
         .let {
+            val runCommand = buildShellCommand(environment)
+            logger.debug { "Running $runCommand on ${properties.shell} with args ${properties.shellArgs}" }
+
             cliRunner.runCli(
                 properties.shell,
                 properties.shellArgs,
-                buildShellCommand(environment),
+                runCommand,
                 it
             )
         }
 
     companion object {
         private const val sourceFileInputName = "input.fb2"
+        private val logger = KotlinLogging.logger { }
     }
 }
 

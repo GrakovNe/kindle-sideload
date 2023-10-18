@@ -15,11 +15,13 @@ class ConverterBinaryProvider(
         .toPath()
         .resolve(sourceProperties.converterFileName)
         .toFile()
+        .also { logger.debug { "Provided the path to binary converter. Path is: ${it.absoluteFile}" } }
 
     fun provideBinaryFolder(): File = Path
         .of(sourceProperties.binaryPersistencePath)
         .toFile()
         .also { it.mkdirs() }
+        .also { logger.debug { "Provided the path to binary directory. Path is: ${it.absoluteFile}" } }
 
     companion object {
         private val logger = KotlinLogging.logger { }

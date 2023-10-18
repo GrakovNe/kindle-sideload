@@ -17,6 +17,7 @@ class ConvertationTaskService(
 ) {
 
     fun updateTask(task: ConvertationTask) = repository
+        .also { logger.debug { "Updating periodic task: $task" } }
         .save(task)
         .let { Either.Right(Unit) }
 
@@ -24,7 +25,6 @@ class ConvertationTaskService(
         user: User,
         sourceFileUrl: String
     ): Either<ConvertationError, Unit> {
-
         val entity = ConvertationTask(
             id = UUID.randomUUID(),
             userId = user.id,
@@ -35,6 +35,7 @@ class ConvertationTaskService(
         )
 
         return repository
+            .also { logger.debug { "Submitting to queue a new one convertation task: $entity" } }
             .save(entity)
             .let { Either.Right(Unit) }
 

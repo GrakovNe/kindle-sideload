@@ -20,12 +20,18 @@ class CliRunner {
             .directory(directory)
             .redirectErrorStream(true)
             .start()
+            .also { logger.debug { "Started a executable process ${it.pid()}" } }
             .also { it.waitFor() }
 
         return if (process.exitValue() == 0) {
+            logger.debug { "Executable process ${process.pid()} has been finished successfully. Exit code = 0" }
             Either.Right(BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n"))
         } else {
-            Either.Left(BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n"))
+            val errorResult = BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n")
+            logger.error { "Executable process ${process.pid()} has been failed. Exit code = ${process.exitValue()}" }
+            logger.error { "Executable process ${process.pid()} error output is: $errorResult" }
+
+            Either.Left(errorResult)
         }
     }
 

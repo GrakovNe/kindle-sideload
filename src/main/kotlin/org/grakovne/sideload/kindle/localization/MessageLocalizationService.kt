@@ -26,9 +26,14 @@ class MessageLocalizationService(
 ) {
 
     fun localize(message: Message, language: Language?): Either<LocalizationError, PreparedMessage> {
+        logger.info { "Localize $message with $language language" }
+
         val messageTemplate: MessageTemplate = findLocalizationResources(language)
             .find { it.name == message.templateName }
-            ?: return Either.Left(LocalizationError.TEMPLATE_NOT_FOUND)
+            ?.also { logger.debug { "Found acceptable template for message $message: ${it.name}" } }
+            ?: return Either
+                .Left(LocalizationError.TEMPLATE_NOT_FOUND)
+                .also { logger.warn { "Unable to find acceptable template for message $message. Skipping localization" } }
 
         val values = message::class
             .memberProperties

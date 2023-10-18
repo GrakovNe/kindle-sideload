@@ -21,7 +21,11 @@ class FileDownloadService(
             null,
             {
                 val file = File.createTempFile(UUID.randomUUID().toString(), ".file")
+                logger.debug { "Created empty temporary file: ${file.absoluteFile}" }
+
                 StreamUtils.copy(it.body, FileOutputStream(file))
+                logger.debug { "Content from $link successfully downloaded to ${file.absoluteFile}" }
+
                 file
             }
         )

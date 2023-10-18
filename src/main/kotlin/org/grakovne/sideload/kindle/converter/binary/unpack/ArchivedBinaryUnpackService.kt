@@ -18,13 +18,18 @@ class ArchivedBinaryUnpackService(
 ) {
 
     fun unpack(archive: File): Either<BinaryError, Unit> {
+        logger.info { "Unpacking a converter Binary from the archive" }
+
         if (sourceProperties.extension.endsWith("zip").not()) {
+            logger.error { "Unable to unpack converter binary. It's not .ZIP archive and it's not supported for now" }
             return Either.Left(BinaryError.UNABLE_TO_UNPACK_BINARY)
         }
 
         try {
             ZipFile(archive).extractAll(binaryProvider.provideBinaryFolder().absolutePath)
+            logger.info { "Unpacked a converter Binary from the archive" }
         } catch (ex: ZipException) {
+            logger.error { "Unable to unpack a converter Binary from the archive. See details: $ex" }
             return Either.Left(BinaryError.UNABLE_TO_UNPACK_BINARY)
         }
 

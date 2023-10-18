@@ -35,6 +35,7 @@ class ConverterBinaryUpdateService(
 
     private fun updateIfNewerVersion(): Either<BinaryError, Instant> {
         val latestPublished = fetchService
+            .also { logger.info { "Found locally saved converter Binary. Checking for updates" } }
             .fetchLatestPublishedAt()
             .fold(
                 ifLeft = { return Either.Left(it) },
@@ -50,6 +51,7 @@ class ConverterBinaryUpdateService(
     }
 
     private fun fetchUpdatedBinary(): Either<BinaryError, Instant> = platformService
+        .also { logger.info { "Locally saved converter Binary is not presented. Fetching the latest version" } }
         .fetchPlatformName()
         .mapLeft { BinaryError.UNABLE_TO_FETCH_BINARY_NO_REQUIRED_PLATFORM }
         .flatMap { fetchService.fetchForPlatform(it) }

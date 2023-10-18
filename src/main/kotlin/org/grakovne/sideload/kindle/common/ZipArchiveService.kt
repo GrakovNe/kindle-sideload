@@ -8,9 +8,7 @@ import java.io.File
 @Service
 class ZipArchiveService {
 
-    fun unpack(file: File, where: File) {
-        return ZipFile(file).extractAll(where.absolutePath)
-    }
+    fun unpack(file: File, where: File) = ZipFile(file).extractAll(where.absolutePath)
 
     companion object {
         private val logger = KotlinLogging.logger { }

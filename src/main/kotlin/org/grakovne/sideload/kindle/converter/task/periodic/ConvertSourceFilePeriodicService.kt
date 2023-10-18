@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converter.task.periodic
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.converter.ConversionResult
 import org.grakovne.sideload.kindle.converter.ConvertationError
@@ -23,8 +24,10 @@ class ConvertSourceFilePeriodicService(
     private val eventSender: EventSender
 ) {
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 5000)
     fun convertSourceFiles() {
+        logger.debug { "Running periodically task ${this.javaClass.simpleName}" }
+
         taskService
             .fetchTasksForProcessing()
             .map { it to processTask(it) }
@@ -77,6 +80,10 @@ class ConvertSourceFilePeriodicService(
         val file = downloadService.download(task.sourceFileUrl)
             ?: return Either.Left(UnableFetchFile)
 
-        return converterService.processAndCollect(task.userId, file)
+        return converterService.convertAndCollect(task.userId, file)
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
     }
 }

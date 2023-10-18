@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.telegram.listeners
 
 import arrow.core.Either
 import com.pengrad.telegrambot.model.Update
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
@@ -16,11 +17,21 @@ abstract class IncomingMessageEventListener : EventListener<IncomingMessageEvent
 
     override fun onEvent(event: Event) =
         when (event is IncomingMessageEvent && event.acceptForListener(getDescription())) {
-            true -> processEvent(event).map { EventProcessingResult.PROCESSED }
+            true -> logger
+                .info { "Received incoming message event $event to ${this.javaClass.simpleName}" }
+                .let { processEvent(event) }
+                .map { EventProcessingResult.PROCESSED }
+                .tap { logger.info { "Incoming message event $event has been successfully processed by ${this.javaClass.simpleName}" } }
+                .tapLeft { logger.warn { "Incoming message event $event has been failed by ${this.javaClass.simpleName}. See details: $it" } }
+
             false -> Either.Right(EventProcessingResult.SKIPPED)
         }
 
     protected abstract fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError<TelegramUpdateProcessingError>, Unit>
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }
 
 private fun Update.hasSender() = this.message()?.chat()?.id() != null

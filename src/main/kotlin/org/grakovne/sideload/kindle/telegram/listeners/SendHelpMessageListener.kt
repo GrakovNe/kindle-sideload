@@ -23,6 +23,7 @@ class SendHelpMessageListener(
 
     override fun processEvent(event: IncomingMessageEvent) =
         incomingMessageEventListeners
+            .also { logger.info { "Requested a default help response on event $event" } }
             .filter { it !is SilentEventListener }
             .mapNotNull { it.getDescription() }
             .map { Help(it.key, it.type) }

@@ -21,10 +21,12 @@ class UserEnvironmentUnnecessaryListener(
             return Either.Right(EventProcessingResult.SKIPPED)
         }
 
+        logger.info { "Processing $event with ${this.javaClass.simpleName}" }
+
         return environmentService
             .terminateEnvironment(event.environmentId ?: return Either.Right(EventProcessingResult.SKIPPED))
             .map { EventProcessingResult.PROCESSED }
-            .mapLeft { EventProcessingError(EnvironmentError.UNABLE_TO_TERMINATE, it.name) }
+            .mapLeft { EventProcessingError(it) }
     }
 
     companion object {

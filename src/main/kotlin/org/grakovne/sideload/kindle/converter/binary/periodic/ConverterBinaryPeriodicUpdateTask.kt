@@ -11,7 +11,9 @@ class ConverterBinaryPeriodicUpdateTask(
 ) {
 
     @Scheduled(fixedDelay = 60 * 60 * 1000)
-    fun checkAndUpdateBinaries() = converterBinaryUpdateService.checkAndUpdate()
+    fun checkAndUpdateBinaries() = converterBinaryUpdateService
+        .also { logger.info { "Running periodically task ${this.javaClass.simpleName}" } }
+        .checkAndUpdate()
 
     companion object {
         private val logger = KotlinLogging.logger { }

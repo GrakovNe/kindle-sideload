@@ -44,7 +44,11 @@ class MessageListenersConfiguration(
 
     private fun onMessageBatch(batch: List<Update>) {
         batch
-            .forEach { update -> onMessage(update) }
+            .forEach { update ->
+                update
+                    .also { logger.debug { "Received update $it. Processing" } }
+                    .let { onMessage(it) }
+            }
     }
 
     private fun onMessage(update: Update) = try {
@@ -53,17 +57,41 @@ class MessageListenersConfiguration(
             language = update.message()?.from()?.languageCode() ?: "en"
         )
 
+        logger.debug { "Processing incoming message ${update.updateId()} for user ${user.id}" }
+
         val incomingMessageEvent = IncomingMessageEvent(update, user)
 
         eventSender
             .sendEvent(incomingMessageEvent)
             .sequence()
-            .tap { it.processedByNothing().ifTrue { unprocessedIncomingEventHandler.handle(incomingMessageEvent) } }
-            .also { bot.execute(SetMyCommands(*messageListenersDescriptions(user.language))) }
-            .also { userMessageReportService.createReportEntry(user.id, update.message()?.text()) }
+            .tap {
+                it
+                    .processedByNothing()
+                    .ifTrue {
+                        unprocessedIncomingEventHandler
+                            .handle(incomingMessageEvent)
+                            .also {
+                                logger.warn {
+                                    "Unable to find acceptable listener for $incomingMessageEvent, sending default one response instead"
+                                }
+                            }
+                    }
+            }
+            .also {
+                bot
+                    .execute(SetMyCommands(*messageListenersDescriptions(user.language)))
+                    .also { logger.debug { "Updated set of available commands for ${user.id}" } }
+            }
+            .also {
+                userMessageReportService
+                    .createReportEntry(user.id, update.message()?.text())
+                    .also { logger.debug { "Raw user message has been logged: ${it.text}" } }
+            }
 
     } catch (ex: Exception) {
+        logger.error { "Unable process incoming message. See Details: $ex" }
         eventSender.sendEvent(LoggingEvent(WARN, "Internal Exception. Message = ${ex.message}"))
+
         Either.Left(TelegramUpdateProcessingError.INTERNAL_ERROR)
     }
 
