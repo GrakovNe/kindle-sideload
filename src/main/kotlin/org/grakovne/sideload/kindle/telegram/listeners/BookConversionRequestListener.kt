@@ -4,7 +4,7 @@ import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetFile
-import org.grakovne.sideload.kindle.converer.task.service.ConvertationTaskService
+import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
