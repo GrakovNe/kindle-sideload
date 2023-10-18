@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.grakovne.sideload.kindle.binary.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.common.ZipArchiveService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
+import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Path
@@ -30,7 +31,17 @@ class UserEnvironmentService(
 
         return userConverterConfigurationService
             .fetchConverterConfiguration(userId)
-            .map { zipArchiveService.unpack(it, temporaryFolder) }
+            .fold(
+                ifLeft = {
+                    when (it) {
+                        UserConverterConfigurationError.CONFIGURATION_NOT_FOUND -> Either.Right(null)
+                        else -> Either.Left(it)
+                    }
+                },
+
+                ifRight = { Either.Right(it) }
+            )
+            .map { it?.let { file -> zipArchiveService.unpack(file, temporaryFolder) } }
             .map { temporaryFolder }
             .mapLeft { EnvironmentError.UNABLE_TO_DEPLOY }
     }
