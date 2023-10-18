@@ -18,7 +18,7 @@ abstract class IncomingMessageEventListener : EventListener<IncomingMessageEvent
     override fun onEvent(event: Event) =
         when (event is IncomingMessageEvent && event.acceptForListener(getDescription())) {
             true -> logger
-                .info { "Received incoming message event $event to ${this.javaClass.simpleName}" }
+                .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
                 .map { EventProcessingResult.PROCESSED }
                 .tap { logger.info { "Incoming message event $event has been successfully processed by ${this.javaClass.simpleName}" } }
