@@ -10,5 +10,4 @@ class UserConverterConfigurationProperties {
 
     var path: String by Delegates.notNull()
     var fileName: String by Delegates.notNull()
-    var maxSize: Long by Delegates.notNull()
 }

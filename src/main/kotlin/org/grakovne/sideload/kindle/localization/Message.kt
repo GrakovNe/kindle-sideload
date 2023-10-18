@@ -1,5 +1,7 @@
 package org.grakovne.sideload.kindle.localization
 
+import org.grakovne.sideload.kindle.common.FileUploadFailedReason
+
 sealed class Message(val templateName: String)
 
 data class HelpMessage(val items: String) : Message("help_message")
@@ -17,7 +19,7 @@ data object UserConfigurationSubmittedMessage : Message("user_configuration_subm
 data object FileConvertationRequestedMessage : Message("file_convertation_requested_message")
 
 data class UserConfigurationFailedMessage(
-    val reason: UserConfigurationFailedReason
+    val reason: FileUploadFailedReason
 ) : Message("user_configuration_failed")
 
 data class FileConvertarionSuccess(val result: String) : Message("file_convertation_success")

@@ -8,9 +8,9 @@
     }
   },
   {
-    "name": "UserConfigurationFailedReason",
+    "name": "FileUploadFailedReason",
     "values": {
-      "FILE_IS_TOO_LARGE": "Sorry, but your file must be below 20MB to be applied as configuration"
+      "FILE_IS_TOO_LARGE": "Sorry, but your file must be below 20MB"
     }
   }
 ]

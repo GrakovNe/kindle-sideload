@@ -6,6 +6,8 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.GetFile
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
+import org.grakovne.sideload.kindle.common.FileUploadFailedReason.FILE_IS_TOO_LARGE
+import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -13,14 +15,12 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.UserConfigurationFailedMessage
-import org.grakovne.sideload.kindle.localization.UserConfigurationFailedReason.FILE_IS_TOO_LARGE
 import org.grakovne.sideload.kindle.localization.UserConfigurationSubmittedMessage
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
-import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationProperties
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
 import org.springframework.stereotype.Service
 
@@ -30,7 +30,7 @@ class UserConfigurationUploadSubmitListener(
     private val fileDownloadService: FileDownloadService,
     private val userActivityStateService: UserActivityStateService,
     private val userConverterConfigurationService: UserConverterConfigurationService,
-    private val properties: UserConverterConfigurationProperties,
+    private val properties: FileUploadProperties,
     private val messageSender: SimpleMessageSender,
 ) : IncomingMessageEventListener(), SilentEventListener {
 

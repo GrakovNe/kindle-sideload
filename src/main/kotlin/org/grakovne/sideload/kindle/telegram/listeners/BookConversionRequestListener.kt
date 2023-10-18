@@ -5,12 +5,15 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetFile
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.FileUploadFailedReason
+import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.FileConvertationRequestedMessage
+import org.grakovne.sideload.kindle.localization.UserConfigurationFailedMessage
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.configuration.ConverterProperties
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
@@ -25,7 +28,8 @@ class BookConversionRequestListener(
     private val convertationTaskService: ConvertationTaskService,
     private val userActivityStateService: UserActivityStateService,
     private val messageSender: SimpleMessageSender,
-    private val bot: TelegramBot
+    private val bot: TelegramBot,
+    private val properties: FileUploadProperties,
 ) : IncomingMessageEventListener(), SilentEventListener {
 
     override fun onEvent(event: Event): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
@@ -51,6 +55,17 @@ class BookConversionRequestListener(
             .message()
             ?.document()
             ?: return Either.Right(Unit)
+
+        if (file.fileSize() > properties.maxSize) {
+            return messageSender
+                .sendResponse(
+                    origin = event.update,
+                    user = event.user,
+                    message = UserConfigurationFailedMessage(FileUploadFailedReason.FILE_IS_TOO_LARGE)
+                )
+                .mapLeft { EventProcessingError(TelegramUpdateProcessingError.RESPONSE_NOT_SENT) }
+                .map { Unit }
+        }
 
         val sourceUrl = bot
             .execute(GetFile(file.fileId()))

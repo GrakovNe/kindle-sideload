@@ -22,9 +22,12 @@ user:
     configuration:
       path: "user_configurations"
       file-name: "configuration.zip"
-      max-size: 20000000
   environment:
     temporaryFolder: "user_environments"
+
+file:
+  upload:
+    max-size: 20000000
 
 converter:
   source:
