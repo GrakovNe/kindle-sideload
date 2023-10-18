@@ -4,7 +4,11 @@ import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
-import org.grakovne.sideload.kindle.events.core.*
+import org.grakovne.sideload.kindle.events.core.Event
+import org.grakovne.sideload.kindle.events.core.EventListener
+import org.grakovne.sideload.kindle.events.core.EventProcessingError
+import org.grakovne.sideload.kindle.events.core.EventProcessingResult
+import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.LogLevel.Companion.isWorseOrEqualThan
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties

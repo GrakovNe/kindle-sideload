@@ -3,7 +3,7 @@ package org.grakovne.sideload.kindle.user.message.report.domain
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @Entity
 data class UserMessageReport(

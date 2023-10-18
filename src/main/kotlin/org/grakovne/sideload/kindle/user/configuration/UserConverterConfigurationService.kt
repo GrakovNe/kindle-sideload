@@ -26,13 +26,13 @@ class UserConverterConfigurationService(
     fun updateConverterConfiguration(user: User, configuration: File): Either<UserConverterConfigurationError, File> {
         val asset = provideConfigurationAsset(user.id)
 
-         return try {
-             FileCopyUtils
-                 .copy(configuration, asset)
-                 .let { Either.Right(asset) }
-         } catch (ex: IOException) {
-             return Either.Left(UserConverterConfigurationError.UNABLE_UPDATE_CONFIGURATION)
-         }
+        return try {
+            FileCopyUtils
+                .copy(configuration, asset)
+                .let { Either.Right(asset) }
+        } catch (ex: IOException) {
+            return Either.Left(UserConverterConfigurationError.UNABLE_UPDATE_CONFIGURATION)
+        }
     }
 
     private fun provideConfigurationAsset(userId: String) = Path

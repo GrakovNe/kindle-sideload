@@ -4,7 +4,7 @@ import org.grakovne.sideload.kindle.converter.binary.reference.domain.ConverterB
 import org.grakovne.sideload.kindle.converter.binary.reference.repository.ConverterBinaryReferenceRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @Service
 class ConverterBinaryReferenceService(

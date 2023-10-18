@@ -1,10 +1,10 @@
 package org.grakovne.sideload.kindle.converter
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.common.CliRunner
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
+import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import java.io.File

@@ -6,7 +6,7 @@ import org.grakovne.sideload.kindle.telegram.state.domain.UserActivityState
 import org.grakovne.sideload.kindle.telegram.state.repository.UserActivityStateRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @Service
 class UserActivityStateService(

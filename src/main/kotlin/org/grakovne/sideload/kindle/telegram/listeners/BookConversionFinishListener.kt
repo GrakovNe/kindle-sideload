@@ -12,8 +12,6 @@ import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
-import org.grakovne.sideload.kindle.events.internal.LogLevel
-import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.localization.FileConvertarionFailed
 import org.grakovne.sideload.kindle.localization.FileConvertarionSuccess

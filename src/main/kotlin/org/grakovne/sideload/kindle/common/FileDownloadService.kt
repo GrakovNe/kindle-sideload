@@ -6,7 +6,7 @@ import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
+import java.util.UUID
 
 @Service
 class FileDownloadService(

@@ -2,7 +2,7 @@ package org.grakovne.sideload.kindle.telegram.state.repository
 
 import org.grakovne.sideload.kindle.telegram.state.domain.UserActivityState
 import org.springframework.data.jpa.repository.JpaRepository
-import java.util.*
+import java.util.UUID
 
 interface UserActivityStateRepository : JpaRepository<UserActivityState, UUID> {
 

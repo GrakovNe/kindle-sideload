@@ -2,8 +2,8 @@ package org.grakovne.sideload.kindle.environment
 
 import arrow.core.Either
 import org.apache.commons.lang3.RandomStringUtils
-import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.common.ZipArchiveService
+import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
 import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
 import org.springframework.stereotype.Service

@@ -5,10 +5,10 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.text.StringSubstitutor
 import org.grakovne.sideload.kindle.common.Language
+import org.grakovne.sideload.kindle.localization.adverisement.AdvertisingService
 import org.grakovne.sideload.kindle.localization.converter.toMessage
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.swiftbot.localization.MessageTemplate
-import org.grakovne.sideload.kindle.localization.adverisement.AdvertisingService
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import java.io.FileNotFoundException

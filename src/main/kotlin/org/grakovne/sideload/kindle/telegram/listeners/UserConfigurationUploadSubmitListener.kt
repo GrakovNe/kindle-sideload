@@ -12,7 +12,6 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.UserConfigurationFailedMessage
-import org.grakovne.sideload.kindle.localization.UserConfigurationFailedReason
 import org.grakovne.sideload.kindle.localization.UserConfigurationFailedReason.FILE_IS_TOO_LARGE
 import org.grakovne.sideload.kindle.localization.UserConfigurationSubmittedMessage
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
