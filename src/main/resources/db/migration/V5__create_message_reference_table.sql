@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS message_reference (
+    id VARCHAR PRIMARY KEY,
+    status VARCHAR NOT NULL
+);

@@ -20,6 +20,8 @@ import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventHandler
+import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
+import org.grakovne.sideload.kindle.telegram.message.reference.service.MessageReferenceService
 import org.grakovne.sideload.kindle.user.message.report.service.UserMessageReportService
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
@@ -32,7 +34,8 @@ class MessageListenersConfiguration(
     private val userService: UserService,
     private val enumLocalizationService: EnumLocalizationService,
     private val userMessageReportService: UserMessageReportService,
-    private val unprocessedIncomingEventHandler: UnprocessedIncomingEventHandler
+    private val unprocessedIncomingEventHandler: UnprocessedIncomingEventHandler,
+    private val messageReferenceService: MessageReferenceService
 ) {
 
     @PostConstruct
@@ -52,6 +55,15 @@ class MessageListenersConfiguration(
     }
 
     private fun onMessage(update: Update) = try {
+        messageReferenceService
+            .fetchMessage(update.message().messageId().toString())
+            ?.let {
+                if (it.status == MessageStatus.PROCESSED) {
+                    logger.debug { "Got same message twice, message id: ${it.id}, skipping" }
+                    return Either.Right(listOf(EventProcessingResult.PROCESSED))
+                }
+            }
+
         val user = userService.fetchOrCreateUser(
             userId = update.message().chat().id().toString(),
             language = update.message()?.from()?.languageCode() ?: "en"
@@ -87,6 +99,7 @@ class MessageListenersConfiguration(
                     .createReportEntry(user.id, update.message()?.text())
                     .also { logger.debug { "Raw user message has been logged: ${it.text}" } }
             }
+            .also { messageReferenceService.markAsProcessed(update.message().messageId().toString()) }
 
     } catch (ex: Exception) {
         logger.error { "Unable process incoming message. See Details: $ex" }

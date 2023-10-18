@@ -38,6 +38,7 @@ class PlatformService {
 
             return when {
                 architecture.contains("arm") -> Either.Right("linux_arm64")
+                architecture.contains("aarch64") -> Either.Right("linux_arm64")
                 architecture.contains("amd64") -> Either.Right("linux_amd64")
                 architecture.contains("x86_64") -> Either.Right("linux_amd64")
                 else -> Either.Left(PlatformError.UNABLE_TO_DEFINE_LINUX_PLATFORM)

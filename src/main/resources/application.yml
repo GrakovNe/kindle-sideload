@@ -10,7 +10,7 @@ spring:
     driverClassName: org.postgresql.Driver
 
 telegram:
-  token: 6586219940:AAGHD_H2nsepHAvtrSTg5-V0lZQFAJ_umIQ
+  token: 6774391168:AAHvA34GxLg6g5x4joR85fax_rZdnuUM8dY
   level: DEBUG
 
 ads:
@@ -49,3 +49,4 @@ logging:
     root: INFO
     org.grakovne: DEBUG
     org.hibernate: ERROR
+    com.pengrad.telegrambot: TRACE
