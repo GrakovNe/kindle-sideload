@@ -27,8 +27,9 @@ user:
     temporaryFolder: "user_environments"
 
 converter:
-  binary:
+  source:
     releasesUrl: "https://api.github.com/repos/rupor-github/fb2converter/releases/latest"
+  binary:
     binaryPersistencePath: "fb2_converter"
     converterFileName: "fb2c"
     shell: "/bin/bash"
@@ -38,3 +39,9 @@ converter:
 
 environment:
   temporaryFolder: "temporary_user_environments"
+
+logging:
+  level:
+    root: INFO
+    org.grakovne: DEBUG
+    org.hibernate: ERROR

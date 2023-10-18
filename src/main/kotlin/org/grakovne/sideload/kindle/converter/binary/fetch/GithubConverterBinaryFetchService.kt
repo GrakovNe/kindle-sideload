@@ -3,7 +3,7 @@ package org.grakovne.sideload.kindle.converter.binary.fetch
 import arrow.core.Either
 import arrow.core.flatMap
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
+import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterSourceProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.GitHubRelease
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.BinaryError
 import org.grakovne.sideload.kindle.converter.binary.unpack.ArchivedBinaryUnpackService
@@ -19,7 +19,7 @@ import java.time.Instant
 @Service
 class GithubConverterBinaryFetchService(
     private val restTemplate: RestTemplate,
-    private val sourceProperties: ConverterBinarySourceProperties,
+    private val sourceProperties: ConverterSourceProperties,
     private val archivedBinaryUnpackService: ArchivedBinaryUnpackService
 ) : ConverterBinaryFetchService {
 

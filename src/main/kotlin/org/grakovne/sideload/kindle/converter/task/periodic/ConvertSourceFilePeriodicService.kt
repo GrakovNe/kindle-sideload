@@ -26,7 +26,7 @@ class ConvertSourceFilePeriodicService(
 
     @Scheduled(fixedDelay = 5000)
     fun convertSourceFiles() {
-        logger.debug { "Running periodically task ${this.javaClass.simpleName}" }
+        logger.trace { "Running periodically task ${this.javaClass.simpleName}" }
 
         taskService
             .fetchTasksForProcessing()

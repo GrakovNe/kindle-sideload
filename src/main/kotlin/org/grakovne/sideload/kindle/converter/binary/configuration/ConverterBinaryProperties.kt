@@ -6,8 +6,7 @@ import kotlin.properties.Delegates
 
 @Configuration
 @ConfigurationProperties(prefix = "converter.binary")
-class ConverterBinarySourceProperties {
-    var releasesUrl: String by Delegates.notNull()
+class ConverterBinaryProperties {
     var binaryPersistencePath: String by Delegates.notNull()
 
     var shell: String by Delegates.notNull()

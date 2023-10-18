@@ -3,7 +3,7 @@ package org.grakovne.sideload.kindle.converter
 import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.CliRunner
-import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
+import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinaryProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.springframework.stereotype.Service
@@ -16,7 +16,7 @@ class ConverterService(
     private val cliRunner: CliRunner,
     private val userEnvironmentService: UserEnvironmentService,
     private val binaryProvider: ConverterBinaryProvider,
-    private val properties: ConverterBinarySourceProperties
+    private val properties: ConverterBinaryProperties
 ) {
 
     fun convertAndCollect(
