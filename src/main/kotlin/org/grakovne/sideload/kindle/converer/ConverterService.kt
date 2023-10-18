@@ -1,7 +1,6 @@
 package org.grakovne.sideload.kindle.converer
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.binary.EnvironmentError
 import org.grakovne.sideload.kindle.binary.UserEnvironmentService
 import org.grakovne.sideload.kindle.common.CliRunner
 import org.grakovne.sideload.kindle.converer.binary.configuration.ConverterBinarySourceProperties
@@ -24,43 +23,54 @@ class ConverterService(
         book: File
     ): Either<ConvertationError, ConversionResult> {
 
-        val environment = userEnvironmentService.deployEnvironment(userId)
+        val environment = userEnvironmentService
+            .deployEnvironment(userId)
+            .fold(
+                ifLeft = { return Either.Left(ConvertationError.UNABLE_TO_DEPLOY_ENVIRONMENT) },
+                ifRight = { it }
+            )
+            .also { deployContent(it, book) }
 
+
+        val environmentFiles = snapshotDirectory(environment)
         val result = convertBook(environment, book)
+        val outputFiles = snapshotDirectory(environment) - environmentFiles.toSet()
 
-        return Either.Right(ConversionResult(null, null))
+        return Either.Right(ConversionResult(result, outputFiles))
     }
 
-    private fun convertBook(
-        environment: Either<EnvironmentError, File>,
-        book: File
+    private fun snapshotDirectory(file: File) = file.listFiles()?.toList() ?: emptyList()
+
+
+    private fun deployContent(
+        environment: File,
+        input: File
     ) = environment
-        .tap {
-            FileCopyUtils.copy(
-                binaryProvider.provideBinaryConverter(),
-                it.toPath().resolve(properties.converterFileName).toFile()
-            )
-        }
-        .tap {
+
+        .also {
             it
                 .toPath()
                 .resolve(properties.converterFileName)
                 .toFile()
                 .setExecutable(true)
         }
-        .tap {
+        .also {
             FileCopyUtils.copy(
-                book,
+                input,
                 it.toPath().resolve(sourceFileInputName).toFile()
             )
         }
-        .map {
-            val path = it.toPath().resolve(properties.converterFileName).toFile().absoluteFile
 
+    private fun convertBook(
+        environment: File,
+        book: File
+    ) = environment
+        .let {
+            val path = binaryProvider.provideBinaryConverter().absolutePath
             cliRunner.runCli(
                 properties.shell,
                 properties.shellArgs,
-                "$path -c configuration.toml convert --stk $sourceFileInputName",
+                "$path -c configuration.toml convert $sourceFileInputName",
                 it
             )
         }
@@ -71,6 +81,6 @@ class ConverterService(
 }
 
 data class ConversionResult(
-    val output: File?,
-    val conversionLog: String?
+    val log: String,
+    val output: List<File>
 )

@@ -34,7 +34,7 @@ converter:
     converterFileName: "fb2c"
     shell: "/bin/bash"
     shellArgs: "-c"
-    runCommand: "-c configuration.toml convert --stk"
+    runCommand: "-c configuration.toml convert"
   sourceFileExtensions: "fb2"
 
 environment:

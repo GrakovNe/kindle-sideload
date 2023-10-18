@@ -9,8 +9,6 @@ class ConverterBinaryPeriodicUpdateTask(
     private val converterBinaryUpdateService: ConverterBinaryUpdateService
 ) {
 
-    @Scheduled(fixedDelay = 60* 60 * 1000)
-    fun checkAndUpdateBinaries() {
-        converterBinaryUpdateService.checkAndUpdate().also { println(it) }
-    }
+    @Scheduled(fixedDelay = 60 * 60 * 1000)
+    fun checkAndUpdateBinaries() = converterBinaryUpdateService.checkAndUpdate()
 }
