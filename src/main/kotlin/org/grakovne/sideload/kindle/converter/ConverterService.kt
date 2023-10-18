@@ -60,7 +60,7 @@ class ConverterService(
         val path = binaryProvider.provideBinaryConverter().absolutePath
         val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
 
-        return "$path $configurationKey convert $sourceFileInputName"
+        return "$path $configurationKey convert ${properties.converterParameters} $sourceFileInputName"
             .also { logger.debug { "Shell command build: $it" } }
     }
 
