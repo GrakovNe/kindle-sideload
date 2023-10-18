@@ -7,6 +7,6 @@ data object UnableFetchFile : ConvertationError(null, null)
 data object UnableDeployEnvironment : ConvertationError(null, null)
 
 data class UnableConvertFile(
+    val reason: String,
     override val environmentId: String,
-    val reason: String
 ) : ConvertationError(reason, environmentId)

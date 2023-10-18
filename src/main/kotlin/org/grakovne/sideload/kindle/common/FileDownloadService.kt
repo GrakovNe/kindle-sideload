@@ -1,13 +1,13 @@
 package org.grakovne.sideload.kindle.common
 
 import mu.KotlinLogging
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.io.FileOutputStream
-import java.util.UUID
 
 @Service
 class FileDownloadService(
@@ -20,7 +20,8 @@ class FileDownloadService(
             HttpMethod.GET,
             null,
             {
-                val file = File.createTempFile(UUID.randomUUID().toString(), ".file")
+                val fileName = link.substringAfterLast("/")
+                val file = File.createTempFile(RandomStringUtils.randomAlphabetic(3), "_$fileName")
                 logger.debug { "Created empty temporary file: ${file.absoluteFile}" }
 
                 StreamUtils.copy(it.body, FileOutputStream(file))

@@ -36,17 +36,21 @@ class ConverterService(
                 },
                 ifRight = { it }
             )
-            .also { deployContent(it, book) }
+
+        val inputFile = deployContent(environment, book)
 
         val environmentFiles = environment.snapshotDirectory()
-        val result = convertBook(environment)
+        val result = convertBook(inputFile, environment)
         val outputFiles = environment.snapshotDirectory() - environmentFiles.toSet()
 
         return result
             .tap { logger.info { "The convertation of ${book.name} for user id: $userId finished successfully. Output files are: ${outputFiles.map { it.name }}" } }
             .map { ConversionResult(it, environment.name, outputFiles) }
             .mapLeft {
-                UnableConvertFile(it, environment.name)
+                UnableConvertFile(
+                    reason = it,
+                    environmentId = environment.name
+                )
                     .also { logger.error { "The convertation of ${book.name} for user id: $userId failed. See details: $it" } }
             }
     }
@@ -56,11 +60,14 @@ class ConverterService(
         ?.find { it.name.endsWith(properties.configurationExtension) }
         ?.name
 
-    private fun buildShellCommand(environment: File): String {
+    private fun buildShellCommand(
+        inputFile: File,
+        environment: File
+    ): String {
         val path = binaryProvider.provideBinaryConverter().absolutePath
         val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
 
-        return "$path $configurationKey convert ${properties.converterParameters} $sourceFileInputName"
+        return "$path $configurationKey convert ${properties.converterParameters} ${inputFile.name}"
             .also { logger.debug { "Shell command build: $it" } }
     }
 
@@ -78,16 +85,23 @@ class ConverterService(
                 .toFile()
                 .setExecutable(true)
         }
-        .also {
+        .let {
+            val inputFile = it.toPath().resolve(input.name).toFile()
+
             FileCopyUtils.copy(
                 input,
-                it.toPath().resolve(sourceFileInputName).toFile()
+                it.toPath().resolve(input.name).toFile()
             )
+
+            inputFile
         }
 
-    private fun convertBook(environment: File) = environment
+    private fun convertBook(
+        inputFile: File,
+        environment: File
+    ) = environment
         .let {
-            val runCommand = buildShellCommand(environment)
+            val runCommand = buildShellCommand(inputFile, environment)
             logger.debug { "Running $runCommand on ${properties.shell} with args ${properties.shellArgs}" }
 
             cliRunner.runCli(
@@ -99,7 +113,6 @@ class ConverterService(
         }
 
     companion object {
-        private const val sourceFileInputName = "input.fb2"
         private val logger = KotlinLogging.logger { }
     }
 }

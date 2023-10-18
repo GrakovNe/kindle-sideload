@@ -2,7 +2,9 @@
   {
     "name": "CommandType",
     "values": {
-      "SEND_HELP": "Prints help"
+      "SEND_HELP": "Prints help",
+      "UPLOAD_CONFIGURATION_REQUEST": "Upload converter configuration",
+      "REMOVE_CONFIGURATION_REQUEST": "Remove converter configuration"
     }
   },
   {

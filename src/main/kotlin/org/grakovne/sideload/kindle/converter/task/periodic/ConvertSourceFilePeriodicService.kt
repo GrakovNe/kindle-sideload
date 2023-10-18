@@ -53,7 +53,7 @@ class ConvertSourceFilePeriodicService(
     private fun notifyUser(task: ConvertationTask, result: Either<ConvertationError, ConversionResult>) {
         val event = result
             .fold(
-                ifLeft = {
+                ifLeft = { it: ConvertationError ->
                     ConvertationFinishedEvent(
                         userId = task.userId,
                         status = ConvertationFinishedStatus.FAILED,

@@ -36,7 +36,7 @@ converter:
     shellArgs: "-c"
     configurationExtension: ".toml"
     converterParameters: "--stk"
-  sourceFileExtensions: "fb2"
+  sourceFileExtensions: [ "fb2", "fb2.zip" ]
 
 environment:
   temporaryFolder: "temporary_user_environments"

@@ -42,6 +42,6 @@
   {
     "name": "file_convertation_failed",
     "type": "HTML",
-    "template": "Sorry, but your file has failed to convert :-(\n\nBelow you can download the detailed log for analysis"
+    "template": "Sorry, but your file has failed to convert\n\nBelow you can see detailed log of converter:\n\n<pre>${details}</pre>"
   }
 ]
