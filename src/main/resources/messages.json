@@ -28,5 +28,15 @@
     "name": "file_convertation_requested_message",
     "type": "HTML",
     "template": "Your file has been submitted to queue and shall be processed shortly."
+  },
+  {
+    "name": "file_convertation_success",
+    "type": "HTML",
+    "template": "Your file is ready!\n\nBelow you can download your file and detailed log for analysis"
+  },
+  {
+    "name": "file_convertation_failed",
+    "type": "HTML",
+    "template": "Sorry, but your file has failed to convert :-(\n\nBelow you can download the detailed log for analysis"
   }
 ]

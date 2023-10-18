@@ -12,6 +12,7 @@ import org.grakovne.sideload.kindle.converer.task.service.ConvertationTaskServic
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
+import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
@@ -20,12 +21,12 @@ class ConvertSourceFilePeriodicService(
     private val downloadService: FileDownloadService,
     private val converterService: ConverterService,
     private val taskService: ConvertationTaskService,
-    private val eventSender: EventSender
+    private val eventSender: EventSender,
+    private val userService: UserService,
 ) {
 
     @Scheduled(fixedDelay = 5000)
     fun convertSourceFiles() {
-
         taskService
             .fetchTasksForProcessing()
             .map { it to processTask(it) }
@@ -34,7 +35,7 @@ class ConvertSourceFilePeriodicService(
                 task to result
             }
             .map { (task, result) ->
-                //updateStatus(task, result)
+                updateStatus(task, result)
             }
 
     }
@@ -42,7 +43,7 @@ class ConvertSourceFilePeriodicService(
     private fun updateStatus(task: ConvertationTask, result: Either<ConvertationError, ConversionResult>) {
         val entity = when (result) {
             is Either.Left -> task.copy(status = ConvertationTaskStatus.FAILED, failReason = result.toString())
-            is Either.Right -> task.copy(status = ConvertationTaskStatus.ACTIVE)
+            is Either.Right -> task.copy(status = ConvertationTaskStatus.SUCCESS)
         }
 
         taskService.updateTask(entity)

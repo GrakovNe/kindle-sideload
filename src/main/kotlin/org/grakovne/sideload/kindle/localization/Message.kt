@@ -10,11 +10,14 @@ data class HelpMessageItem(
     val arguments: List<String> = emptyList()
 ) : Message("help_message_item")
 
-data object UserConfigurationRequestedMessage: Message("user_configuration_requested")
-data object UserConfigurationSubmittedMessage: Message("user_configuration_submitted")
+data object UserConfigurationRequestedMessage : Message("user_configuration_requested")
+data object UserConfigurationSubmittedMessage : Message("user_configuration_submitted")
 
-data object FileConvertationRequestedMessage: Message("file_convertation_requested_message")
+data object FileConvertationRequestedMessage : Message("file_convertation_requested_message")
 
 data class UserConfigurationFailedMessage(
-    val reason:  UserConfigurationFailedReason
-): Message("user_configuration_failed")
+    val reason: UserConfigurationFailedReason
+) : Message("user_configuration_failed")
+
+data class FileConvertarionSuccess(val result: String) : Message("file_convertation_success")
+data class FileConvertarionFailed(val details: String) : Message("file_convertation_failed")

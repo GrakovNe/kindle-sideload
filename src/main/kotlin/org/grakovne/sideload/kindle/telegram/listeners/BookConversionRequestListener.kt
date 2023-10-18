@@ -19,7 +19,7 @@ import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateServ
 import org.springframework.stereotype.Service
 
 @Service
-class BookConversionListener(
+class BookConversionRequestListener(
     private val converterProperties: ConverterProperties,
     private val convertationTaskService: ConvertationTaskService,
     private val userActivityStateService: UserActivityStateService,

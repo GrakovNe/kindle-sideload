@@ -47,7 +47,7 @@ class MessageListenersConfiguration(
     }
 
     private fun onMessage(update: Update) = try {
-        val user = userService.fetchUser(
+        val user = userService.fetchOrCreateUser(
             userId = update.message().chat().id().toString(),
             language = update.message()?.from()?.languageCode() ?: "en"
         )
