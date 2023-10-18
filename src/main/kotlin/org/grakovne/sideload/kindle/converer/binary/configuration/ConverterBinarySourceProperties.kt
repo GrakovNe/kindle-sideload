@@ -13,6 +13,6 @@ class ConverterBinarySourceProperties {
 
     var shell: String by Delegates.notNull()
     var shellArgs: String by Delegates.notNull()
-    var runCommand: String by Delegates.notNull()
     var converterFileName: String by Delegates.notNull()
+    var configurationExtension: String by Delegates.notNull()
 }

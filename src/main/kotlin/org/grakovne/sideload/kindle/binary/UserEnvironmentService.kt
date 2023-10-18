@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.binary
 
 import arrow.core.Either
+import org.apache.commons.lang3.RandomStringUtils
 import org.grakovne.sideload.kindle.binary.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.common.ZipArchiveService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
@@ -23,7 +24,7 @@ class UserEnvironmentService(
     fun deployEnvironment(userId: String): Either<EnvironmentError, File> {
         val temporaryFolder = provideBinaryFolder()
             .toPath()
-            .resolve(userId)
+            .resolve(RandomStringUtils.randomAlphabetic(8))
             .toFile()
             .also { it.mkdirs() }
 

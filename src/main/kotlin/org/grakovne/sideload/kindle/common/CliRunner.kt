@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.common
 
+import arrow.core.Either
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.File
@@ -13,19 +14,17 @@ class CliRunner {
         shellArgs: String,
         command: String,
         directory: File
-    ): String {
+    ): Either<String, String> {
         val process = ProcessBuilder(shell, shellArgs, command)
             .directory(directory)
             .redirectErrorStream(true)
             .start()
             .also { it.waitFor() }
 
-        val exitValue = process.exitValue()
-
-        return if (exitValue == 0) {
-            BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n")
+        return if (process.exitValue() == 0) {
+            Either.Right(BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n"))
         } else {
-            BufferedReader(InputStreamReader(process.errorStream)).readLines().joinToString("\n")
+            Either.Left(BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n"))
         }
     }
 }

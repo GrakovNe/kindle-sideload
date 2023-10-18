@@ -26,21 +26,35 @@ class ConverterService(
         val environment = userEnvironmentService
             .deployEnvironment(userId)
             .fold(
-                ifLeft = { return Either.Left(ConvertationError.UNABLE_TO_DEPLOY_ENVIRONMENT) },
+                ifLeft = { return Either.Left(UnableDeployEnvironment) },
                 ifRight = { it }
             )
             .also { deployContent(it, book) }
 
 
-        val environmentFiles = snapshotDirectory(environment)
-        val result = convertBook(environment, book)
-        val outputFiles = snapshotDirectory(environment) - environmentFiles.toSet()
+        val environmentFiles = environment.snapshotDirectory()
+        val result = convertBook(environment)
+        val outputFiles = environment.snapshotDirectory() - environmentFiles.toSet()
 
-        return Either.Right(ConversionResult(result, outputFiles))
+        return result
+            .map { ConversionResult(it, outputFiles) }
+            .mapLeft { UnableConvertFile(it) }
     }
 
-    private fun snapshotDirectory(file: File) = file.listFiles()?.toList() ?: emptyList()
+    private fun File.fetchConfigurationFileName(): String? = this
+        .listFiles()
+        ?.find { it.name.endsWith(properties.configurationExtension) }
+        ?.name
 
+    private fun buildShellCommand(environment: File): String {
+        val path = binaryProvider.provideBinaryConverter().absolutePath
+        val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
+
+        val result = "$path $configurationKey convert $sourceFileInputName"
+        return result
+    }
+
+    private fun File.snapshotDirectory() = this.listFiles()?.toList() ?: emptyList()
 
     private fun deployContent(
         environment: File,
@@ -61,16 +75,12 @@ class ConverterService(
             )
         }
 
-    private fun convertBook(
-        environment: File,
-        book: File
-    ) = environment
+    private fun convertBook(environment: File) = environment
         .let {
-            val path = binaryProvider.provideBinaryConverter().absolutePath
             cliRunner.runCli(
                 properties.shell,
                 properties.shellArgs,
-                "$path -c configuration.toml convert $sourceFileInputName",
+                buildShellCommand(environment),
                 it
             )
         }

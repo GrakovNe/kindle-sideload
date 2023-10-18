@@ -1,0 +1,17 @@
+package org.grakovne.sideload.kindle.events.internal
+
+import org.grakovne.sideload.kindle.events.core.Event
+import org.grakovne.sideload.kindle.events.core.EventType
+import java.io.File
+
+data class ConvertationFinishedEvent(
+    val userId: String,
+    val status: ConvertationFinishedStatus,
+    val log: String,
+    val output: List<File>
+) : Event(EventType.CONVERTATION_FINISHED)
+
+enum class ConvertationFinishedStatus {
+    SUCCESS,
+    FAILED
+}

@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converer
 
-enum class ConvertationError {
-    UNABLE_TO_FETCH_FILE,
-    UNABLE_TO_DEPLOY_ENVIRONMENT
-}
+sealed class ConvertationError(open val details: String?)
+
+data object UnableFetchFile: ConvertationError(null)
+data object UnableDeployEnvironment: ConvertationError(null)
+data class UnableConvertFile(val reason: String): ConvertationError(reason)
