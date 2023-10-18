@@ -28,6 +28,23 @@ class UserConverterConfigurationService(
         }
     }
 
+    fun removeConverterConfiguration(userId: String): Either<UserConverterConfigurationError, Unit> {
+        return provideConfigurationAsset(userId)
+            .also { logger.debug { "Removing user configuration asset" } }
+            .deleteRecursively()
+            .let {
+                when (it) {
+                    true -> Either
+                        .Right(Unit)
+                        .also { logger.debug { "Removed user configuration asset" } }
+
+                    false -> Either
+                        .Left(UserConverterConfigurationError.UNABLE_UPDATE_CONFIGURATION)
+                        .also { logger.warn { "User configuration asset was not removed and still using" } }
+                }
+            }
+    }
+
     fun updateConverterConfiguration(user: User, configuration: File): Either<UserConverterConfigurationError, File> {
         val asset = provideConfigurationAsset(user.id)
 

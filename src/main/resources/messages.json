@@ -20,6 +20,11 @@
     "template": "Your configuration has been saved and will be applied every time when book is converting"
   },
   {
+    "name": "user_configuration_removed",
+    "type": "HTML",
+    "template": "Your configuration has been removed and default settings will be applied"
+  },
+  {
     "name": "user_configuration_failed",
     "type": "HTML",
     "template": "${reason}"

@@ -11,6 +11,7 @@ data class HelpMessageItem(
 ) : Message("help_message_item")
 
 data object UserConfigurationRequestedMessage : Message("user_configuration_requested")
+data object UserConfigurationRemovedMessage : Message("user_configuration_removed")
 data object UserConfigurationSubmittedMessage : Message("user_configuration_submitted")
 
 data object FileConvertationRequestedMessage : Message("file_convertation_requested_message")
