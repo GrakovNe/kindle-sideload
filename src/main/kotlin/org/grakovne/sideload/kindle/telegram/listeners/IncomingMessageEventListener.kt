@@ -21,8 +21,20 @@ abstract class IncomingMessageEventListener : EventListener<IncomingMessageEvent
                 .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
                 .map { EventProcessingResult.PROCESSED }
-                .tap { logger.info { "Incoming message event $event has been successfully processed by ${this.javaClass.simpleName}" } }
-                .tapLeft { logger.warn { "Incoming message event $event has been failed by ${this.javaClass.simpleName}. See details: $it" } }
+                .tap {
+                    logger.info {
+                        "Incoming message event for user ${event.user} with text ${
+                            event.update.message()?.text()
+                        } has been successfully processed by ${this.javaClass.simpleName}"
+                    }
+                }
+                .tapLeft {
+                    logger.warn {
+                        "Incoming message event for user ${event.user} with text ${
+                            event.update.message()?.text()
+                        } has been failed by ${this.javaClass.simpleName}. See details: $it"
+                    }
+                }
 
             false -> Either.Right(EventProcessingResult.SKIPPED)
         }
