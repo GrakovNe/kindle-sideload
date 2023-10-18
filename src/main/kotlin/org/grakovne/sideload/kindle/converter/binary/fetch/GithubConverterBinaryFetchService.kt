@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converter.binary.fetch
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.GitHubRelease
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.BinaryError
@@ -55,5 +56,9 @@ class GithubConverterBinaryFetchService(
             ?.let { archivedBinaryUnpackService.unpack(it) }
             ?.map { releases.publishedAt }
             ?: return Either.Left(BinaryError.UNABLE_TO_STORE_BINARY)
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
     }
 }

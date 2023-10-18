@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.user.configuration
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
@@ -43,4 +44,8 @@ class UserConverterConfigurationService(
         .toPath()
         .resolve(properties.fileName)
         .toFile()
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.converter.binary.update
 
 import arrow.core.Either
 import arrow.core.flatMap
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.binary.fetch.GithubConverterBinaryFetchService
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.BinaryError
@@ -52,4 +53,8 @@ class ConverterBinaryUpdateService(
         .fetchPlatformName()
         .mapLeft { BinaryError.UNABLE_TO_FETCH_BINARY_NO_REQUIRED_PLATFORM }
         .flatMap { fetchService.fetchForPlatform(it) }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

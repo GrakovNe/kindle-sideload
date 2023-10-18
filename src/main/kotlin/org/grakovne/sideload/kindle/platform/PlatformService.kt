@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.platform
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.apache.commons.lang3.SystemUtils
 import org.springframework.stereotype.Service
 
@@ -37,5 +38,9 @@ class PlatformService {
         }
 
         return Either.Left(PlatformError.UNABLE_TO_DEFINE_PLATFORM)
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
     }
 }

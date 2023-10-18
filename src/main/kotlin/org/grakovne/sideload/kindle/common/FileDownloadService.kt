@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.common
 
+import mu.KotlinLogging
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.util.StreamUtils
@@ -24,4 +25,8 @@ class FileDownloadService(
                 file
             }
         )
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

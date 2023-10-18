@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.model.BotCommand
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.SetMyCommands
 import jakarta.annotation.PostConstruct
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.Language
 import org.grakovne.sideload.kindle.common.ifTrue
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -78,4 +79,8 @@ class MessageListenersConfiguration(
 
     private fun List<EventProcessingResult>.processedByNothing() =
         this.all { result -> result == EventProcessingResult.SKIPPED }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

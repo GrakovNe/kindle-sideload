@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.user.reference.service
 
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.user.reference.domain.Type
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
@@ -34,4 +35,8 @@ class UserService(private val userRepository: UserRepository) {
         type = type,
         lastActivityTimestamp = Instant.now()
     ).let { userRepository.save(it) }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

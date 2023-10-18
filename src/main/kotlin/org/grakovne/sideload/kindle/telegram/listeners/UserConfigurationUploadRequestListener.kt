@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.UserConfigurationRequestedMessage
@@ -36,5 +37,9 @@ class UserConfigurationUploadRequestListener(
             }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 
 }

@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.flatMap
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendDocument
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
@@ -90,5 +91,9 @@ class BookConversionFinishListener(
                 )
             )
         }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 
 }

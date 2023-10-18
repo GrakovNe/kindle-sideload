@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.common
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.File
@@ -26,5 +27,9 @@ class CliRunner {
         } else {
             Either.Left(BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n"))
         }
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
     }
 }

@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.environment
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
@@ -24,5 +25,9 @@ class UserEnvironmentUnnecessaryListener(
             .terminateEnvironment(event.environmentId ?: return Either.Right(EventProcessingResult.SKIPPED))
             .map { EventProcessingResult.PROCESSED }
             .mapLeft { EventProcessingError(EnvironmentError.UNABLE_TO_TERMINATE, it.name) }
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
     }
 }

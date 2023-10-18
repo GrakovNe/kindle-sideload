@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.converter.binary.provider
 
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
 import org.springframework.stereotype.Service
 import java.io.File
@@ -20,4 +21,7 @@ class ConverterBinaryProvider(
         .toFile()
         .also { it.mkdirs() }
 
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

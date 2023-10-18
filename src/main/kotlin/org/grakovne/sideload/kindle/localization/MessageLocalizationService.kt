@@ -3,6 +3,7 @@ package org.grakovne.sideload.kindle.localization
 import arrow.core.Either
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import mu.KotlinLogging
 import org.apache.commons.text.StringSubstitutor
 import org.grakovne.sideload.kindle.common.Language
 import org.grakovne.sideload.kindle.localization.adverisement.AdvertisingService
@@ -74,5 +75,9 @@ class MessageLocalizationService(
         }
 
         return null
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
     }
 }

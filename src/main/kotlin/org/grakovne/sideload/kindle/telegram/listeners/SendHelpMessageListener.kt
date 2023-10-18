@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
@@ -39,5 +40,9 @@ class SendHelpMessageListener(
     override fun acceptableEvents() = listOf(EventType.INCOMING_MESSAGE)
 
     fun forceProcessEvent(event: IncomingMessageEvent) = processEvent(event)
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 
 }

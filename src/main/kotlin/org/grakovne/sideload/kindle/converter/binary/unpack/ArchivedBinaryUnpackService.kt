@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converter.binary.unpack
 
 import arrow.core.Either
+import mu.KotlinLogging
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinarySourceProperties
@@ -28,5 +29,9 @@ class ArchivedBinaryUnpackService(
         }
 
         return Either.Right(Unit)
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
     }
 }

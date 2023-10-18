@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.converter.binary.periodic
 
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.binary.update.ConverterBinaryUpdateService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -11,4 +12,8 @@ class ConverterBinaryPeriodicUpdateTask(
 
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun checkAndUpdateBinaries() = converterBinaryUpdateService.checkAndUpdate()
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

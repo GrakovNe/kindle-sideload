@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.environment
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.apache.commons.lang3.RandomStringUtils
 import org.grakovne.sideload.kindle.common.ZipArchiveService
 import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
@@ -52,4 +53,8 @@ class UserEnvironmentService(
         .resolve(environmentId)
         .toFile()
         .also { it.mkdirs() }
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

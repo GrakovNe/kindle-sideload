@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.telegram.state.service
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.domain.UserActivityState
 import org.grakovne.sideload.kindle.telegram.state.repository.UserActivityStateRepository
@@ -30,4 +31,7 @@ class UserActivityStateService(
         return repository.save(entity).let { Either.Right(Unit) }
     }
 
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

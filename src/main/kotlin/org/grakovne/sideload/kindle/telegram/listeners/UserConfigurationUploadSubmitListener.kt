@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.flatMap
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.GetFile
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
@@ -83,4 +84,8 @@ class UserConfigurationUploadSubmitListener(
     }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

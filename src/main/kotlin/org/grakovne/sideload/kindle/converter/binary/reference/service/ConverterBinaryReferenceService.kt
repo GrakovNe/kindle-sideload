@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.converter.binary.reference.service
 
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.ConverterBinaryReference
 import org.grakovne.sideload.kindle.converter.binary.reference.repository.ConverterBinaryReferenceRepository
 import org.springframework.stereotype.Service
@@ -26,4 +27,8 @@ class ConverterBinaryReferenceService(
         id = UUID.randomUUID(),
         publishedAt = publishedAt
     )
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

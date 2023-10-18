@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converter.task.service
 
 import arrow.core.Either
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.ConvertationError
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
@@ -41,4 +42,8 @@ class ConvertationTaskService(
 
     fun fetchTasksForProcessing() =
         repository.findByStatusInAndCreatedAtLessThan(listOf(ConvertationTaskStatus.ACTIVE), Instant.now())
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }
