@@ -16,11 +16,15 @@ class UserConverterConfigurationService(
 ) {
 
     fun fetchConverterConfiguration(userId: String): Either<UserConverterConfigurationError, File> {
+        logger.info { "Fetching converter configuration for $userId" }
+
         val asset = provideConfigurationAsset(userId)
 
         return when (asset.exists()) {
-            true -> Either.Right(asset)
-            false -> Either.Left(UserConverterConfigurationError.CONFIGURATION_NOT_FOUND)
+            true -> Either.Right(asset).also { logger.debug { "Found requested configuration file for user $userId" } }
+            false -> Either
+                .Left(UserConverterConfigurationError.CONFIGURATION_NOT_FOUND)
+                .also { logger.info { "Requested configuration file for user $userId was not found" } }
         }
     }
 

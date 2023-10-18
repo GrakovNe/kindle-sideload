@@ -24,7 +24,6 @@ class UserService(private val userRepository: UserRepository) {
             .copy(language = language)
             .let { persistUser(it.id, it.language ?: "en", it.type) }
 
-
     private fun persistUser(
         id: String,
         language: String,

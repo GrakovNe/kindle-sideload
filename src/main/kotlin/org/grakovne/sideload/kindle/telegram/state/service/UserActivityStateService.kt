@@ -15,11 +15,14 @@ class UserActivityStateService(
 ) {
 
     fun fetchCurrentState(userId: String): ActivityState? = repository
+        .also { logger.debug { "Fetching current activity state for $userId" } }
         .findByUserIdOrderByCreatedAtDesc(userId)
         .firstOrNull()
         ?.activityState
 
-    fun dropCurrentState(userId: String) = setCurrentState(userId, ActivityState.NOT_SPECIFIED)
+    fun dropCurrentState(userId: String) = logger
+        .debug { "Dropping current activity state for $userId" }
+        .let { setCurrentState(userId, ActivityState.NOT_SPECIFIED) }
 
     fun setCurrentState(userId: String, state: ActivityState): Either<UserActivityStateError, Unit> {
         val entity = UserActivityState(
@@ -28,7 +31,13 @@ class UserActivityStateService(
             activityState = state,
             createdAt = Instant.now()
         )
-        return repository.save(entity).let { Either.Right(Unit) }
+
+        logger.debug { "Setting current state for user $userId to $entity" }
+
+        return repository
+            .save(entity)
+            .let { Either.Right(Unit) }
+            .tap { logger.debug { logger.debug("Activity state for user $userId has been updated") } }
     }
 
     companion object {
