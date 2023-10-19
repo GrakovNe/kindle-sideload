@@ -13,7 +13,7 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.FileConvertationRequestedMessage
-import org.grakovne.sideload.kindle.localization.UserConfigurationFailedMessage
+import org.grakovne.sideload.kindle.localization.FileUploadFailedMessage
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.configuration.ConverterProperties
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
@@ -61,7 +61,7 @@ class BookConversionRequestListener(
                 .sendResponse(
                     origin = event.update,
                     user = event.user,
-                    message = UserConfigurationFailedMessage(FileUploadFailedReason.FILE_IS_TOO_LARGE)
+                    message = FileUploadFailedMessage(FileUploadFailedReason.FILE_IS_TOO_LARGE)
                 )
                 .mapLeft { EventProcessingError(TelegramUpdateProcessingError.RESPONSE_NOT_SENT) }
                 .map { Unit }

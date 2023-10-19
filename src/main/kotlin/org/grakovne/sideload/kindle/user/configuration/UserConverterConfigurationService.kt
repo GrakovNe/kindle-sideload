@@ -2,7 +2,11 @@ package org.grakovne.sideload.kindle.user.configuration
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.user.configuration.domain.ConfigurationNotFoundError
+import org.grakovne.sideload.kindle.user.configuration.domain.UnableUpdateConfigurationError
 import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
+import org.grakovne.sideload.kindle.user.configuration.domain.ValidationError
+import org.grakovne.sideload.kindle.user.configuration.validation.ConfigurationValidationService
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
@@ -12,7 +16,8 @@ import java.nio.file.Path
 
 @Service
 class UserConverterConfigurationService(
-    private val properties: UserConverterConfigurationProperties
+    private val properties: UserConverterConfigurationProperties,
+    private val validationService: ConfigurationValidationService
 ) {
 
     fun fetchConverterConfiguration(userId: String): Either<UserConverterConfigurationError, File> {
@@ -23,7 +28,7 @@ class UserConverterConfigurationService(
         return when (asset.exists()) {
             true -> Either.Right(asset).also { logger.debug { "Found requested configuration file for user $userId" } }
             false -> Either
-                .Left(UserConverterConfigurationError.CONFIGURATION_NOT_FOUND)
+                .Left(ConfigurationNotFoundError)
                 .also { logger.info { "Requested configuration file for user $userId was not found" } }
         }
     }
@@ -39,7 +44,7 @@ class UserConverterConfigurationService(
                         .also { logger.debug { "Removed user configuration asset" } }
 
                     false -> Either
-                        .Left(UserConverterConfigurationError.UNABLE_UPDATE_CONFIGURATION)
+                        .Left(UnableUpdateConfigurationError)
                         .also { logger.warn { "User configuration asset was not removed and still using" } }
                 }
             }
@@ -47,13 +52,20 @@ class UserConverterConfigurationService(
 
     fun updateConverterConfiguration(user: User, configuration: File): Either<UserConverterConfigurationError, File> {
         val asset = provideConfigurationAsset(user.id)
+            .let { validationService.validate(configuration) }
+            .fold(
+                ifLeft = {
+                    return Either.Left(ValidationError(it.code))
+                },
+                ifRight = { configuration }
+            )
 
         return try {
             FileCopyUtils
                 .copy(configuration, asset)
                 .let { Either.Right(asset) }
         } catch (ex: IOException) {
-            return Either.Left(UserConverterConfigurationError.UNABLE_UPDATE_CONFIGURATION)
+            return Either.Left(UnableUpdateConfigurationError)
         }
     }
 

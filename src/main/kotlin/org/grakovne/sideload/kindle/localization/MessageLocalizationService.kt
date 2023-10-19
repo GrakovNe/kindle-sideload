@@ -33,7 +33,7 @@ class MessageLocalizationService(
             ?.also { logger.debug { "Found acceptable template for message $message: ${it.name}" } }
             ?: return Either
                 .Left(LocalizationError.TEMPLATE_NOT_FOUND)
-                .also { logger.warn { "Unable to find acceptable template for message $message. Skipping localization" } }
+                .also { logger.error { "Unable to find acceptable template for message $message. Skipping responding" } }
 
         val values = message::class
             .memberProperties

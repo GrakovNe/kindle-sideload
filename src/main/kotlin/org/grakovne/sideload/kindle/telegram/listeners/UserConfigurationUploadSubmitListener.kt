@@ -1,7 +1,6 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
 import arrow.core.Either
-import arrow.core.flatMap
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.GetFile
 import mu.KotlinLogging
@@ -14,14 +13,18 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
 import org.grakovne.sideload.kindle.events.core.EventType
-import org.grakovne.sideload.kindle.localization.UserConfigurationFailedMessage
+import org.grakovne.sideload.kindle.localization.FileUploadFailedMessage
+import org.grakovne.sideload.kindle.localization.UserConfigurationSubmissionFailedMessage
 import org.grakovne.sideload.kindle.localization.UserConfigurationSubmittedMessage
+import org.grakovne.sideload.kindle.localization.UserConfigurationValidationFailedMessage
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
+import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
+import org.grakovne.sideload.kindle.user.configuration.domain.ValidationError
 import org.springframework.stereotype.Service
 
 @Service
@@ -57,7 +60,7 @@ class UserConfigurationUploadSubmitListener(
                 .sendResponse(
                     origin = event.update,
                     user = event.user,
-                    message = UserConfigurationFailedMessage(FILE_IS_TOO_LARGE)
+                    message = FileUploadFailedMessage(FILE_IS_TOO_LARGE)
                 )
                 .mapLeft { EventProcessingError(TelegramUpdateProcessingError.RESPONSE_NOT_SENT) }
                 .map { Unit }
@@ -72,15 +75,40 @@ class UserConfigurationUploadSubmitListener(
 
         return userConverterConfigurationService
             .updateConverterConfiguration(event.user, configurationFile)
-            .flatMap { userActivityStateService.dropCurrentState(event.user.id) }
-            .mapLeft { EventProcessingError(TelegramUpdateProcessingError.INTERNAL_ERROR) }
-            .tap {
-                messageSender.sendResponse(
-                    origin = event.update,
-                    user = event.user,
-                    message = UserConfigurationSubmittedMessage
-                )
-            }
+            .fold(
+                ifLeft = { handleConfigurationUpdateError(it, event) },
+                ifRight = {
+                    messageSender.sendResponse(
+                        origin = event.update,
+                        user = event.user,
+                        message = UserConfigurationSubmittedMessage
+                    )
+
+                    Either.Right(Unit)
+                }
+            )
+            .also { userActivityStateService.dropCurrentState(event.user.id) }
+    }
+
+    private fun handleConfigurationUpdateError(
+        error: UserConverterConfigurationError,
+        event: IncomingMessageEvent
+    ): Either.Left<EventProcessingError<TelegramUpdateProcessingError>> {
+        when (error) {
+            is ValidationError -> messageSender.sendResponse(
+                origin = event.update,
+                user = event.user,
+                message = UserConfigurationValidationFailedMessage(error.code)
+            )
+
+            else -> messageSender.sendResponse(
+                origin = event.update,
+                user = event.user,
+                message = UserConfigurationSubmissionFailedMessage
+            )
+        }
+
+        return Either.Left(EventProcessingError(TelegramUpdateProcessingError.INTERNAL_ERROR))
     }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)

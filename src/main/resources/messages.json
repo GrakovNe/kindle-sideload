@@ -25,7 +25,7 @@
     "template": "Your configuration has been removed and default settings will be applied"
   },
   {
-    "name": "user_configuration_failed",
+    "name": "file_upload_failed",
     "type": "HTML",
     "template": "${reason}"
   },
@@ -43,5 +43,15 @@
     "name": "file_convertation_failed",
     "type": "HTML",
     "template": "Sorry, but your file has failed to convert\n\nBelow you can see detailed log of converter:\n\n<pre>${details}</pre>"
+  },
+  {
+    "name": "user_configuration_validation_failed",
+    "type": "HTML",
+    "template": "Validation of the configuration has been failed due to: \n\n<pre>${reason}</pre>\n\nPlease, check you configuration and try again!"
+  },
+  {
+    "name": "user_configuration_submission_failed",
+    "type": "HTML",
+    "template": "Processing the configuration file has been failed.\n\nPlease, contact the support!"
   }
 ]

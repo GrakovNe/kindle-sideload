@@ -1,6 +1,9 @@
 package org.grakovne.sideload.kindle.user.configuration.domain
 
-enum class UserConverterConfigurationError {
-    CONFIGURATION_NOT_FOUND,
-    UNABLE_UPDATE_CONFIGURATION
-}
+import org.grakovne.sideload.kindle.user.configuration.validation.ConfigurationValidationError
+
+sealed interface UserConverterConfigurationError
+
+data object ConfigurationNotFoundError : UserConverterConfigurationError
+data object UnableUpdateConfigurationError : UserConverterConfigurationError
+data class ValidationError(val code: ConfigurationValidationError) : UserConverterConfigurationError

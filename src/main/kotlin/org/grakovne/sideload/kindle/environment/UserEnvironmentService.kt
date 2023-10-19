@@ -6,7 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.grakovne.sideload.kindle.common.ZipArchiveService
 import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
-import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
+import org.grakovne.sideload.kindle.user.configuration.domain.ConfigurationNotFoundError
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Path
@@ -33,7 +33,7 @@ class UserEnvironmentService(
             .fold(
                 ifLeft = {
                     when (it) {
-                        UserConverterConfigurationError.CONFIGURATION_NOT_FOUND -> Either.Right(null)
+                        ConfigurationNotFoundError -> Either.Right(null)
                         else -> Either.Left(it)
                     }
                 },
