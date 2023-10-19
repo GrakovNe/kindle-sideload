@@ -38,7 +38,7 @@ converter:
     shell: "/bin/bash"
     shellArgs: "-c"
     configurationExtension: ".toml"
-    converterParameters: "--stk"
+    converterParameters: ""
   sourceFileExtensions: [ "fb2", "fb2.zip" ]
 
 environment:

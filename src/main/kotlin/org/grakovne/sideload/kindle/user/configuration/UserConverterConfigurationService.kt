@@ -51,13 +51,12 @@ class UserConverterConfigurationService(
     }
 
     fun updateConverterConfiguration(user: User, configuration: File): Either<UserConverterConfigurationError, File> {
-        val asset = provideConfigurationAsset(user.id)
-            .let { validationService.validate(configuration) }
+        val asset = validationService.validate(configuration)
             .fold(
                 ifLeft = {
                     return Either.Left(ValidationError(it.code))
                 },
-                ifRight = { configuration }
+                ifRight = { provideConfigurationAsset(user.id) }
             )
 
         return try {
