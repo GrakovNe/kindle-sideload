@@ -6,7 +6,11 @@ data object UnableFetchFile : ConvertationError(null, null)
 
 data object UnableDeployEnvironment : ConvertationError(null, null)
 
+data class FatalError(
+    override val details: String
+) : ConvertationError(details, null)
+
 data class UnableConvertFile(
-    val reason: String,
+    override val details: String,
     override val environmentId: String,
-) : ConvertationError(reason, environmentId)
+) : ConvertationError(details, environmentId)

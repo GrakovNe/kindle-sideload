@@ -48,7 +48,7 @@ class ConverterService(
             .map { ConversionResult(it, environment.name, outputFiles) }
             .mapLeft {
                 UnableConvertFile(
-                    reason = it,
+                    details = it,
                     environmentId = environment.name
                 )
                     .also { logger.error { "The convertation of ${book.name} for user id: $userId failed. See details: $it" } }

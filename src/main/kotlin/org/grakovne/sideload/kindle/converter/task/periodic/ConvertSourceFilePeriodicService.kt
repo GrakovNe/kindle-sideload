@@ -1,11 +1,14 @@
 package org.grakovne.sideload.kindle.converter.task.periodic
 
 import arrow.core.Either
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
+import org.grakovne.sideload.kindle.common.parallelMap
 import org.grakovne.sideload.kindle.converter.ConversionResult
 import org.grakovne.sideload.kindle.converter.ConvertationError
 import org.grakovne.sideload.kindle.converter.ConverterService
+import org.grakovne.sideload.kindle.converter.FatalError
 import org.grakovne.sideload.kindle.converter.UnableFetchFile
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
@@ -28,17 +31,18 @@ class ConvertSourceFilePeriodicService(
     fun convertSourceFiles() {
         logger.trace { "Running periodically task ${this.javaClass.simpleName}" }
 
-        taskService
-            .fetchTasksForProcessing()
-            .map { it to processTask(it) }
-            .map { (task, result) ->
-                notifyUser(task, result)
-                task to result
-            }
-            .map { (task, result) ->
-                updateStatus(task, result)
-            }
-
+        runBlocking {
+            taskService
+                .fetchTasksForProcessing()
+                .parallelMap { it to processTask(it) }
+                .map { (task, result) ->
+                    notifyUser(task, result)
+                    task to result
+                }
+                .map { (task, result) ->
+                    updateStatus(task, result)
+                }
+        }
     }
 
     private fun updateStatus(task: ConvertationTask, result: Either<ConvertationError, ConversionResult>) {
@@ -57,7 +61,7 @@ class ConvertSourceFilePeriodicService(
                     ConvertationFinishedEvent(
                         userId = task.userId,
                         status = ConvertationFinishedStatus.FAILED,
-                        log = it.details ?: "",
+                        log = if (it is FatalError) "Fatal Error occurred on file processing. " else it.details ?: "",
                         output = emptyList(),
                         environmentId = it.environmentId
                     )
@@ -76,11 +80,13 @@ class ConvertSourceFilePeriodicService(
         eventSender.sendEvent(event)
     }
 
-    private fun processTask(task: ConvertationTask): Either<ConvertationError, ConversionResult> {
-        val file = downloadService.download(task.sourceFileUrl)
-            ?: return Either.Left(UnableFetchFile)
-
-        return converterService.convertAndCollect(task.userId, file)
+    private fun processTask(task: ConvertationTask): Either<ConvertationError, ConversionResult> = try {
+        downloadService
+            .download(task.sourceFileUrl)
+            ?.let { converterService.convertAndCollect(task.userId, it) }
+            ?: Either.Left(UnableFetchFile)
+    } catch (ex: Exception) {
+        Either.Left(FatalError(ex.stackTraceToString()))
     }
 
     companion object {
