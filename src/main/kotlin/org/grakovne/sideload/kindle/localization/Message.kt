@@ -18,6 +18,7 @@ data object UserConfigurationRequestedMessage : Message("user_configuration_requ
 data object UserConfigurationRemovedMessage : Message("user_configuration_removed")
 data object UserConfigurationSubmittedMessage : Message("user_configuration_submitted")
 data object UserConfigurationSubmissionFailedMessage : Message("user_configuration_submission_failed")
+data object UserConfigurationFileAbsentMessage : Message("user_configuration_file_absent")
 data class UserConfigurationValidationFailedMessage(val reason: ConfigurationValidationError) :
     Message("user_configuration_validation_failed")
 

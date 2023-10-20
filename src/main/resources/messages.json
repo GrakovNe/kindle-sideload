@@ -53,5 +53,10 @@
     "name": "user_configuration_submission_failed",
     "type": "HTML",
     "template": "Processing the configuration file has been failed.\n\nPlease, contact the support!"
+  },
+  {
+    "name": "user_configuration_file_absent",
+    "type": "HTML",
+    "template": "Please, upload configuration ZIP archive"
   }
 ]

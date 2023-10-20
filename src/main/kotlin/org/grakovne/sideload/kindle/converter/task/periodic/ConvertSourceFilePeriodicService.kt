@@ -27,7 +27,7 @@ class ConvertSourceFilePeriodicService(
     private val eventSender: EventSender
 ) {
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 100)
     fun convertSourceFiles() {
         logger.trace { "Running periodically task ${this.javaClass.simpleName}" }
 

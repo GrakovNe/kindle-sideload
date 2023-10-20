@@ -10,6 +10,7 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
 import org.grakovne.sideload.kindle.events.core.EventType
+import org.grakovne.sideload.kindle.localization.UserConfigurationFileAbsentMessage
 import org.grakovne.sideload.kindle.localization.UserConfigurationSubmissionFailedMessage
 import org.grakovne.sideload.kindle.localization.UserConfigurationSubmittedMessage
 import org.grakovne.sideload.kindle.localization.UserConfigurationValidationFailedMessage
@@ -18,8 +19,8 @@ import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
+import org.grakovne.sideload.kindle.user.configuration.domain.FileAbsentError
 import org.grakovne.sideload.kindle.user.configuration.domain.FileIsTooLargeError
-import org.grakovne.sideload.kindle.user.configuration.domain.FileNotPresentedError
 import org.grakovne.sideload.kindle.user.configuration.domain.InternalError
 import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
 import org.grakovne.sideload.kindle.user.configuration.domain.ValidationError
@@ -63,6 +64,12 @@ class UserConfigurationUploadSubmitListener(
                 message = UserConfigurationValidationFailedMessage(code.code)
             )
 
+            is FileAbsentError -> messageSender.sendResponse(
+                origin = event.update,
+                user = event.user,
+                message = UserConfigurationFileAbsentMessage
+            )
+
             else -> messageSender.sendResponse(
                 origin = event.update,
                 user = event.user,
@@ -76,7 +83,7 @@ class UserConfigurationUploadSubmitListener(
             .update
             .message()
             ?.document()
-            ?: return Either.Left(FileNotPresentedError)
+            ?: return Either.Left(FileAbsentError)
 
         if (file.fileSize() > properties.maxSize) {
             return Either.Left(FileIsTooLargeError)
