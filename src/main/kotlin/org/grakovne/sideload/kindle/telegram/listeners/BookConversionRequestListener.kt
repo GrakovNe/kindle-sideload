@@ -57,8 +57,7 @@ class BookConversionRequestListener(
             receivedSourceFile(event.update) ->
                 processEvent(event).map { EventProcessingResult.PROCESSED }
 
-            else ->
-                return Either.Right(EventProcessingResult.SKIPPED)
+            else -> return Either.Right(EventProcessingResult.SKIPPED)
         }
     }
 

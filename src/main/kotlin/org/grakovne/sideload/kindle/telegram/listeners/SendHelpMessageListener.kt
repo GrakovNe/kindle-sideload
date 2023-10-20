@@ -30,7 +30,7 @@ class SendHelpMessageListener(
         )
     }
 
-    override fun processEvent(event: IncomingMessageEvent) =
+    public override fun processEvent(event: IncomingMessageEvent) =
         incomingMessageEventListeners
             .also { logger.info { "Requested a default help response on event $event" } }
             .filter { it !is SilentEventListener }
@@ -39,8 +39,6 @@ class SendHelpMessageListener(
             .let { helpMessageSender.sendResponse(event.update, event.user, it) }
 
     override fun acceptableEvents() = listOf(EventType.INCOMING_MESSAGE)
-
-    fun forceProcessEvent(event: IncomingMessageEvent) = processEvent(event)
 
     companion object {
         private val logger = KotlinLogging.logger { }

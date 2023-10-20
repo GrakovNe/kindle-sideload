@@ -13,8 +13,6 @@ abstract class ReplyingEventListener<E : Event, T : EventProcessingError> : Even
 
     override fun handleEvent(event: Event) =
         super.handleEvent(event as E)
-            .tap {
-                (it == EventProcessingResult.PROCESSED).ifTrue { sendSuccessfulResponse(event) }
-            }
+            .tap { (it == EventProcessingResult.PROCESSED).ifTrue { sendSuccessfulResponse(event) } }
             .tapLeft { sendFailureResponse(event, it) }
 }

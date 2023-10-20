@@ -3,7 +3,9 @@ package org.grakovne.sideload.kindle.telegram.listeners
 import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendDocument
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.parallelMap
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
@@ -39,10 +41,12 @@ class BookConversionFinishListener(
                 message = FileConvertarionSuccess(event.log)
             )
             .map {
-                event
-                    .output
-                    .map { SendDocument(event.userId, it) }
-                    .map { bot.execute(it) }
+                runBlocking {
+                    event
+                        .output
+                        .map { SendDocument(event.userId, it) }
+                        .parallelMap { bot.execute(it) }
+                }
             }
             .also {
                 eventSender.sendEvent(

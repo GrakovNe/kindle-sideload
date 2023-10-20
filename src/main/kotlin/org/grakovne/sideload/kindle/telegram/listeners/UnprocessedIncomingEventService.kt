@@ -9,7 +9,7 @@ class UnprocessedIncomingEventService(
     private val sender: SendHelpMessageListener
 ) {
 
-    fun handle(incomingMessageEvent: IncomingMessageEvent) = sender.forceProcessEvent(incomingMessageEvent)
+    fun handle(incomingMessageEvent: IncomingMessageEvent) = sender.processEvent(incomingMessageEvent)
 
     companion object {
         private val logger = KotlinLogging.logger { }
