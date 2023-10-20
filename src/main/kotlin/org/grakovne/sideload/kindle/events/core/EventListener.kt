@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.events.core
 
 import arrow.core.Either
+import org.grakovne.sideload.kindle.common.ifTrue
 import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
 
 abstract class EventListener<E : Event, T : NewEventProcessingError> {
@@ -10,7 +11,9 @@ abstract class EventListener<E : Event, T : NewEventProcessingError> {
 
     fun handleEvent(event: Event) =
         onEvent(event as E)
-            .tap { sendSuccessfulResponse(event) }
+            .tap {
+                (it == EventProcessingResult.PROCESSED).ifTrue { sendSuccessfulResponse(event) }
+            }
             .tapLeft { sendFailureResponse(event, it.code) }
 
     abstract fun acceptableEvents(): List<EventType>
