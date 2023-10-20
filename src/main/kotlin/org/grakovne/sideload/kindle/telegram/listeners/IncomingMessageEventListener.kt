@@ -30,6 +30,10 @@ abstract class IncomingMessageEventListener<T: NewEventProcessingError> :
 
     protected abstract fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError<T>, Unit>
 
+    protected fun IncomingMessageEvent.acceptForListener(description: IncomingMessageDescription?) = this.update.hasMessage()
+            && this.update.hasSender()
+            && this.update.message().text().startsWith("/" + description?.key)
+
     companion object {
         private val logger = KotlinLogging.logger { }
     }
@@ -38,9 +42,6 @@ abstract class IncomingMessageEventListener<T: NewEventProcessingError> :
 private fun Update.hasSender() = this.message()?.chat()?.id() != null
 private fun Update.hasMessage() = this.message()?.text() != null
 
-private fun IncomingMessageEvent.acceptForListener(description: IncomingMessageDescription?) = this.update.hasMessage()
-        && this.update.hasSender()
-        && this.update.message().text().startsWith("/" + description?.key)
 
 data class IncomingMessageDescription(
     val key: String,

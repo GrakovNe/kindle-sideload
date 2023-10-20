@@ -33,9 +33,14 @@ class UserConfigurationUploadSubmitListener(
     private val userConverterConfigurationService: UserConverterConfigurationService,
     private val properties: FileUploadProperties,
     private val messageSender: SimpleMessageSender,
+    private val userConfigurationUploadRequestListener: UserConfigurationUploadRequestListener
 ) : IncomingMessageEventListener<UserConverterConfigurationError>(), SilentEventListener {
 
     override fun onEvent(event: IncomingMessageEvent): Either<EventProcessingError<UserConverterConfigurationError>, EventProcessingResult> {
+        if (event.acceptForListener(userConfigurationUploadRequestListener.getDescription())) {
+            return Either.Right(SKIPPED)
+        }
+
         return when (userActivityStateService.fetchCurrentState(event.user.id)) {
             ActivityState.UPLOADING_CONFIGURATION_REQUESTED -> processEvent(event).map { PROCESSED }
             else -> return Either.Right(SKIPPED)
