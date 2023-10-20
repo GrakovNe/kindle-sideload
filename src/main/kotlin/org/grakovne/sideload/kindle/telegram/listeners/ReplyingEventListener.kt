@@ -11,6 +11,7 @@ abstract class ReplyingEventListener<E : Event, T : EventProcessingError> : Even
     open fun sendSuccessfulResponse(event: E) = Unit
     open fun sendFailureResponse(event: E, code: T) = Unit
 
+    @Suppress("UNCHECKED_CAST")
     override fun handleEvent(event: Event) =
         super.handleEvent(event as E)
             .tap { (it == EventProcessingResult.PROCESSED).ifTrue { sendSuccessfulResponse(event) } }
