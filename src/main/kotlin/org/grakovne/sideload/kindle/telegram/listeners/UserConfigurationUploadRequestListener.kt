@@ -18,6 +18,15 @@ class UserConfigurationUploadRequestListener(
     private val messageSender: SimpleMessageSender,
 ) : IncomingMessageEventListener() {
 
+    override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
+        messageSender
+            .sendResponse(
+                event.update,
+                event.user,
+                UserConfigurationRequestedMessage
+            )
+    }
+
     override fun getDescription(): IncomingMessageDescription = IncomingMessageDescription(
         key = "upload_configuration",
         type = CommandType.UPLOAD_CONFIGURATION_REQUEST
@@ -27,14 +36,6 @@ class UserConfigurationUploadRequestListener(
         userActivityStateService
             .setCurrentState(event.user.id, ActivityState.UPLOADING_CONFIGURATION_REQUESTED)
             .mapLeft { EventProcessingError(TelegramUpdateProcessingError.INTERNAL_ERROR) }
-            .tap {
-                messageSender
-                    .sendResponse(
-                        event.update,
-                        event.user,
-                        UserConfigurationRequestedMessage
-                    )
-            }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 

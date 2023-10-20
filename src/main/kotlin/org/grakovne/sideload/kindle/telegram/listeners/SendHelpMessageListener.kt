@@ -21,6 +21,15 @@ class SendHelpMessageListener(
 
     override fun getDescription() = IncomingMessageDescription("help", CommandType.SEND_HELP)
 
+    override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
+        eventSender.sendEvent(
+            LoggingEvent(
+                LogLevel.DEBUG,
+                "Help text was sent in response on origin message: ${event.update.message().text()}"
+            )
+        )
+    }
+
     override fun processEvent(event: IncomingMessageEvent) =
         incomingMessageEventListeners
             .also { logger.info { "Requested a default help response on event $event" } }
@@ -29,14 +38,6 @@ class SendHelpMessageListener(
             .map { Help(it.key, it.type) }
             .let { helpMessageSender.sendResponse(event.update, event.user, it) }
             .mapLeft { EventProcessingError(it) }
-            .tap {
-                eventSender.sendEvent(
-                    LoggingEvent(
-                        LogLevel.DEBUG,
-                        "Help text was sent in response on origin message: ${event.update.message().text()}"
-                    )
-                )
-            }
 
     override fun acceptableEvents() = listOf(EventType.INCOMING_MESSAGE)
 

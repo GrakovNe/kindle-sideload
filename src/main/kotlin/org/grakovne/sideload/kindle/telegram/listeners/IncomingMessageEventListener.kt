@@ -10,16 +10,22 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.listeners.domain.Response
 
-abstract class IncomingMessageEventListener : EventListener<IncomingMessageEvent, TelegramUpdateProcessingError> {
+abstract class IncomingMessageEventListener :
+    EventListener<IncomingMessageEvent, TelegramUpdateProcessingError> {
 
     open fun getDescription(): IncomingMessageDescription? = null
+
+    open fun sendSuccessfulResponse(event: IncomingMessageEvent) = Unit
+    open fun sendFailureResponse(event: IncomingMessageEvent) = Unit
 
     override fun onEvent(event: Event) =
         when (event is IncomingMessageEvent && event.acceptForListener(getDescription())) {
             true -> logger
                 .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
+                .tap { sendSuccessfulResponse(event) }
                 .map { EventProcessingResult.PROCESSED }
                 .tap {
                     logger.info {
@@ -28,6 +34,7 @@ abstract class IncomingMessageEventListener : EventListener<IncomingMessageEvent
                         } has been successfully processed by ${this.javaClass.simpleName}"
                     }
                 }
+                .tapLeft { sendFailureResponse(event) }
                 .tapLeft {
                     logger.warn {
                         "Incoming message event for user ${event.user} with text ${

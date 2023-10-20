@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserConfigurationRemoveListener(
-    private val userActivityStateService: UserActivityStateService,
     private val messageSender: SimpleMessageSender,
     private val userConverterConfigurationService: UserConverterConfigurationService,
 ) : IncomingMessageEventListener() {
@@ -24,18 +23,19 @@ class UserConfigurationRemoveListener(
         type = CommandType.REMOVE_CONFIGURATION_REQUEST
     )
 
+    override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
+        messageSender
+            .sendResponse(
+                event.update,
+                event.user,
+                UserConfigurationRemovedMessage
+            )
+    }
+
     override fun processEvent(event: IncomingMessageEvent) =
         userConverterConfigurationService
             .removeConverterConfiguration(event.user.id)
             .mapLeft { EventProcessingError(TelegramUpdateProcessingError.INTERNAL_ERROR) }
-            .tap {
-                messageSender
-                    .sendResponse(
-                        event.update,
-                        event.user,
-                        UserConfigurationRemovedMessage
-                    )
-            }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
