@@ -12,6 +12,6 @@ class ConverterBinaryProperties {
     var shell: String by Delegates.notNull()
     var shellArgs: String by Delegates.notNull()
     var converterFileName: String by Delegates.notNull()
-    var configurationExtension: String by Delegates.notNull()
+    var configurationExtensions: List<String> by Delegates.notNull()
     var converterParameters: String by Delegates.notNull()
 }

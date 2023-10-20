@@ -37,7 +37,7 @@ converter:
     converterFileName: "fb2c"
     shell: "/bin/bash"
     shellArgs: "-c"
-    configurationExtension: ".toml"
+    configurationExtensions: [ "toml "]
     converterParameters: ""
   sourceFileExtensions: [ "fb2", "fb2.zip" ]
 

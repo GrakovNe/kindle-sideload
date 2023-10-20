@@ -57,7 +57,7 @@ class ConverterService(
 
     private fun File.fetchConfigurationFileName(): String? = this
         .listFiles()
-        ?.find { it.name.endsWith(properties.configurationExtension) }
+        ?.find {file -> properties.configurationExtensions.any { file.extension == it } }
         ?.name
 
     private fun buildShellCommand(
