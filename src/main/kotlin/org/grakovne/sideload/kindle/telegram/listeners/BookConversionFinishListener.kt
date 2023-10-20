@@ -5,7 +5,6 @@ import arrow.core.flatMap
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendDocument
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -28,16 +27,12 @@ class BookConversionFinishListener(
     private val messageSender: SimpleMessageSender,
     private val userService: UserService,
     private val eventSender: EventSender
-) : EventListener<ConvertationFinishedEvent, TelegramUpdateProcessingError>,
+) : EventListener<ConvertationFinishedEvent, TelegramUpdateProcessingError>(),
     SilentEventListener {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)
 
-    override fun onEvent(event: Event): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
-        if (event !is ConvertationFinishedEvent) {
-            return Either.Right(EventProcessingResult.SKIPPED)
-        }
-
+    override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
         val user = userService.fetchUser(event.userId) ?: return Either.Left(
             EventProcessingError(
                 TelegramUpdateProcessingError.TARGET_USER_DISAPPEAR

@@ -8,7 +8,6 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileUploadFailedReason
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
-import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
@@ -32,11 +31,7 @@ class BookConversionRequestListener(
     private val properties: FileUploadProperties,
 ) : IncomingMessageEventListener(), SilentEventListener {
 
-    override fun onEvent(event: Event): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
-        if (event !is IncomingMessageEvent) {
-            return Either.Right(EventProcessingResult.SKIPPED)
-        }
-
+    override fun onEvent(event: IncomingMessageEvent): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
         return when {
             userActivityStateService.fetchCurrentState(event.user.id) == UPLOADING_CONFIGURATION_REQUESTED ->
                 return Either.Right(EventProcessingResult.SKIPPED)

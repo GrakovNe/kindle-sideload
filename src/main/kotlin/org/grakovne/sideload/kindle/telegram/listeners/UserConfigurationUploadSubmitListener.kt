@@ -7,7 +7,6 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.FileUploadFailedReason.FILE_IS_TOO_LARGE
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
-import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
@@ -37,11 +36,7 @@ class UserConfigurationUploadSubmitListener(
     private val messageSender: SimpleMessageSender,
 ) : IncomingMessageEventListener(), SilentEventListener {
 
-    override fun onEvent(event: Event): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
-        if (event !is IncomingMessageEvent) {
-            return Either.Right(SKIPPED)
-        }
-
+    override fun onEvent(event: IncomingMessageEvent): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
         return when (userActivityStateService.fetchCurrentState(event.user.id)) {
             ActivityState.UPLOADING_CONFIGURATION_REQUESTED -> processEvent(event).map { PROCESSED }
             else -> return Either.Right(SKIPPED)

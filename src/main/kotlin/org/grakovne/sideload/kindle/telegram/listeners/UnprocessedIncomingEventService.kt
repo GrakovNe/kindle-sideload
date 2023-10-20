@@ -5,7 +5,7 @@ import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.springframework.stereotype.Service
 
 @Service
-class UnprocessedIncomingEventHandler(
+class UnprocessedIncomingEventService(
     private val sender: SendHelpMessageListener
 ) {
 

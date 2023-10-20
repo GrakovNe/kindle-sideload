@@ -2,9 +2,11 @@ package org.grakovne.sideload.kindle.events.core
 
 import arrow.core.Either
 
-interface EventListener<E : Event, T> {
+abstract class EventListener<E : Event, T> {
 
-    fun acceptableEvents(): List<EventType>
+    fun handleEvent(event: Event) = onEvent(event as E)
 
-    fun onEvent(event: Event): Either<EventProcessingError<T>, EventProcessingResult>
+    abstract fun acceptableEvents(): List<EventType>
+
+    protected abstract fun onEvent(event: E): Either<EventProcessingError<T>, EventProcessingResult>
 }

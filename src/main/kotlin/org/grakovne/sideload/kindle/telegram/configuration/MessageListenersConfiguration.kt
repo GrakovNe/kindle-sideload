@@ -19,7 +19,7 @@ import org.grakovne.sideload.kindle.localization.EnumLocalizationService
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
-import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventHandler
+import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventService
 import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
 import org.grakovne.sideload.kindle.telegram.message.reference.service.MessageReferenceService
 import org.grakovne.sideload.kindle.user.message.report.service.UserMessageReportService
@@ -34,7 +34,7 @@ class MessageListenersConfiguration(
     private val userService: UserService,
     private val enumLocalizationService: EnumLocalizationService,
     private val userMessageReportService: UserMessageReportService,
-    private val unprocessedIncomingEventHandler: UnprocessedIncomingEventHandler,
+    private val unprocessedIncomingEventService: UnprocessedIncomingEventService,
     private val messageReferenceService: MessageReferenceService
 ) {
 
@@ -80,7 +80,7 @@ class MessageListenersConfiguration(
                 it
                     .processedByNothing()
                     .ifTrue {
-                        unprocessedIncomingEventHandler
+                        unprocessedIncomingEventService
                             .handle(incomingMessageEvent)
                             .also {
                                 logger.warn {

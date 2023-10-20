@@ -3,25 +3,23 @@ package org.grakovne.sideload.kindle.telegram.listeners
 import arrow.core.Either
 import com.pengrad.telegrambot.model.Update
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.listeners.domain.Response
 
 abstract class IncomingMessageEventListener :
-    EventListener<IncomingMessageEvent, TelegramUpdateProcessingError> {
+    EventListener<IncomingMessageEvent, TelegramUpdateProcessingError>() {
 
     open fun getDescription(): IncomingMessageDescription? = null
 
     open fun sendSuccessfulResponse(event: IncomingMessageEvent) = Unit
     open fun sendFailureResponse(event: IncomingMessageEvent) = Unit
 
-    override fun onEvent(event: Event) =
-        when (event is IncomingMessageEvent && event.acceptForListener(getDescription())) {
+    override fun onEvent(event: IncomingMessageEvent) =
+        when (event.acceptForListener(getDescription())) {
             true -> logger
                 .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
