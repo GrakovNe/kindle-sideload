@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.localization
 
-import org.grakovne.sideload.kindle.common.FileUploadFailedReason
+import org.grakovne.sideload.kindle.common.FileUploadFailedError
+import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.user.configuration.validation.ConfigurationValidationError
 
 sealed class Message(val templateName: String)

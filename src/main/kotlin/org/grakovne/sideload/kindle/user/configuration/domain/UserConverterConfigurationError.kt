@@ -1,9 +1,12 @@
 package org.grakovne.sideload.kindle.user.configuration.domain
 
+import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
 import org.grakovne.sideload.kindle.user.configuration.validation.ConfigurationValidationError
 
-sealed interface UserConverterConfigurationError
+interface UserConverterConfigurationError: NewEventProcessingError
 
 data object ConfigurationNotFoundError : UserConverterConfigurationError
 data object UnableUpdateConfigurationError : UserConverterConfigurationError
+object InternalError : UserConverterConfigurationError
+object FileIsTooLargeError : UserConverterConfigurationError
 data class ValidationError(val code: ConfigurationValidationError) : UserConverterConfigurationError

@@ -13,9 +13,9 @@ class UserService(private val userRepository: UserRepository) {
 
     fun fetchSuperUsers() = userRepository.findByType(Type.SUPER_USER)
 
-    fun fetchUser(userId: String): User? = userRepository
+    fun fetchUser(userId: String): User = userRepository
         .findById(userId)
-        .getOrNull()
+        .get()
 
     fun fetchOrCreateUser(userId: String, language: String): User =
         userRepository

@@ -12,6 +12,8 @@ import org.grakovne.sideload.kindle.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
+import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
+import org.grakovne.sideload.kindle.telegram.domain.error.UndescribedError
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 
@@ -26,7 +28,7 @@ class HelpMessageSender(
         origin: Update,
         user: User,
         helpMessage: List<Help>
-    ): Either<TelegramUpdateProcessingError, Unit> {
+    ): Either<NewEventProcessingError, Unit> {
         val targetLanguage = user.language
 
         return helpMessage
@@ -41,7 +43,7 @@ class HelpMessageSender(
             .map { it.joinToString(separator = "\n", transform = PreparedMessage::text) }
             .map { HelpMessage(it) }
             .flatMap { localizationService.localize(it, targetLanguage) }
-            .mapLeft { TelegramUpdateProcessingError.INTERNAL_ERROR }
+            .mapLeft { UndescribedError }
             .flatMap { sendRawMessage(origin, it) }
     }
 

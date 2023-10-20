@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service
 @Service
 class MessageListenersConfiguration(
     private val bot: TelegramBot,
-    private val incomingMessageEventListeners: List<IncomingMessageEventListener>,
+    private val incomingMessageEventListeners: List<IncomingMessageEventListener<*>>,
     private val eventSender: EventSender,
     private val userService: UserService,
     private val enumLocalizationService: EnumLocalizationService,

@@ -5,8 +5,9 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
-import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
+import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
+import org.grakovne.sideload.kindle.telegram.domain.error.UnableSendResponse
 import org.grakovne.swiftbot.localization.MessageType
 import org.springframework.stereotype.Service
 
@@ -17,7 +18,7 @@ abstract class MessageSender(private val bot: TelegramBot) {
         chatId: String,
         message: PreparedMessage,
         type: MessageType = MessageType.HTML,
-    ): Either<TelegramUpdateProcessingError, Unit> {
+    ): Either<NewEventProcessingError, Unit> {
         val isMessageSent = SendMessage(chatId, message.text)
             .setParseMode(type)
             .disableWebPagePreview(message.webPagePreview)
@@ -25,7 +26,7 @@ abstract class MessageSender(private val bot: TelegramBot) {
 
         return when (isMessageSent) {
             true -> Either.Right(Unit)
-            false -> Either.Left(TelegramUpdateProcessingError.RESPONSE_NOT_SENT)
+            false -> Either.Left(UnableSendResponse)
         }
     }
 

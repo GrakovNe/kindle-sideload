@@ -43,7 +43,7 @@ class UserEnvironmentService(
             .map { temporaryFolder }
             .mapLeft {
                 logger.error { "Unable to deploy environment for user $userId. See details: $it" }
-                EnvironmentError.UNABLE_TO_DEPLOY
+                UnableDeployError
             }
     }
 
@@ -56,7 +56,7 @@ class UserEnvironmentService(
                     true -> Either.Right(Unit)
                         .also { logger.info { "Terminated temporary environment id: $environmentId" } }
 
-                    false -> Either.Left(EnvironmentError.UNABLE_TO_TERMINATE)
+                    false -> Either.Left(UnableTerminateError)
                         .also { logger.error { "Unable to terminate temporary environment id: $environmentId" } }
                 }
             }

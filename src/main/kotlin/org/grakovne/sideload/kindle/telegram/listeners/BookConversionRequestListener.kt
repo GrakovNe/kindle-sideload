@@ -5,7 +5,9 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetFile
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.common.FileUploadFailedReason
+import org.grakovne.sideload.kindle.common.BookIsTooLargeError
+import org.grakovne.sideload.kindle.common.FileUploadFailedError
+import org.grakovne.sideload.kindle.common.TaskQueueingError
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
@@ -13,8 +15,8 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.FileConvertationRequestedMessage
 import org.grakovne.sideload.kindle.localization.FileUploadFailedMessage
-import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.configuration.ConverterProperties
+import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState.UPLOADING_CONFIGURATION_REQUESTED
@@ -29,9 +31,26 @@ class BookConversionRequestListener(
     private val messageSender: SimpleMessageSender,
     private val bot: TelegramBot,
     private val properties: FileUploadProperties,
-) : IncomingMessageEventListener(), SilentEventListener {
+) : IncomingMessageEventListener<FileUploadFailedError>(), SilentEventListener {
 
-    override fun onEvent(event: IncomingMessageEvent): Either<EventProcessingError<TelegramUpdateProcessingError>, EventProcessingResult> {
+    override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
+        messageSender.sendResponse(
+            origin = event.update,
+            user = event.user,
+            message = FileConvertationRequestedMessage
+        )
+    }
+
+    override fun sendFailureResponse(event: IncomingMessageEvent, code: FileUploadFailedError) {
+        messageSender
+            .sendResponse(
+                origin = event.update,
+                user = event.user,
+                message = FileUploadFailedMessage(FileUploadFailedReason.FILE_IS_TOO_LARGE)
+            )
+    }
+
+    override fun onEvent(event: IncomingMessageEvent): Either<EventProcessingError<FileUploadFailedError>, EventProcessingResult> {
         return when {
             userActivityStateService.fetchCurrentState(event.user.id) == UPLOADING_CONFIGURATION_REQUESTED ->
                 return Either.Right(EventProcessingResult.SKIPPED)
@@ -44,7 +63,7 @@ class BookConversionRequestListener(
         }
     }
 
-    override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError<TelegramUpdateProcessingError>, Unit> {
+    override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError<FileUploadFailedError>, Unit> {
         val file = event
             .update
             .message()
@@ -52,14 +71,7 @@ class BookConversionRequestListener(
             ?: return Either.Right(Unit)
 
         if (file.fileSize() > properties.maxSize) {
-            return messageSender
-                .sendResponse(
-                    origin = event.update,
-                    user = event.user,
-                    message = FileUploadFailedMessage(FileUploadFailedReason.FILE_IS_TOO_LARGE)
-                )
-                .mapLeft { EventProcessingError(TelegramUpdateProcessingError.RESPONSE_NOT_SENT) }
-                .map { Unit }
+            return Either.Left(EventProcessingError(BookIsTooLargeError))
         }
 
         val sourceUrl = bot
@@ -69,14 +81,7 @@ class BookConversionRequestListener(
 
         return convertationTaskService
             .submitTask(event.user, sourceFileUrl = sourceUrl)
-            .mapLeft { EventProcessingError(TelegramUpdateProcessingError.INTERNAL_ERROR) }
-            .tap {
-                messageSender.sendResponse(
-                    origin = event.update,
-                    user = event.user,
-                    message = FileConvertationRequestedMessage
-                )
-            }
+            .mapLeft { EventProcessingError(TaskQueueingError) }
     }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)

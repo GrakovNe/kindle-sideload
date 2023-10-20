@@ -8,16 +8,17 @@ import org.grakovne.sideload.kindle.events.internal.LogLevel
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
 import org.grakovne.sideload.kindle.telegram.messaging.Help
 import org.grakovne.sideload.kindle.telegram.messaging.HelpMessageSender
 import org.springframework.stereotype.Service
 
 @Service
 class SendHelpMessageListener(
-    private val incomingMessageEventListeners: List<IncomingMessageEventListener>,
+    private val incomingMessageEventListeners: List<IncomingMessageEventListener<*>>,
     private val eventSender: EventSender,
     private val helpMessageSender: HelpMessageSender
-) : IncomingMessageEventListener() {
+) : IncomingMessageEventListener<NewEventProcessingError>() {
 
     override fun getDescription() = IncomingMessageDescription("help", CommandType.SEND_HELP)
 

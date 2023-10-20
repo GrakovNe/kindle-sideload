@@ -1,12 +1,14 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
+import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.UserConfigurationRequestedMessage
-import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
+import org.grakovne.sideload.kindle.telegram.domain.error.UndescribedError
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service
 class UserConfigurationUploadRequestListener(
     private val userActivityStateService: UserActivityStateService,
     private val messageSender: SimpleMessageSender,
-) : IncomingMessageEventListener() {
+) : IncomingMessageEventListener<NewEventProcessingError>() {
 
     override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
         messageSender
@@ -32,10 +34,11 @@ class UserConfigurationUploadRequestListener(
         type = CommandType.UPLOAD_CONFIGURATION_REQUEST
     )
 
-    override fun processEvent(event: IncomingMessageEvent) =
+    override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError<NewEventProcessingError>, Unit> =
         userActivityStateService
             .setCurrentState(event.user.id, ActivityState.UPLOADING_CONFIGURATION_REQUESTED)
-            .mapLeft { EventProcessingError(TelegramUpdateProcessingError.INTERNAL_ERROR) }
+            .mapLeft { EventProcessingError(UndescribedError) }
+
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 

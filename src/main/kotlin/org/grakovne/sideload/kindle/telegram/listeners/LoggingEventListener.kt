@@ -11,6 +11,7 @@ import org.grakovne.sideload.kindle.events.internal.LogLevel.Companion.isWorseOr
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
+import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 
@@ -19,7 +20,7 @@ class LoggingEventListener(
     private val bot: TelegramBot,
     private val properties: ConfigurationProperties,
     private val userService: UserService
-) : EventListener<LoggingEvent, TelegramUpdateProcessingError>() {
+) : EventListener<LoggingEvent, NewEventProcessingError>() {
     override fun acceptableEvents(): List<EventType> = listOf(EventType.LOG_SENT)
 
     override fun onEvent(event: LoggingEvent): Either.Right<EventProcessingResult> {
