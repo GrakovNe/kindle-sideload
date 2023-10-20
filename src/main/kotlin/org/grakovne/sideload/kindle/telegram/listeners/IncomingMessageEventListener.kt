@@ -3,12 +3,12 @@ package org.grakovne.sideload.kindle.telegram.listeners
 import arrow.core.Either
 import com.pengrad.telegrambot.model.Update
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
 
-abstract class IncomingMessageEventListener<T: EventProcessingError> :
+abstract class IncomingMessageEventListener<T : EventProcessingError> :
     ReplyingEventListener<IncomingMessageEvent, T>() {
 
     open fun getDescription(): IncomingMessageDescription? = null
@@ -27,9 +27,10 @@ abstract class IncomingMessageEventListener<T: EventProcessingError> :
 
     protected abstract fun processEvent(event: IncomingMessageEvent): Either<T, Unit>
 
-    protected fun IncomingMessageEvent.acceptForListener(description: IncomingMessageDescription?) = this.update.hasMessage()
-            && this.update.hasSender()
-            && this.update.message().text().startsWith("/" + description?.key)
+    protected fun IncomingMessageEvent.acceptForListener(description: IncomingMessageDescription?) =
+        this.update.hasMessage()
+                && this.update.hasSender()
+                && this.update.message().text().startsWith("/" + description?.key)
 
     companion object {
         private val logger = KotlinLogging.logger { }

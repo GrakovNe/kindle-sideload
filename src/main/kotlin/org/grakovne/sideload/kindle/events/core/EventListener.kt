@@ -1,7 +1,6 @@
 package org.grakovne.sideload.kindle.events.core
 
 import arrow.core.Either
-import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
 
 abstract class EventListener<E : Event, T : EventProcessingError> {
 

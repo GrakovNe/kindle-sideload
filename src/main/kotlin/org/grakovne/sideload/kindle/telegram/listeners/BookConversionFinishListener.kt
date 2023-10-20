@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendDocument
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
@@ -12,7 +13,6 @@ import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.localization.FileConvertarionFailed
 import org.grakovne.sideload.kindle.localization.FileConvertarionSuccess
-import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.user.reference.service.UserService

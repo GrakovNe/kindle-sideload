@@ -2,11 +2,11 @@ package org.grakovne.sideload.kindle.telegram.listeners
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.UserConfigurationRequestedMessage
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState

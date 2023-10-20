@@ -1,9 +1,9 @@
 package org.grakovne.sideload.kindle.user.configuration.domain
 
-import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
+import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.user.configuration.validation.ConfigurationValidationError
 
-interface UserConverterConfigurationError: EventProcessingError
+interface UserConverterConfigurationError : EventProcessingError
 
 data object ConfigurationNotFoundError : UserConverterConfigurationError
 data object UnableUpdateConfigurationError : UserConverterConfigurationError

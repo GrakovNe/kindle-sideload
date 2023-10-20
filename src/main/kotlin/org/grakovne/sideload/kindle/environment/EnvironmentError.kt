@@ -1,6 +1,6 @@
 package org.grakovne.sideload.kindle.environment
 
-import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
+import org.grakovne.sideload.kindle.events.core.EventProcessingError
 
 interface EnvironmentError : EventProcessingError
 

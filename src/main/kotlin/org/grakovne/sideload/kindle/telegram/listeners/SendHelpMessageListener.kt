@@ -1,13 +1,13 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.LogLevel
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.messaging.Help
 import org.grakovne.sideload.kindle.telegram.messaging.HelpMessageSender
 import org.springframework.stereotype.Service
