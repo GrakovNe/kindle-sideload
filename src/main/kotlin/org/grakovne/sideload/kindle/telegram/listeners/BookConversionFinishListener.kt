@@ -4,7 +4,6 @@ import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendDocument
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
@@ -13,8 +12,8 @@ import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.localization.FileConvertarionFailed
 import org.grakovne.sideload.kindle.localization.FileConvertarionSuccess
-import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
-import org.grakovne.sideload.kindle.telegram.domain.error.UndescribedError
+import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
+import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
@@ -25,7 +24,7 @@ class BookConversionFinishListener(
     private val messageSender: SimpleMessageSender,
     private val userService: UserService,
     private val eventSender: EventSender
-) : EventListener<ConvertationFinishedEvent, NewEventProcessingError>(),
+) : ReplyingEventListener<ConvertationFinishedEvent, EventProcessingError>(),
     SilentEventListener {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)
@@ -54,7 +53,7 @@ class BookConversionFinishListener(
             }
     }
 
-    override fun sendFailureResponse(event: ConvertationFinishedEvent, code: NewEventProcessingError) {
+    override fun sendFailureResponse(event: ConvertationFinishedEvent, code: EventProcessingError) {
         val user = userService.fetchUser(event.userId)
 
         messageSender
@@ -73,10 +72,10 @@ class BookConversionFinishListener(
             }
     }
 
-    override fun onEvent(event: ConvertationFinishedEvent): Either<NewEventProcessingError, EventProcessingResult> =
+    override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> =
         when (event.status) {
             ConvertationFinishedStatus.SUCCESS -> Either.Right(EventProcessingResult.PROCESSED)
-            ConvertationFinishedStatus.FAILED -> Either.Left(UndescribedError)
+            ConvertationFinishedStatus.FAILED -> Either.Left(UnknownError)
         }
 
     companion object {

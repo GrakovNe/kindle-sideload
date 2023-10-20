@@ -6,7 +6,7 @@ import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.UserConfigurationRemovedMessage
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
+import org.grakovne.sideload.kindle.telegram.domain.error.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
 import org.springframework.stereotype.Service
@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service
 class UserConfigurationRemoveListener(
     private val messageSender: SimpleMessageSender,
     private val userConverterConfigurationService: UserConverterConfigurationService,
-) : IncomingMessageEventListener<NewEventProcessingError>() {
+) : IncomingMessageEventListener<EventProcessingError>() {
 
     override fun getDescription(): IncomingMessageDescription = IncomingMessageDescription(
         key = "remove_configuration",
         type = CommandType.REMOVE_CONFIGURATION_REQUEST
     )
 
-    override fun processEvent(event: IncomingMessageEvent): Either<NewEventProcessingError, Unit> =
+    override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError, Unit> =
         userConverterConfigurationService
             .removeConverterConfiguration(event.user.id)
 

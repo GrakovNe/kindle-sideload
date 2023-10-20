@@ -6,7 +6,6 @@ import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class UserService(private val userRepository: UserRepository) {
