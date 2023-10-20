@@ -8,5 +8,6 @@ interface UserConverterConfigurationError: NewEventProcessingError
 data object ConfigurationNotFoundError : UserConverterConfigurationError
 data object UnableUpdateConfigurationError : UserConverterConfigurationError
 object InternalError : UserConverterConfigurationError
+object FileNotPresentedError : UserConverterConfigurationError
 object FileIsTooLargeError : UserConverterConfigurationError
 data class ValidationError(val code: ConfigurationValidationError) : UserConverterConfigurationError

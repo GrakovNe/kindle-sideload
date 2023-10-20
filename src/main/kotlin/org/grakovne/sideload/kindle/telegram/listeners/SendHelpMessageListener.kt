@@ -1,7 +1,6 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.LogLevel
@@ -38,7 +37,6 @@ class SendHelpMessageListener(
             .mapNotNull { it.getDescription() }
             .map { Help(it.key, it.type) }
             .let { helpMessageSender.sendResponse(event.update, event.user, it) }
-            .mapLeft { EventProcessingError(it) }
 
     override fun acceptableEvents() = listOf(EventType.INCOMING_MESSAGE)
 

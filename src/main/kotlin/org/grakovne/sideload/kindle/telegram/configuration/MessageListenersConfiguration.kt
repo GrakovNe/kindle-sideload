@@ -16,8 +16,8 @@ import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.LogLevel.WARN
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.localization.EnumLocalizationService
-import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.domain.error.UndescribedError
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventService
 import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
@@ -104,8 +104,6 @@ class MessageListenersConfiguration(
     } catch (ex: Exception) {
         logger.error { "Unable process incoming message. See Details: $ex" }
         eventSender.sendEvent(LoggingEvent(WARN, "Internal Exception. Message = ${ex.message}"))
-
-        Either.Left(TelegramUpdateProcessingError.INTERNAL_ERROR)
     }
 
     private fun messageListenersDescriptions(targetLanguage: Language?) = incomingMessageEventListeners

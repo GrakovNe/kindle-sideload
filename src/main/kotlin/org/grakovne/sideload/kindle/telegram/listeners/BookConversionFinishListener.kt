@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendDocument
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventListener
-import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
@@ -64,7 +63,6 @@ class BookConversionFinishListener(
                 user = user,
                 message = FileConvertarionFailed(event.log)
             )
-            .mapLeft { EventProcessingError(it) }
             .map { EventProcessingResult.PROCESSED }
             .also {
                 eventSender.sendEvent(
@@ -75,10 +73,10 @@ class BookConversionFinishListener(
             }
     }
 
-    override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError<NewEventProcessingError>, EventProcessingResult> =
+    override fun onEvent(event: ConvertationFinishedEvent): Either<NewEventProcessingError, EventProcessingResult> =
         when (event.status) {
             ConvertationFinishedStatus.SUCCESS -> Either.Right(EventProcessingResult.PROCESSED)
-            ConvertationFinishedStatus.FAILED -> Either.Left(EventProcessingError(UndescribedError))
+            ConvertationFinishedStatus.FAILED -> Either.Left(UndescribedError)
         }
 
     companion object {

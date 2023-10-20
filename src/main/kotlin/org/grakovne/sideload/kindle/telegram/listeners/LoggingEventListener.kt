@@ -10,7 +10,6 @@ import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.LogLevel.Companion.isWorseOrEqualThan
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
-import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service

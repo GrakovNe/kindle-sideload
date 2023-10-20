@@ -9,7 +9,6 @@ import org.grakovne.sideload.kindle.localization.EnumLocalizationService
 import org.grakovne.sideload.kindle.localization.HelpMessage
 import org.grakovne.sideload.kindle.localization.HelpMessageItem
 import org.grakovne.sideload.kindle.localization.MessageLocalizationService
-import org.grakovne.sideload.kindle.telegram.TelegramUpdateProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.sideload.kindle.telegram.domain.error.NewEventProcessingError

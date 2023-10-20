@@ -14,9 +14,9 @@ abstract class EventListener<E : Event, T : NewEventProcessingError> {
             .tap {
                 (it == EventProcessingResult.PROCESSED).ifTrue { sendSuccessfulResponse(event) }
             }
-            .tapLeft { sendFailureResponse(event, it.code) }
+            .tapLeft { sendFailureResponse(event, it) }
 
     abstract fun acceptableEvents(): List<EventType>
 
-    protected abstract fun onEvent(event: E): Either<EventProcessingError<T>, EventProcessingResult>
+    protected abstract fun onEvent(event: E): Either<T, EventProcessingResult>
 }

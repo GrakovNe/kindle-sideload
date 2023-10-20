@@ -2,7 +2,6 @@ package org.grakovne.sideload.kindle.telegram.listeners
 
 import arrow.core.Either
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.UserConfigurationRequestedMessage
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
@@ -34,11 +33,10 @@ class UserConfigurationUploadRequestListener(
         type = CommandType.UPLOAD_CONFIGURATION_REQUEST
     )
 
-    override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError<NewEventProcessingError>, Unit> =
+    override fun processEvent(event: IncomingMessageEvent): Either<NewEventProcessingError, Unit> =
         userActivityStateService
             .setCurrentState(event.user.id, ActivityState.UPLOADING_CONFIGURATION_REQUESTED)
-            .mapLeft { EventProcessingError(UndescribedError) }
-
+            .mapLeft { UndescribedError }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 

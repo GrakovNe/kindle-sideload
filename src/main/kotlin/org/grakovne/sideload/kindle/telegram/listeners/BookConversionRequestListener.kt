@@ -10,7 +10,6 @@ import org.grakovne.sideload.kindle.common.FileUploadFailedError
 import org.grakovne.sideload.kindle.common.TaskQueueingError
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
-import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.localization.FileConvertationRequestedMessage
@@ -50,7 +49,7 @@ class BookConversionRequestListener(
             )
     }
 
-    override fun onEvent(event: IncomingMessageEvent): Either<EventProcessingError<FileUploadFailedError>, EventProcessingResult> {
+    override fun onEvent(event: IncomingMessageEvent): Either<FileUploadFailedError, EventProcessingResult> {
         return when {
             userActivityStateService.fetchCurrentState(event.user.id) == UPLOADING_CONFIGURATION_REQUESTED ->
                 return Either.Right(EventProcessingResult.SKIPPED)
@@ -63,7 +62,7 @@ class BookConversionRequestListener(
         }
     }
 
-    override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError<FileUploadFailedError>, Unit> {
+    override fun processEvent(event: IncomingMessageEvent): Either<FileUploadFailedError, Unit> {
         val file = event
             .update
             .message()
@@ -71,7 +70,7 @@ class BookConversionRequestListener(
             ?: return Either.Right(Unit)
 
         if (file.fileSize() > properties.maxSize) {
-            return Either.Left(EventProcessingError(BookIsTooLargeError))
+            return Either.Left(BookIsTooLargeError)
         }
 
         val sourceUrl = bot
@@ -81,7 +80,7 @@ class BookConversionRequestListener(
 
         return convertationTaskService
             .submitTask(event.user, sourceFileUrl = sourceUrl)
-            .mapLeft { EventProcessingError(TaskQueueingError) }
+            .mapLeft { TaskQueueingError }
     }
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
