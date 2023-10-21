@@ -33,11 +33,17 @@ class NavigatedMessageSender(
         chatId: String,
         user: User,
         message: T,
-        navigation: List<Button> = emptyList()
+        navigation: List<List<Button>> = emptyList()
     ): Either<EventProcessingError, Unit> {
         val localizedMessage = messageLocalizationService.localize(message, user.language)
         val localizedNavigation =
-            navigation.map { navigationLocalizationService.localize(it, user.language) }.sequence()
+            navigation
+                .map { row ->
+                    row
+                        .map { navigationLocalizationService.localize(it, user.language) }
+                        .sequence()
+                }
+                .sequence()
 
         return localizedMessage
             .flatMap { preparedMessage ->
@@ -53,7 +59,7 @@ class NavigatedMessageSender(
         origin: Update,
         user: User,
         message: T,
-        navigation: List<Button> = emptyList()
+        navigation: List<List<Button>> = emptyList()
     ) = sendResponse(origin.message().chat().id().toString(), user, message, navigation)
 
 
@@ -61,19 +67,22 @@ class NavigatedMessageSender(
         private fun prepareMessage(
             chatId: String,
             message: PreparedMessage,
-            navigation: List<PreparedButton>,
+            navigation: List<List<PreparedButton>>,
             type: MessageType = MessageType.HTML,
         ): SendMessage = SendMessage(chatId, message.text)
             .replyMarkup(navigation.toReplyKeyboard())
             .setParseMode(type)
             .disableWebPagePreview(message.webPagePreview)
 
-        private fun List<PreparedButton>.toReplyKeyboard(): Keyboard {
+        private fun List<List<PreparedButton>>.toReplyKeyboard(): Keyboard {
             if (this.isEmpty()) {
                 return ReplyKeyboardRemove()
             }
 
-            return ReplyKeyboardMarkup(this.map { it.toButton() }.toTypedArray())
+            val layout: List<List<KeyboardButton>> = this
+                .map { row -> row.map { it.toButton() } }
+
+            return ReplyKeyboardMarkup(*layout.map { it.toTypedArray() }.toTypedArray()).resizeKeyboard(true)
         }
 
         private fun PreparedButton.toButton() = KeyboardButton(this.text)

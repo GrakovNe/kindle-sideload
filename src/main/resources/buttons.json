@@ -13,5 +13,30 @@
     "name": "RequestHelpButton",
     "type": "HTML",
     "template": "Help"
+  },
+  {
+    "name": "MainScreenButton",
+    "type": "HTML",
+    "template": "Back to main"
+  },
+  {
+    "name": "DebugModeSettingScreenButton",
+    "type": "HTML",
+    "template": "Verbose Mode"
+  },
+  {
+    "name": "SendToKindleSettingsScreenButton",
+    "type": "HTML",
+    "template": "Configure sending to Kindle"
+  },
+  {
+    "name": "ConverterConfigurationSettingsScreenButton",
+    "type": "HTML",
+    "template": "Customize converter configuration"
+  },
+  {
+    "name": "OutputFileTypeSettingsScreenButton",
+    "type": "HTML",
+    "template": "Set output file type"
   }
 ]

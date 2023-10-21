@@ -53,5 +53,10 @@
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
     "template": "Main Screen Template"
+  },
+  {
+    "name": "SettingsScreenRequestedMessage",
+    "type": "HTML",
+    "template": "Main Screen Template"
   }
 ]
