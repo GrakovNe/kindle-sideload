@@ -8,7 +8,7 @@ data class MessageTemplate(
     override val template: String,
     val enablePreview: Boolean = true,
     val advertising: AdvertisingTemplate = AdvertisingTemplate.default
-): TextTemplate(name, template)
+) : TextTemplate(name, template)
 
 data class AdvertisingTemplate(
     val status: AdvertisingType,

@@ -15,10 +15,10 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.LogLevel.WARN
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
-import org.grakovne.sideload.kindle.telegram.localization.EnumLocalizationService
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventService
+import org.grakovne.sideload.kindle.telegram.localization.EnumLocalizationService
 import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
 import org.grakovne.sideload.kindle.telegram.message.reference.service.MessageReferenceService
 import org.grakovne.sideload.kindle.user.message.report.service.UserMessageReportService

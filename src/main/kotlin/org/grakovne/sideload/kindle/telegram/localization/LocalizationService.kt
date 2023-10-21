@@ -34,7 +34,7 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
         logger.info { "Localize $message with $language language" }
 
         val localizationTemplate: F = findLocalizationResources(language)
-            .find { it.name == message.template }
+            .find { it.name == message.javaClass.simpleName }
             ?.also { logger.debug { "Found acceptable template for message $message: ${it.name}" } }
             ?: return Either
                 .Left(LocalizationError.TEMPLATE_NOT_FOUND)

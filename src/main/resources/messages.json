@@ -1,66 +1,56 @@
 [
   {
-    "name": "help_message",
-    "type": "HTML",
-    "template": "Unofficial Kindle Book Converter\n\nAuthor: @maxgrakov\n\nAvailable Commands:\n\n${items}\n\nPlease note that we don't collect any sensitive user information"
-  },
-  {
-    "name": "help_message_item",
-    "type": "HTML",
-    "template": "/${key} - ${description}"
-  },
-  {
-    "name": "user_configuration_requested",
+    "name": "UserConfigurationRequestedMessage",
     "type": "HTML",
     "template": "You're welcome to upload a configuration .zip archive in the next message"
   },
   {
-    "name": "user_configuration_submitted",
+    "name": "UserConfigurationSubmittedMessage",
     "type": "HTML",
     "template": "Your configuration has been saved and will be applied every time when book is converting"
   },
   {
-    "name": "user_configuration_removed",
+    "name": "UserConfigurationRemovedMessage",
     "type": "HTML",
     "template": "Your configuration has been removed and default settings will be applied"
   },
   {
-    "name": "file_upload_failed",
+    "name": "FileUploadFailedMessage",
     "type": "HTML",
     "template": "${reason}"
   },
   {
-    "name": "file_convertation_requested_message",
+    "name": "FileConvertationRequestedMessage",
     "type": "HTML",
     "template": "Your file has been submitted to queue and shall be processed shortly."
   },
   {
-    "name": "file_convertation_success",
+    "name": "FileConvertarionSuccess",
     "type": "HTML",
     "template": "Your file is ready!\n\nBelow you can download your file and detailed log for analysis"
   },
   {
-    "name": "file_convertation_failed",
+    "name": "FileConvertarionFailed",
     "type": "HTML",
     "template": "Sorry, but your file has failed to convert\n\nBelow you can see detailed log of converter:\n\n<pre>${details}</pre>"
   },
   {
-    "name": "user_configuration_validation_failed",
+    "name": "UserConfigurationValidationFailedMessage",
     "type": "HTML",
     "template": "Validation of the configuration has been failed due to: \n\n<pre>${reason}</pre>\n\nPlease, check you configuration and try again!"
   },
   {
-    "name": "user_configuration_submission_failed",
+    "name": "UserConfigurationSubmissionFailedMessage",
     "type": "HTML",
     "template": "Processing the configuration file has been failed.\n\nPlease, contact the support!"
   },
   {
-    "name": "user_configuration_file_absent",
+    "name": "UserConfigurationFileAbsentMessage",
     "type": "HTML",
     "template": "Please, upload configuration ZIP archive"
   },
   {
-    "name": "main_screen_message",
+    "name": "MainScreenRequestedMessage",
     "type": "HTML",
     "template": "Main Screen Template"
   }

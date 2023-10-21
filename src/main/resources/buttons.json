@@ -1,6 +1,6 @@
 [
   {
-    "name": "test_one",
+    "name": "RequestSettingButton",
     "type": "HTML",
     "template": "Click Me!"
   }

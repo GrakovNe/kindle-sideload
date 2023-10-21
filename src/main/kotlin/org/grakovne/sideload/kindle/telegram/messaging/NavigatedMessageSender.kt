@@ -14,11 +14,11 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.PreparedButton
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.sideload.kindle.telegram.domain.error.LocalizationError
+import org.grakovne.sideload.kindle.telegram.localization.MessageLocalizationService
+import org.grakovne.sideload.kindle.telegram.localization.NavigationLocalizationService
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.localization.domain.Message
-import org.grakovne.sideload.kindle.telegram.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.localization.template.MessageType
-import org.grakovne.sideload.kindle.telegram.localization.NavigationLocalizationService
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 

@@ -26,7 +26,7 @@ class MainScreenRequestedEventListener(
                 event.update,
                 event.user,
                 MainScreenRequestedMessage,
-                listOf(TestButton)
+                listOf(RequestSettingButton)
             )
     }
 
