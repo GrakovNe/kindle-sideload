@@ -1,6 +1,8 @@
 package org.grakovne.sideload.kindle.converter.task.periodic
 
 import arrow.core.Either
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
@@ -34,7 +36,7 @@ class ConvertSourceFilePeriodicService(
         runBlocking {
             taskService
                 .fetchTasksForProcessing()
-                .parallelMap { it to processTask(it) }
+                .parallelMap(scope = CoroutineScope(Dispatchers.IO)) { it to processTask(it) }
                 .map { (task, result) ->
                     notifyUser(task, result)
                     task to result
