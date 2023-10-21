@@ -1,23 +1,23 @@
 package org.grakovne.sideload.kindle.telegram.listeners
 
 import arrow.core.Either
-import com.pengrad.telegrambot.model.Update
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
-import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.fetchText
+import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 
 abstract class IncomingMessageEventListener<T : EventProcessingError> :
     ReplyingEventListener<IncomingMessageEvent, T>() {
 
-    open fun getDescription(): IncomingMessageDescription? = null
+    open fun getOperatingButton(): Button? = null
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
     override fun onEvent(event: IncomingMessageEvent): Either<T, EventProcessingResult> {
-        val description = getDescription() ?: return Either.Right(EventProcessingResult.SKIPPED)
+        val description = getOperatingButton() ?: return Either.Right(EventProcessingResult.SKIPPED)
 
         return when (event.acceptForListener(description)) {
             true -> logger
@@ -33,21 +33,10 @@ abstract class IncomingMessageEventListener<T : EventProcessingError> :
 
     protected abstract fun processEvent(event: IncomingMessageEvent): Either<T, Unit>
 
-    protected fun IncomingMessageEvent.acceptForListener(description: IncomingMessageDescription) =
-        this.update.hasMessage()
-                && this.update.hasSender()
-                && this.update.message().text().endsWith(description.key)
+    protected fun IncomingMessageEvent.acceptForListener(button: Button) =
+        this.update.fetchText().endsWith(button.javaClass.simpleName)
 
     companion object {
         private val logger = KotlinLogging.logger { }
     }
 }
-
-private fun Update.hasSender() = this.message()?.chat()?.id() != null
-private fun Update.hasMessage() = this.message()?.text() != null
-
-
-data class IncomingMessageDescription(
-    val key: String,
-    val type: CommandType
-)

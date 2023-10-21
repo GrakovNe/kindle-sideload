@@ -38,7 +38,7 @@ class UserConfigurationUploadSubmitListener(
 ) : IncomingMessageEventListener<UserConverterConfigurationError>(), SilentEventListener {
 
     override fun onEvent(event: IncomingMessageEvent): Either<UserConverterConfigurationError, EventProcessingResult> {
-        if (event.acceptForListener(userConfigurationUploadRequestListener.getDescription())) {
+        if (event.acceptForListener(userConfigurationUploadRequestListener.getOperatingButton())) {
             return Either.Right(SKIPPED)
         }
 

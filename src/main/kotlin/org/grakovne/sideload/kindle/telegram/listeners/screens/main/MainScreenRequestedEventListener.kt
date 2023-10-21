@@ -2,10 +2,9 @@ package org.grakovne.sideload.kindle.telegram.listeners.screens.main
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
-import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageDescription
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.configuration.domain.InternalError
@@ -17,7 +16,7 @@ class MainScreenRequestedEventListener(
     private val userActivityStateService: UserActivityStateService
 ) : IncomingMessageEventListener<EventProcessingError>() {
 
-    override fun getDescription() = IncomingMessageDescription("main_screen", CommandType.MAIN_SCREEN_REQUESTED)
+    override fun getOperatingButton() = MainScreenButton
 
     override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
         messageSender

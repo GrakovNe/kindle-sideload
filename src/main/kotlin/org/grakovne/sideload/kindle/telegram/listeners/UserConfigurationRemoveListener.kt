@@ -3,8 +3,8 @@ package org.grakovne.sideload.kindle.telegram.listeners
 import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
-import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.configuration.RemoveConfigurationButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRemovedMessage
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
@@ -16,10 +16,7 @@ class UserConfigurationRemoveListener(
     private val userConverterConfigurationService: UserConverterConfigurationService,
 ) : IncomingMessageEventListener<EventProcessingError>() {
 
-    override fun getDescription(): IncomingMessageDescription = IncomingMessageDescription(
-        key = "remove_configuration",
-        type = CommandType.REMOVE_CONFIGURATION_REQUEST
-    )
+    override fun getOperatingButton() = RemoveConfigurationButton
 
     override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError, Unit> =
         userConverterConfigurationService

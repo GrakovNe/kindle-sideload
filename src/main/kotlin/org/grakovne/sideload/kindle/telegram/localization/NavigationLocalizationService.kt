@@ -24,7 +24,7 @@ class NavigationLocalizationService(
         template: ButtonTemplate
     ) = StringSubstitutor(localizedValues)
         .replace(template.template)
-        .let { PreparedButton(it) }
+        .let { PreparedButton(it, template.name) }
         .let { Either.Right(it) }
 
     override fun deserializeResourceContent(content: ByteArray): List<ButtonTemplate> =

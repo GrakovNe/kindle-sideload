@@ -1,0 +1,40 @@
+package org.grakovne.sideload.kindle.telegram
+
+import com.pengrad.telegrambot.model.Update
+
+
+fun Update.fetchText(): String {
+    if (null != this.message()) {
+        return this.message().text()
+    }
+
+    if (null != this.callbackQuery()) {
+        return this.callbackQuery().data()
+    }
+
+    throw IllegalArgumentException("Change me later")
+}
+
+fun Update.fetchUserId(): String {
+    if (null != this.message()) {
+        return this.message().from().id().toString()
+    }
+
+    if (null != this.callbackQuery()) {
+        return this.callbackQuery().from().id().toString()
+    }
+
+    throw IllegalArgumentException("Change me later")
+}
+
+fun Update.fetchLanguage(): String {
+    if (null != this.message()) {
+        return this.message().from()?.languageCode() ?: "en"
+    }
+
+    if (null != this.callbackQuery()) {
+        return this.callbackQuery().from().languageCode() ?: "en"
+    }
+
+    return "en"
+}
