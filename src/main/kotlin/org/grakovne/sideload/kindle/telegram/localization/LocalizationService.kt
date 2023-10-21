@@ -1,43 +1,39 @@
 package org.grakovne.sideload.kindle.telegram.localization
 
 import arrow.core.Either
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.Language
 import org.grakovne.sideload.kindle.telegram.domain.PreparedItem
-import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingService
 import org.grakovne.sideload.kindle.telegram.localization.converter.toMessage
+import org.grakovne.sideload.kindle.telegram.localization.domain.Message
+import org.grakovne.sideload.kindle.telegram.localization.template.TextTemplate
 import org.springframework.core.io.ClassPathResource
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.time.Instant
 import kotlin.reflect.full.memberProperties
 
-abstract class LocalizationService<T: Message, R: PreparedItem>(
+abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTemplate>(
     private val resourceName: String,
-    private val enumLocalizationService: EnumLocalizationService,
-    protected val advertisingService: AdvertisingService,
-    private val objectMapper: ObjectMapper,
+    private val enumLocalizationService: EnumLocalizationService
 ) {
 
-    private fun findLocalizationResources(language: Language?): List<LocalizationTemplate> {
-        val content = getLocalizationResource(language)
-            .readBytes()
+    private fun findLocalizationResources(language: Language?) = getLocalizationResource(language)
+        .readBytes()
+        .let { deserializeResourceContent(it) }
 
-        return objectMapper.readValue(content, object : TypeReference<List<LocalizationTemplate>>() {})
-    }
+    abstract fun deserializeResourceContent(content: ByteArray): List<F>
 
     abstract fun applyLocalization(
         language: Language?,
         localizedValues: Map<String, String>,
-        template: LocalizationTemplate
+        template: F
     ): Either<LocalizationError, R>
 
-    fun localize(message: T, language: Language?): Either<LocalizationError, out R> {
+    fun localize(message: T, language: Language?): Either<LocalizationError, R> {
         logger.info { "Localize $message with $language language" }
 
-        val localizationTemplate: LocalizationTemplate = findLocalizationResources(language)
+        val localizationTemplate: F = findLocalizationResources(language)
             .find { it.name == message.template }
             ?.also { logger.debug { "Found acceptable template for message $message: ${it.name}" } }
             ?: return Either
@@ -50,12 +46,6 @@ abstract class LocalizationService<T: Message, R: PreparedItem>(
             .toMap()
 
         return applyLocalization(language, values, localizationTemplate)
-
-//        return StringSubstitutor(values)
-//            .replace(localizationTemplate.template)
-//            .let { it + advertisingService.provideContent(localizationTemplate, language) }
-//            .let { PreparedResponseItem(it, localizationTemplate.enablePreview.not()) }
-//            .let { Either.Right(it) }
     }
 
     private fun getLocalizationResource(language: Language?): InputStream {

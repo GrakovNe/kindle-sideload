@@ -1,14 +1,14 @@
-package org.grakovne.sideload.kindle.telegram.localization
+package org.grakovne.sideload.kindle.telegram.localization.template
 
 import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingType
 
-data class LocalizationTemplate(
-    val name: String,
+data class MessageTemplate(
+    override val name: String,
     val type: MessageType,
-    val template: String,
+    override val template: String,
     val enablePreview: Boolean = true,
     val advertising: AdvertisingTemplate = AdvertisingTemplate.default
-)
+): TextTemplate(name, template)
 
 data class AdvertisingTemplate(
     val status: AdvertisingType,
