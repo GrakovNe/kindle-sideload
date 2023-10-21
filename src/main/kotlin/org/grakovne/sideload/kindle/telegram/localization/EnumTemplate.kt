@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.localization
+package org.grakovne.sideload.kindle.telegram.localization
 
 data class EnumTemplate(
     val name: String,

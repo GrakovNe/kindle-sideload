@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.localization.converter
+package org.grakovne.sideload.kindle.telegram.localization.converter
 
 import java.time.Instant
 import java.time.ZoneId

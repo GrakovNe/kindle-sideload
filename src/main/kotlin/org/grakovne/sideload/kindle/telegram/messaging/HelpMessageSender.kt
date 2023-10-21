@@ -6,8 +6,8 @@ import arrow.core.sequence
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Update
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
-import org.grakovne.sideload.kindle.localization.EnumLocalizationService
-import org.grakovne.sideload.kindle.localization.MessageLocalizationService
+import org.grakovne.sideload.kindle.telegram.localization.EnumLocalizationService
+import org.grakovne.sideload.kindle.telegram.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError

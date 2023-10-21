@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.localization
+package org.grakovne.sideload.kindle.telegram.localization
 
 import arrow.core.Either
 import com.fasterxml.jackson.core.type.TypeReference
@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import mu.KotlinLogging
 import org.apache.commons.text.StringSubstitutor
 import org.grakovne.sideload.kindle.common.Language
-import org.grakovne.sideload.kindle.localization.adverisement.AdvertisingService
-import org.grakovne.sideload.kindle.localization.converter.toMessage
+import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingService
+import org.grakovne.sideload.kindle.telegram.localization.converter.toMessage
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.swiftbot.localization.MessageTemplate
 import org.springframework.core.io.ClassPathResource

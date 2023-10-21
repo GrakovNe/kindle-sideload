@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.localization.adverisement
+package org.grakovne.sideload.kindle.telegram.localization.adverisement
 
 import org.grakovne.sideload.kindle.common.Language
 import org.springframework.boot.context.properties.ConfigurationProperties

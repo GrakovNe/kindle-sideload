@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.localization
+package org.grakovne.sideload.kindle.telegram.localization
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
