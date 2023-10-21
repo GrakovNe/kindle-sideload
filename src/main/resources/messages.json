@@ -58,5 +58,10 @@
     "name": "user_configuration_file_absent",
     "type": "HTML",
     "template": "Please, upload configuration ZIP archive"
+  },
+  {
+    "name": "main_menu_message",
+    "type": "HTML",
+    "template": "Main Menu Template"
   }
 ]

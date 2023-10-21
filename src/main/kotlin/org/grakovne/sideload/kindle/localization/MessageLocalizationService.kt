@@ -29,7 +29,7 @@ class MessageLocalizationService(
         logger.info { "Localize $message with $language language" }
 
         val messageTemplate: MessageTemplate = findLocalizationResources(language)
-            .find { it.name == message.templateName }
+            .find { it.name == message.template }
             ?.also { logger.debug { "Found acceptable template for message $message: ${it.name}" } }
             ?: return Either
                 .Left(LocalizationError.TEMPLATE_NOT_FOUND)

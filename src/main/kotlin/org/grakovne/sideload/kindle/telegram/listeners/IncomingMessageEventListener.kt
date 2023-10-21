@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.Update
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
+import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 
@@ -12,6 +13,8 @@ abstract class IncomingMessageEventListener<T : EventProcessingError> :
     ReplyingEventListener<IncomingMessageEvent, T>() {
 
     open fun getDescription(): IncomingMessageDescription? = null
+
+    override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
     override fun onEvent(event: IncomingMessageEvent) =
         when (event.acceptForListener(getDescription())) {

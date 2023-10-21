@@ -7,12 +7,12 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Update
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.localization.EnumLocalizationService
-import org.grakovne.sideload.kindle.localization.HelpMessage
-import org.grakovne.sideload.kindle.localization.HelpMessageItem
 import org.grakovne.sideload.kindle.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
+import org.grakovne.sideload.kindle.telegram.navigation.HelpMessage
+import org.grakovne.sideload.kindle.telegram.navigation.HelpMessageItem
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 

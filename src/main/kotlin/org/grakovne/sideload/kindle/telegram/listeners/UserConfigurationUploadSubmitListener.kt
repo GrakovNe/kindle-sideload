@@ -10,12 +10,12 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
 import org.grakovne.sideload.kindle.events.core.EventType
-import org.grakovne.sideload.kindle.localization.UserConfigurationFileAbsentMessage
-import org.grakovne.sideload.kindle.localization.UserConfigurationSubmissionFailedMessage
-import org.grakovne.sideload.kindle.localization.UserConfigurationSubmittedMessage
-import org.grakovne.sideload.kindle.localization.UserConfigurationValidationFailedMessage
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
+import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationFileAbsentMessage
+import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmissionFailedMessage
+import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmittedMessage
+import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationValidationFailedMessage
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
