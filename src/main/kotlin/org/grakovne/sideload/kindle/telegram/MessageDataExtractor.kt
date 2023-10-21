@@ -15,6 +15,18 @@ fun Update.fetchText(): String {
     throw IllegalArgumentException("Change me later")
 }
 
+fun Update.fetchUniqueIdentifier(): String {
+    if (null != this.message()) {
+        return this.message().messageId().toString()
+    }
+
+    if (null != this.callbackQuery()) {
+        return this.callbackQuery().message().messageId().toString()
+    }
+
+    throw IllegalArgumentException("Change me later")
+}
+
 fun Update.fetchUserId(): String {
     if (null != this.message()) {
         return this.message().from().id().toString()
