@@ -1,5 +1,5 @@
 package org.grakovne.sideload.kindle.telegram.listeners.screens.main
 
-import org.grakovne.sideload.kindle.telegram.localization.NavigationItem
+import org.grakovne.sideload.kindle.telegram.localization.Button
 
-object TestNavigationItem: NavigationItem("test_one")
+object TestButton: Button("test_one")

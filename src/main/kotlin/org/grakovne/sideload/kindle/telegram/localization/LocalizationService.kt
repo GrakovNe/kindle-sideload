@@ -4,9 +4,8 @@ import arrow.core.Either
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import mu.KotlinLogging
-import org.apache.commons.text.StringSubstitutor
 import org.grakovne.sideload.kindle.common.Language
-import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
+import org.grakovne.sideload.kindle.telegram.domain.PreparedItem
 import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingService
 import org.grakovne.sideload.kindle.telegram.localization.converter.toMessage
 import org.springframework.core.io.ClassPathResource
@@ -15,10 +14,10 @@ import java.io.InputStream
 import java.time.Instant
 import kotlin.reflect.full.memberProperties
 
-abstract class LocalizationService<T: Message>(
+abstract class LocalizationService<T: Message, R: PreparedItem>(
     private val resourceName: String,
     private val enumLocalizationService: EnumLocalizationService,
-    private val advertisingService: AdvertisingService,
+    protected val advertisingService: AdvertisingService,
     private val objectMapper: ObjectMapper,
 ) {
 
@@ -29,7 +28,13 @@ abstract class LocalizationService<T: Message>(
         return objectMapper.readValue(content, object : TypeReference<List<LocalizationTemplate>>() {})
     }
 
-    fun localize(message: T, language: Language?): Either<LocalizationError, PreparedMessage> {
+    abstract fun applyLocalization(
+        language: Language?,
+        localizedValues: Map<String, String>,
+        template: LocalizationTemplate
+    ): Either<LocalizationError, R>
+
+    fun localize(message: T, language: Language?): Either<LocalizationError, out R> {
         logger.info { "Localize $message with $language language" }
 
         val localizationTemplate: LocalizationTemplate = findLocalizationResources(language)
@@ -44,11 +49,13 @@ abstract class LocalizationService<T: Message>(
             .mapNotNull { member -> message.getField(member.name, language)?.let { member.name to it } }
             .toMap()
 
-        return StringSubstitutor(values)
-            .replace(localizationTemplate.template)
-            .let { it + advertisingService.provideContent(localizationTemplate, language) }
-            .let { PreparedMessage(it, localizationTemplate.enablePreview.not()) }
-            .let { Either.Right(it) }
+        return applyLocalization(language, values, localizationTemplate)
+
+//        return StringSubstitutor(values)
+//            .replace(localizationTemplate.template)
+//            .let { it + advertisingService.provideContent(localizationTemplate, language) }
+//            .let { PreparedResponseItem(it, localizationTemplate.enablePreview.not()) }
+//            .let { Either.Right(it) }
     }
 
     private fun getLocalizationResource(language: Language?): InputStream {

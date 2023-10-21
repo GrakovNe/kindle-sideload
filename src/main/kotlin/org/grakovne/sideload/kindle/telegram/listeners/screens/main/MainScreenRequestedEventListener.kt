@@ -6,7 +6,7 @@ import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageDescription
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
-import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
+import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.configuration.domain.InternalError
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class MainScreenRequestedEventListener(
-    private val messageSender: SimpleMessageSender,
+    private val messageSender: NavigatedMessageSender,
     private val userActivityStateService: UserActivityStateService
 ) : IncomingMessageEventListener<EventProcessingError>() {
 
@@ -26,7 +26,7 @@ class MainScreenRequestedEventListener(
                 event.update,
                 event.user,
                 MainScreenRequestedMessage,
-                listOf(TestNavigationItem)
+                listOf(TestButton)
             )
     }
 

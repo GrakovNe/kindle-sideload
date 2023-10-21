@@ -15,7 +15,7 @@ import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.telegram.configuration.ConverterProperties
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
+import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertationRequestedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileUploadFailedMessage
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState.UPLOADING_CONFIGURATION_REQUESTED
@@ -27,7 +27,7 @@ class BookConversionRequestListener(
     private val converterProperties: ConverterProperties,
     private val convertationTaskService: ConvertationTaskService,
     private val userActivityStateService: UserActivityStateService,
-    private val messageSender: SimpleMessageSender,
+    private val messageSender: NavigatedMessageSender,
     private val bot: TelegramBot,
     private val properties: FileUploadProperties,
 ) : IncomingMessageEventListener<FileUploadFailedError>(), SilentEventListener {

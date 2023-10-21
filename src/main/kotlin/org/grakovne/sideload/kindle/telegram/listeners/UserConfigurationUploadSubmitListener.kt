@@ -11,7 +11,7 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
+import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationFileAbsentMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmissionFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmittedMessage
@@ -33,7 +33,7 @@ class UserConfigurationUploadSubmitListener(
     private val userActivityStateService: UserActivityStateService,
     private val userConverterConfigurationService: UserConverterConfigurationService,
     private val properties: FileUploadProperties,
-    private val messageSender: SimpleMessageSender,
+    private val messageSender: NavigatedMessageSender,
     private val userConfigurationUploadRequestListener: UserConfigurationUploadRequestListener
 ) : IncomingMessageEventListener<UserConverterConfigurationError>(), SilentEventListener {
 

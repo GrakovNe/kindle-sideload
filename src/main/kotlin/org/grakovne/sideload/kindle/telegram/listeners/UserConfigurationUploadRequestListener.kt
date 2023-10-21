@@ -7,7 +7,7 @@ import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
-import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
+import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRequestedMessage
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserConfigurationUploadRequestListener(
     private val userActivityStateService: UserActivityStateService,
-    private val messageSender: SimpleMessageSender,
+    private val messageSender: NavigatedMessageSender,
 ) : IncomingMessageEventListener<EventProcessingError>() {
 
     override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
