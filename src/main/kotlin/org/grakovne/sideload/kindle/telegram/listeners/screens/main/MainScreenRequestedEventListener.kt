@@ -1,9 +1,11 @@
-package org.grakovne.sideload.kindle.telegram.listeners
+package org.grakovne.sideload.kindle.telegram.listeners.screens.main
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.CommandType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageDescription
+import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
 import org.grakovne.sideload.kindle.telegram.messaging.SimpleMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
@@ -23,7 +25,8 @@ class MainScreenRequestedEventListener(
             .sendResponse(
                 event.update,
                 event.user,
-                MainScreenRequestedMessage
+                MainScreenRequestedMessage,
+                listOf(TestNavigationItem)
             )
     }
 

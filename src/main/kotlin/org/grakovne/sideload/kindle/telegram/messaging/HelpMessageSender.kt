@@ -43,7 +43,7 @@ class HelpMessageSender(
             .map { HelpMessage(it) }
             .flatMap { localizationService.localize(it, targetLanguage) }
             .mapLeft { UnknownError }
-            .flatMap { sendRawMessage(origin, it) }
+            .flatMap { sendRawMessage(origin, it, emptyList()) }
     }
 
     private fun buildCommandUsage(it: Help): String = it.key

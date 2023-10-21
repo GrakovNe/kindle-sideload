@@ -8,7 +8,7 @@ import com.pengrad.telegrambot.request.SendMessage
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.sideload.kindle.telegram.domain.error.UnableSendResponse
-import org.grakovne.swiftbot.localization.MessageType
+import org.grakovne.sideload.kindle.telegram.localization.MessageType
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,6 +17,7 @@ abstract class MessageSender(private val bot: TelegramBot) {
     protected fun sendRawMessage(
         chatId: String,
         message: PreparedMessage,
+        navigation: List<PreparedMessage>,
         type: MessageType = MessageType.HTML,
     ): Either<EventProcessingError, Unit> {
         val isMessageSent = SendMessage(chatId, message.text)
@@ -33,8 +34,9 @@ abstract class MessageSender(private val bot: TelegramBot) {
     protected fun sendRawMessage(
         origin: Update,
         message: PreparedMessage,
+        navigation: List<PreparedMessage>,
         type: MessageType = MessageType.HTML,
-    ) = sendRawMessage(origin.message().chat().id().toString(), message, type)
+    ) = sendRawMessage(origin.message().chat().id().toString(), message, navigation, type)
 }
 
 private fun SendMessage.setParseMode(type: MessageType): SendMessage = when (type) {

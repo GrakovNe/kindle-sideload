@@ -1,8 +1,8 @@
-package org.grakovne.swiftbot.localization
+package org.grakovne.sideload.kindle.telegram.localization
 
 import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingType
 
-data class MessageTemplate(
+data class LocalizationTemplate(
     val name: String,
     val type: MessageType,
     val template: String,
