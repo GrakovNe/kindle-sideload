@@ -60,8 +60,8 @@
     "template": "Please, upload configuration ZIP archive"
   },
   {
-    "name": "main_menu_message",
+    "name": "main_screen_message",
     "type": "HTML",
-    "template": "Main Menu Template"
+    "template": "Main Screen Template"
   }
 ]

@@ -29,4 +29,4 @@ data class FileUploadFailedMessage(
 data class FileConvertarionSuccess(val result: String) : Message("file_convertation_success")
 data class FileConvertarionFailed(val details: String) : Message("file_convertation_failed")
 
-data object MainMenuRequestedMessage : Message("main_menu_message")
+data object MainScreenRequestedMessage : Message("main_screen_message")
