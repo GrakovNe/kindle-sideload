@@ -55,11 +55,11 @@ class MessageListenersConfiguration(
 
     private fun onMessage(update: Update) = try {
         messageReferenceService
-            .fetchMessage(update.fetchUserId())
+            .fetchMessage(update.fetchUniqueIdentifier())
             ?.let {
                 if (it.status == MessageStatus.PROCESSED) {
                     logger.debug { "Got same message twice, message id: ${it.id}, skipping" }
-                    return Either.Right(listOf(EventProcessingResult.PROCESSED))
+                    return Either.Right(listOf(EventProcessingResult.SKIPPED))
                 }
             }
 
