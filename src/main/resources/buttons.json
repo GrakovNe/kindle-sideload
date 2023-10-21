@@ -2,6 +2,16 @@
   {
     "name": "RequestSettingButton",
     "type": "HTML",
-    "template": "Click Me!"
+    "template": "Settings"
+  },
+  {
+    "name": "RequestConvertationWizardButton",
+    "type": "HTML",
+    "template": "Convert a book"
+  },
+  {
+    "name": "RequestHelpButton",
+    "type": "HTML",
+    "template": "Help"
   }
 ]

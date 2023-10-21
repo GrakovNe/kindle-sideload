@@ -17,5 +17,3 @@ data class FileUploadFailedMessage(val reason: FileUploadFailedReason) : Message
 
 data class FileConvertarionSuccess(val result: String) : Message()
 data class FileConvertarionFailed(val details: String) : Message()
-
-data object MainScreenRequestedMessage : Message()

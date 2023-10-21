@@ -16,8 +16,10 @@ abstract class IncomingMessageEventListener<T : EventProcessingError> :
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
-    override fun onEvent(event: IncomingMessageEvent) =
-        when (event.acceptForListener(getDescription())) {
+    override fun onEvent(event: IncomingMessageEvent): Either<T, EventProcessingResult> {
+        val description = getDescription() ?: return Either.Right(EventProcessingResult.SKIPPED)
+
+        return when (event.acceptForListener(description)) {
             true -> logger
                 .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
@@ -27,13 +29,14 @@ abstract class IncomingMessageEventListener<T : EventProcessingError> :
 
             false -> Either.Right(EventProcessingResult.SKIPPED)
         }
+    }
 
     protected abstract fun processEvent(event: IncomingMessageEvent): Either<T, Unit>
 
-    protected fun IncomingMessageEvent.acceptForListener(description: IncomingMessageDescription?) =
+    protected fun IncomingMessageEvent.acceptForListener(description: IncomingMessageDescription) =
         this.update.hasMessage()
                 && this.update.hasSender()
-                && this.update.message().text().startsWith("/" + description?.key)
+                && this.update.message().text().endsWith(description.key)
 
     companion object {
         private val logger = KotlinLogging.logger { }
