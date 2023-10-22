@@ -73,7 +73,7 @@ class NavigatedMessageSender(
         ): SendMessage = SendMessage(chatId, message.text)
             .replyMarkup(navigation.toReplyKeyboard())
             .setParseMode(type)
-            .disableWebPagePreview(message.webPagePreview)
+            .disableWebPagePreview(message.enablePreview.not())
 
         private fun List<List<PreparedButton>>.toReplyKeyboard(): Keyboard {
             if (this.isEmpty()) {

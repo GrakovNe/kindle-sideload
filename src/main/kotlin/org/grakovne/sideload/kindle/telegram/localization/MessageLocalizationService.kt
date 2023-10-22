@@ -27,7 +27,7 @@ class MessageLocalizationService(
     ) = StringSubstitutor(localizedValues)
         .replace(template.template)
         .let { it + advertisingService.provideContent(template, language) }
-        .let { PreparedMessage(it, template.enablePreview.not()) }
+        .let { PreparedMessage(it, template.enablePreview) }
         .let { Either.Right(it) }
 
     override fun deserializeResourceContent(content: ByteArray): List<MessageTemplate> =

@@ -63,9 +63,7 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
     private fun Any.getField(fieldName: String, language: Language?): String? {
         this::class.memberProperties.forEach { kCallable ->
             if (fieldName == kCallable.name) {
-                val rawValue = kCallable.getter.call(this)
-
-                return when (rawValue) {
+                return when (val rawValue = kCallable.getter.call(this)) {
                     is Enum<*> -> enumLocalizationService.localize(rawValue, language)
                     is Instant -> rawValue.toMessage()
                     else -> rawValue.toString()
