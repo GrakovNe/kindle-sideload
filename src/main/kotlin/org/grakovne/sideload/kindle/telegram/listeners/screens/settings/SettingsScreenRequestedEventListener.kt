@@ -22,9 +22,9 @@ class SettingsScreenRequestedEventListener(
                 event.user,
                 SettingsScreenRequestedMessage,
                 listOf(
-                    listOf(MainScreenButton),
                     listOf(OutputFileTypeSettingsScreenButton, StkSettingsScreenButton),
-                    listOf(DebugModeSettingScreenButton, ConverterConfigurationSettingsScreenButton)
+                    listOf(DebugModeSettingScreenButton, ConverterConfigurationSettingsScreenButton),
+                    listOf(MainScreenButton),
                 )
             )
     }

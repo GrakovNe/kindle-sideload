@@ -26,10 +26,10 @@ class ConverterConfigurationScreenEventListener(
                 event.user,
                 MainScreenRequestedMessage,
                 listOf(
-                    listOf(BackToSettingsButton),
                     listOf(UploadConfigurationButton, RemoveConfigurationButton),
                     listOf(FetchConfigurationButton),
-                    listOf(FetchDefaultConfigurationButton)
+                    listOf(FetchDefaultConfigurationButton),
+                    listOf(BackToSettingsButton),
                 )
             )
     }

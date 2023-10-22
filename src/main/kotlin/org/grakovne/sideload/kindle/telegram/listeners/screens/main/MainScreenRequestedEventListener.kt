@@ -25,8 +25,8 @@ class MainScreenRequestedEventListener(
                 event.user,
                 MainScreenRequestedMessage,
                 listOf(
-                    listOf(RequestConvertationWizardButton),
-                    listOf(RequestSettingButton, RequestHelpButton)
+                    listOf(RequestConvertationPromptButton),
+                    listOf(RequestSettingButton, RequestProjectInfoButton)
                 )
             )
     }

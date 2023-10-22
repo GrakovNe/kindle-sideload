@@ -4,16 +4,16 @@
     "template": "Settings"
   },
   {
-    "name": "RequestConvertationWizardButton",
-    "template": "Convert a book"
+    "name": "RequestConvertationPromptButton",
+    "template": "Convert book"
   },
   {
-    "name": "RequestHelpButton",
-    "template": "Help"
+    "name": "RequestProjectInfoButton",
+    "template": "Project info"
   },
   {
     "name": "MainScreenButton",
-    "template": "Back to main"
+    "template": "Go back"
   },
   {
     "name": "DebugModeSettingScreenButton",
@@ -21,43 +21,39 @@
   },
   {
     "name": "StkSettingsScreenButton",
-    "template": "Configure sending to Kindle"
+    "template": "STK"
   },
   {
     "name": "ConverterConfigurationSettingsScreenButton",
-    "template": "Customize converter configuration"
+    "template": "Advanced"
   },
   {
     "name": "OutputFileTypeSettingsScreenButton",
-    "template": "Set output file type"
+    "template": "Output format"
   },
   {
     "name": "FetchConfigurationButton",
-    "template": "Fetch current configuration"
+    "template": "Download current config"
   },
   {
     "name": "FetchDefaultConfigurationButton",
-    "template": "Fetch default configuration"
+    "template": "Download default config"
   },
   {
     "name": "RemoveConfigurationButton",
-    "template": "Set default"
+    "template": "Reset to default"
   },
   {
     "name": "UploadConfigurationButton",
-    "template": "Upload configuration file"
+    "template": "Upload config file"
   },
   {
     "name": "CancelUploadConfigurationButton",
     "template": "Cancel"
   },
   {
-    "name": "RemoveConfigurationButton",
-    "template": "Set default"
-  },
-  {
     "name": "UploadConfigurationButton",
-    "template": "Upload configuration file"
+    "template": "Upload config file"
   },
   {
     "name": "CancelUploadConfigurationButton",
@@ -73,7 +69,7 @@
   },
   {
     "name": "BackToSettingsButton",
-    "template": "Back"
+    "template": "Go Back"
   },
   {
     "name": "EpubOutputButton",

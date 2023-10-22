@@ -24,8 +24,8 @@ class DebugSettingsScreenEventListener(
                 event.user,
                 MainScreenRequestedMessage,
                 listOf(
+                    listOf(EnableDebugModeButton, DisableDebugModeButton),
                     listOf(BackToSettingsButton),
-                    listOf(EnableDebugModeButton, DisableDebugModeButton)
                 )
             )
     }
