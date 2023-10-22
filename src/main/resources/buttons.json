@@ -1,42 +1,102 @@
 [
   {
     "name": "RequestSettingButton",
-    "type": "HTML",
     "template": "Settings"
   },
   {
     "name": "RequestConvertationWizardButton",
-    "type": "HTML",
     "template": "Convert a book"
   },
   {
     "name": "RequestHelpButton",
-    "type": "HTML",
     "template": "Help"
   },
   {
     "name": "MainScreenButton",
-    "type": "HTML",
     "template": "Back to main"
   },
   {
     "name": "DebugModeSettingScreenButton",
-    "type": "HTML",
     "template": "Verbose Mode"
   },
   {
-    "name": "SendToKindleSettingsScreenButton",
-    "type": "HTML",
+    "name": "StkSettingsScreenButton",
     "template": "Configure sending to Kindle"
   },
   {
     "name": "ConverterConfigurationSettingsScreenButton",
-    "type": "HTML",
     "template": "Customize converter configuration"
   },
   {
     "name": "OutputFileTypeSettingsScreenButton",
-    "type": "HTML",
     "template": "Set output file type"
+  },
+  {
+    "name": "FetchConfigurationButton",
+    "template": "Fetch current configuration"
+  },
+  {
+    "name": "FetchDefaultConfigurationButton",
+    "template": "Fetch default configuration"
+  },
+  {
+    "name": "RemoveConfigurationButton",
+    "template": "Set default"
+  },
+  {
+    "name": "UploadConfigurationButton",
+    "template": "Upload configuration file"
+  },
+  {
+    "name": "CancelUploadConfigurationButton",
+    "template": "Cancel"
+  },
+  {
+    "name": "RemoveConfigurationButton",
+    "template": "Set default"
+  },
+  {
+    "name": "UploadConfigurationButton",
+    "template": "Upload configuration file"
+  },
+  {
+    "name": "CancelUploadConfigurationButton",
+    "template": "Cancel"
+  },
+  {
+    "name": "EnableDebugModeButton",
+    "template": "Enable"
+  },
+  {
+    "name": "DisableDebugModeButton",
+    "template": "Disable"
+  },
+  {
+    "name": "BackToSettingsButton",
+    "template": "Back"
+  },
+  {
+    "name": "EpubOutputButton",
+    "template": "Epub"
+  },
+  {
+    "name": "KEpubOutputButton",
+    "template": "KEpub"
+  },
+  {
+    "name": "Awz3ModeButton",
+    "template": "AWZ3"
+  },
+  {
+    "name": "EnableStkButton",
+    "template": "Enable"
+  },
+  {
+    "name": "DisableStkButton",
+    "template": "Disable"
+  },
+  {
+    "name": "UpdateStkEmailButton",
+    "template": "Update Email"
   }
 ]

@@ -1,34 +1,35 @@
-package org.grakovne.sideload.kindle.telegram.listeners.screens.settings
+package org.grakovne.sideload.kindle.telegram.listeners.screens.settings.file.output
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
-import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestSettingButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.DebugModeSettingScreenButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.OutputFileTypeSettingsScreenButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.springframework.stereotype.Service
 
 @Service
-class SettingsScreenRequestedEventListener(
+class OutputTypeSettingsScreenEventListener(
     private val messageSender: NavigatedMessageSender
 ) : IncomingMessageEventListener<EventProcessingError>() {
 
-    override fun getOperatingButtons() = listOf(BackToSettingsButton, RequestSettingButton)
+    override fun getOperatingButtons() = listOf(OutputFileTypeSettingsScreenButton)
 
     override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
         messageSender
             .sendResponse(
                 event.update,
                 event.user,
-                SettingsScreenRequestedMessage,
+                MainScreenRequestedMessage,
                 listOf(
-                    listOf(MainScreenButton),
-                    listOf(OutputFileTypeSettingsScreenButton, StkSettingsScreenButton),
-                    listOf(DebugModeSettingScreenButton, ConverterConfigurationSettingsScreenButton)
+                    listOf(BackToSettingsButton),
+                    listOf(EpubOutputButton, KEpubOutputButton, Awz3ModeButton)
                 )
             )
     }
 
     override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError, Unit> = Either.Right(Unit)
-
 }

@@ -12,14 +12,12 @@ import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 abstract class IncomingMessageEventListener<T : EventProcessingError> :
     ReplyingEventListener<IncomingMessageEvent, T>() {
 
-    open fun getOperatingButton(): Button? = null
+    open fun getOperatingButtons(): List<Button> = emptyList()
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
-    override fun onEvent(event: IncomingMessageEvent): Either<T, EventProcessingResult> {
-        val description = getOperatingButton() ?: return Either.Right(EventProcessingResult.SKIPPED)
-
-        return when (event.acceptForListener(description)) {
+    override fun onEvent(event: IncomingMessageEvent) =
+        when (getOperatingButtons().any { event.acceptForListener(it) }) {
             true -> logger
                 .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
@@ -29,7 +27,6 @@ abstract class IncomingMessageEventListener<T : EventProcessingError> :
 
             false -> Either.Right(EventProcessingResult.SKIPPED)
         }
-    }
 
     protected abstract fun processEvent(event: IncomingMessageEvent): Either<T, Unit>
 

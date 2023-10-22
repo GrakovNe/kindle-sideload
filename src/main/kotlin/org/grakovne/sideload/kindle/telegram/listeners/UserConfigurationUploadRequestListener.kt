@@ -6,7 +6,7 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
-import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.configuration.UploadConfigurationButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.UploadConfigurationButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRequestedMessage
 import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
@@ -28,7 +28,7 @@ class UserConfigurationUploadRequestListener(
             )
     }
 
-    override fun getOperatingButton() = UploadConfigurationButton
+    override fun getOperatingButtons() = listOf(UploadConfigurationButton)
 
     override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError, Unit> =
         userActivityStateService

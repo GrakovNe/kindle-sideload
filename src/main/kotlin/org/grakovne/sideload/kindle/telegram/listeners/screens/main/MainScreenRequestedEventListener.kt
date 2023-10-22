@@ -16,7 +16,7 @@ class MainScreenRequestedEventListener(
     private val userActivityStateService: UserActivityStateService
 ) : IncomingMessageEventListener<EventProcessingError>() {
 
-    override fun getOperatingButton() = MainScreenButton
+    override fun getOperatingButtons() = listOf(MainScreenButton)
 
     override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
         messageSender
