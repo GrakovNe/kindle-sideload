@@ -52,7 +52,7 @@
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Unofficial Kindle Sideload tool\n\nAuthor: @maxgrakov\\nSelect the desired action below."
+    "template": "Unofficial Kindle Sideload tool\n\nAuthor: @maxgrakov\n\nSelect the desired action below."
   },
   {
     "name": "SettingsScreenRequestedMessage",
@@ -67,7 +67,7 @@
   {
     "name": "ProjectInfoMessage",
     "type": "HTML",
-    "template": "Project Info & Credits"
+    "template": "This bot is designed to seamlessly convert fb2 files for Kindle, ensuring that essential formatting elements like pages and footnotes are retained.\n\nTo utilize its capabilities, simply upload an fb2 file and let the bot manage the conversion.\n\nFor a more tailored experience, there's an option to customize the conversion process by uploading advanced configuration settings.\n\n"
   },
   {
     "name": "ConverterConfigurationMessage",
