@@ -52,12 +52,12 @@
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Unofficial Kindle Sideload tool\n\nAuthor: @maxgrakov\n\nSelect the desired action below."
+    "template": "Unofficial Kindle Sideload tool\n\n<pre>Author: @maxgrakov</pre>\nSelect the desired action below"
   },
   {
     "name": "SettingsScreenRequestedMessage",
     "type": "HTML",
-    "template": "Want a tailored experience? Configure the bot now."
+    "template": "Want a tailored experience? Configure the bot now"
   },
   {
     "name": "ConversationPromptMessage",
