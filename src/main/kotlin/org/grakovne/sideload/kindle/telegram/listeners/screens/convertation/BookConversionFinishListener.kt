@@ -35,29 +35,29 @@ class BookConversionFinishListener(
     override fun sendSuccessfulResponse(event: ConvertationFinishedEvent) {
         val user = userService.fetchUser(event.userId)
 
-        messageSender
-            .sendResponse(
-                chatId = user.id,
-                user = user,
-                message = FileConvertarionSuccess(event.log),
-                navigation = listOf(
-                    listOf(MainScreenButton),
-                )
-            )
-            .map {
-                runBlocking {
-                    event
-                        .output
-                        .map { SendDocument(event.userId, it) }
-                        .parallelMap { bot.execute(it) }
-                }
-            }
+        runBlocking {
+            event
+                .output
+                .map { SendDocument(event.userId, it) }
+                .parallelMap { bot.execute(it) }
+        }
             .also {
                 eventSender.sendEvent(
                     UserEnvironmentUnnecessaryEvent(
                         environmentId = event.environmentId
                     )
                 )
+            }
+            .also {
+                messageSender
+                    .sendResponse(
+                        chatId = user.id,
+                        user = user,
+                        message = FileConvertarionSuccess(event.log),
+                        navigation = listOf(
+                            listOf(MainScreenButton),
+                        )
+                    )
             }
     }
 
