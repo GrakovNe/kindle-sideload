@@ -13,7 +13,7 @@ class ButtonService {
         .associate { it.simpleName to getObjectByClassName(it.canonicalName) }
 
     fun fetchButtonName(button: Button): String = button.javaClass.simpleName
-    fun fetchButtonForName(name: String) = buttons[name] as Button
+    fun fetchButtonForName(name: String) = buttons[name]?.let { it as Button }
 
     private fun getObjectByClassName(className: String): Any? {
         return try {
