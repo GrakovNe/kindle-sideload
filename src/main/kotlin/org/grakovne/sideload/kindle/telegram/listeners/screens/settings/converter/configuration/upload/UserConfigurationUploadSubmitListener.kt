@@ -9,6 +9,7 @@ import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.InputRequiredEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.UploadConfigurationButton
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
@@ -44,6 +45,7 @@ class UserConfigurationUploadSubmitListener(
             message = UserConfigurationSubmittedMessage,
             listOf(
                 listOf(BackToSettingsButton),
+                listOf(MainScreenButton)
             )
         )
     }

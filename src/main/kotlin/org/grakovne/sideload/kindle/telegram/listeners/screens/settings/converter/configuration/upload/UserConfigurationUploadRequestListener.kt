@@ -6,6 +6,7 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.UploadConfigurationButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
@@ -28,6 +29,7 @@ class UserConfigurationUploadRequestListener(
                 UserConfigurationRequestedMessage,
                 listOf(
                     listOf(BackToSettingsButton),
+                    listOf(MainScreenButton)
                 )
             )
     }

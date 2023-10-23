@@ -6,6 +6,7 @@ import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.file.output.KEpubOutputButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
@@ -32,6 +33,7 @@ class KepubOutputTypeSettingsScreenEventListener(
                 MainScreenRequestedMessage,
                 listOf(
                     listOf(BackToSettingsButton),
+                    listOf(MainScreenButton)
                 )
             )
     }

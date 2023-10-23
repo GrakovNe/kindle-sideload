@@ -13,7 +13,7 @@
   },
   {
     "name": "MainScreenButton",
-    "template": "Go back"
+    "template": "Back to Home Screen"
   },
   {
     "name": "DebugModeSettingScreenButton",
@@ -65,7 +65,7 @@
   },
   {
     "name": "BackToSettingsButton",
-    "template": "Go Back"
+    "template": "Return to Settings"
   },
   {
     "name": "EpubOutputButton",
@@ -78,13 +78,5 @@
   {
     "name": "Azw3ModeButton",
     "template": "AWZ3"
-  },
-  {
-    "name": "CancelInteractiveActionButton",
-    "template": "Cancel"
-  },
-  {
-    "name": "SendConvertedToEmailButton",
-    "template": "Send to email"
   }
 ]

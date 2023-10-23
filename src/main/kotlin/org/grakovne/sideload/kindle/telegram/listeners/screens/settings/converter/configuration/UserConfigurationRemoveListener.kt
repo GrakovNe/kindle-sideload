@@ -6,6 +6,7 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRemovedMessage
@@ -35,6 +36,7 @@ class UserConfigurationRemoveListener(
                 UserConfigurationRemovedMessage,
                 listOf(
                     listOf(BackToSettingsButton),
+                    listOf(MainScreenButton)
                 )
             )
     }
