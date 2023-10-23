@@ -13,12 +13,8 @@ import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
-
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.listeners.ReplyingEventListener
-import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestConvertationPromptButton
-import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestProjectInfoButton
-import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestSettingButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailed
@@ -45,7 +41,6 @@ class BookConversionFinishListener(
                 user = user,
                 message = FileConvertarionSuccess(event.log),
                 navigation = listOf(
-                    listOf(SendConvertedToEmailButton(event.output)),
                     listOf(MainScreenButton),
                 )
             )
@@ -57,13 +52,13 @@ class BookConversionFinishListener(
                         .parallelMap { bot.execute(it) }
                 }
             }
-//            .also {
-//                eventSender.sendEvent(
-//                    UserEnvironmentUnnecessaryEvent(
-//                        environmentId = event.environmentId
-//                    )
-//                )
-//            }
+            .also {
+                eventSender.sendEvent(
+                    UserEnvironmentUnnecessaryEvent(
+                        environmentId = event.environmentId
+                    )
+                )
+            }
     }
 
     override fun sendFailureResponse(event: ConvertationFinishedEvent, code: EventProcessingError) {

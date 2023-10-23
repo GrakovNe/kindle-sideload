@@ -6,6 +6,5 @@ import java.util.UUID
 
 interface UserPreferencesRepository : JpaRepository<UserPreferences, UUID> {
 
-
     fun findByUserId(userId: String): UserPreferences?
 }
