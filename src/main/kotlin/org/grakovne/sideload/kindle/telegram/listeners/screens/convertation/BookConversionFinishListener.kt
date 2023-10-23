@@ -16,6 +16,10 @@ import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEv
 
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.listeners.ReplyingEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestConvertationPromptButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestProjectInfoButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestSettingButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailed
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccess
@@ -39,7 +43,11 @@ class BookConversionFinishListener(
             .sendResponse(
                 chatId = user.id,
                 user = user,
-                message = FileConvertarionSuccess(event.log)
+                message = FileConvertarionSuccess(event.log),
+                navigation = listOf(
+                    listOf(SendConvertedToEmailButton),
+                    listOf(MainScreenButton),
+                )
             )
             .map {
                 runBlocking {

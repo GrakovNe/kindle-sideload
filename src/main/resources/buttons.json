@@ -98,5 +98,9 @@
   {
     "name": "CancelInteractiveActionButton",
     "template": "Cancel"
+  },
+  {
+    "name": "SendConvertedToEmailButton",
+    "template": "Send to email"
   }
 ]
