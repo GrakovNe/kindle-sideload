@@ -2,7 +2,6 @@ package org.grakovne.sideload.kindle.telegram.listeners.screens.settings.convert
 
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 
-object FetchConfigurationButton : Button()
 object FetchDefaultConfigurationButton : Button()
 object RemoveConfigurationButton : Button()
 object UploadConfigurationButton : Button()
