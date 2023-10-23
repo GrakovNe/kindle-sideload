@@ -1,22 +1,4 @@
 spring:
-  mail:
-    from: "grakovne@gmail.com"
-    subject: "Kindle Sideload Book"
-    text: "Your Books are ready!"
-    host: "smtp.gmail.com"
-    port: "587"
-    username: "grakovne@gmail.com"
-    password: "pass"
-    properties:
-      mail:
-        transport:
-          protocol: smtp
-        smtp:
-          port: 25
-          auth: true
-          starttls:
-            enable: true
-            required: true
   jpa:
     hibernate:
       ddl-auto: validate
