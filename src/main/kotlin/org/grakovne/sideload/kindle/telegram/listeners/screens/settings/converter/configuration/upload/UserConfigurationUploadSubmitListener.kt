@@ -57,18 +57,6 @@ class UserConfigurationUploadSubmitListener(
                 user = event.user,
                 message = UserConfigurationValidationFailedMessage(code.code)
             )
-
-            is FileAbsentError -> messageSender.sendResponse(
-                origin = event.update,
-                user = event.user,
-                message = UserConfigurationFileAbsentMessage
-            )
-
-            else -> messageSender.sendResponse(
-                origin = event.update,
-                user = event.user,
-                message = UserConfigurationSubmissionFailedMessage
-            )
         }
     }
 
