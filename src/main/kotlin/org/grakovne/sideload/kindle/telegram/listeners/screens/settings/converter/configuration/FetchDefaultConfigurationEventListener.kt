@@ -37,7 +37,6 @@ class FetchDefaultConfigurationEventListener(
                         event.user,
                         MainScreenRequestedMessage,
                         listOf(
-                            listOf(FetchDefaultConfigurationButton),
                             listOf(BackToSettingsButton),
                         )
                     )

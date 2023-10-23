@@ -1,10 +1,11 @@
-package org.grakovne.sideload.kindle.telegram.listeners
+package org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration
 
 import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
-import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.RemoveConfigurationButton
+import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRemovedMessage
@@ -31,7 +32,10 @@ class UserConfigurationRemoveListener(
             .sendResponse(
                 event.update,
                 event.user,
-                UserConfigurationRemovedMessage
+                UserConfigurationRemovedMessage,
+                listOf(
+                    listOf(BackToSettingsButton),
+                )
             )
     }
 
