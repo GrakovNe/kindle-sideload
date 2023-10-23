@@ -2,17 +2,17 @@
   {
     "name": "UserConfigurationRequestedMessage",
     "type": "HTML",
-    "template": "You're welcome to upload a configuration .zip archive in the next message"
+    "template": "Please upload a configuration .zip archive in the next message"
   },
   {
     "name": "UserConfigurationSubmittedMessage",
     "type": "HTML",
-    "template": "Your configuration has been saved and will be applied every time when book is converting"
+    "template": "Configuration saved and will be applied during each book conversion"
   },
   {
     "name": "UserConfigurationRemovedMessage",
     "type": "HTML",
-    "template": "Your configuration has been removed and default settings will be applied"
+    "template": "Configuration removed; default settings will now be applied"
   },
   {
     "name": "FileUploadFailedMessage",
@@ -22,41 +22,86 @@
   {
     "name": "FileConvertationRequestedMessage",
     "type": "HTML",
-    "template": "Your file has been submitted to queue and shall be processed shortly."
+    "template": "File submitted to the queue and will be processed shortly"
   },
   {
     "name": "FileConvertarionSuccess",
     "type": "HTML",
-    "template": "Your file is ready!\n\nBelow you can download your file and detailed log for analysis"
+    "template": "File is ready! Download your files now"
   },
   {
     "name": "FileConvertarionFailed",
     "type": "HTML",
-    "template": "Sorry, but your file has failed to convert\n\nBelow you can see detailed log of converter:\n\n<pre>${details}</pre>"
+    "template": "File conversion failed; see the detailed converter log below:\n\n<pre>${details}</pre>"
   },
   {
     "name": "UserConfigurationValidationFailedMessage",
     "type": "HTML",
-    "template": "Validation of the configuration has been failed due to: \n\n<pre>${reason}</pre>\n\nPlease, check you configuration and try again!"
+    "template": "Configuration validation failed due to:\n\n<pre>${reason}</pre>\n\nCheck your configuration and try again"
   },
   {
     "name": "UserConfigurationSubmissionFailedMessage",
     "type": "HTML",
-    "template": "Processing the configuration file has been failed.\n\nPlease, contact the support!"
+    "template": "Configuration file processing failed; please contact support"
   },
   {
     "name": "UserConfigurationFileAbsentMessage",
     "type": "HTML",
-    "template": "Please, upload configuration ZIP archive"
+    "template": "Upload the configuration ZIP archive"
   },
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Main Screen Template"
+    "template": "Unofficial Kindle Sideload tool\n\nAuthor: @maxgrakov\\nSelect the desired action below."
   },
   {
     "name": "SettingsScreenRequestedMessage",
     "type": "HTML",
-    "template": "Main Screen Template"
+    "template": "Want a tailored experience? Configure the bot now."
+  },
+  {
+    "name": "ConversationPromptMessage",
+    "type": "HTML",
+    "template": "Submit your book file for conversion"
+  },
+  {
+    "name": "ProjectInfoMessage",
+    "type": "HTML",
+    "template": "Project Info & Credits"
+  },
+  {
+    "name": "ConverterConfigurationMessage",
+    "type": "HTML",
+    "template": "Configure the bot to best suit your preferences in the settings section"
+  },
+  {
+    "name": "ConverterDefaultConfigurationMessage",
+    "type": "HTML",
+    "template": "Download the default configuration file below, customize it, and re-upload the adjusted file for optimal bot performance"
+  },
+  {
+    "name": "DebugSettingsMessage",
+    "type": "HTML",
+    "template": "You're in verbose mode configuration; adjust how detailed the responses will be"
+  },
+  {
+    "name": "DisableDebugSettingsMessage",
+    "type": "HTML",
+    "template": "Verbose mode disabled"
+  },
+  {
+    "name": "EnableDebugSettingsMessage",
+    "type": "HTML",
+    "template": "Verbose mode activated"
+  },
+  {
+    "name": "OutputTypeSettingsMessage",
+    "type": "HTML",
+    "template": "Define the file format post-conversion in this section; choose the best option for your needs"
+  },
+  {
+    "name": "SetOutputTypeMessage",
+    "type": "HTML",
+    "template": "Output format configured"
   }
 ]

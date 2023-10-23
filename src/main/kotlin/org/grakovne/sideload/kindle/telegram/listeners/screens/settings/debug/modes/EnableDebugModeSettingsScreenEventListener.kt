@@ -4,7 +4,6 @@ import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
-import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.debug.EnableDebugModeButton
@@ -18,8 +17,8 @@ import org.springframework.stereotype.Service
 class EnableDebugModeSettingsScreenEventListener(
     private val userPreferencesService: UserPreferencesService,
     private val messageSender: NavigatedMessageSender,
-    private val buttonService: ButtonService,
-    private val userActivityStateService: UserActivityStateService,
+    buttonService: ButtonService,
+    userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventListener<EventProcessingError>(buttonService, userActivityStateService) {
 
     override fun getOperatingButtons() = listOf(EnableDebugModeButton)
@@ -29,7 +28,7 @@ class EnableDebugModeSettingsScreenEventListener(
             .sendResponse(
                 event.update,
                 event.user,
-                MainScreenRequestedMessage,
+                EnableDebugSettingsMessage,
                 listOf(
                     listOf(BackToSettingsButton),
                     listOf(MainScreenButton)

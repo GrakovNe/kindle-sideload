@@ -7,7 +7,6 @@ import org.grakovne.sideload.kindle.assets.configuration.default.DefaultConfigur
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
-import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
@@ -36,7 +35,7 @@ class FetchDefaultConfigurationEventListener(
                     .sendResponse(
                         event.update,
                         event.user,
-                        MainScreenRequestedMessage,
+                        ConverterDefaultConfigurationMessage,
                         listOf(
                             listOf(BackToSettingsButton),
                             listOf(MainScreenButton)
