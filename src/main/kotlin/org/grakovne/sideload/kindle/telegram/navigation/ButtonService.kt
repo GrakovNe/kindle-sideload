@@ -2,13 +2,14 @@ package org.grakovne.sideload.kindle.telegram.navigation
 
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.reflections.Reflections
+import org.reflections.util.ConfigurationBuilder
 import org.springframework.stereotype.Service
 import kotlin.reflect.full.companionObjectInstance
 
+
 @Service
 class ButtonService {
-
-    private val buttons = Reflections("org.grakovne")
+    private val buttons = Reflections(ConfigurationBuilder().forPackages("org.grakovne"))
         .getSubTypesOf(Button::class.java)
         .associate { it.simpleName to getObjectByClassName(it.canonicalName) }
 
