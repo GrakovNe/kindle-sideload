@@ -31,7 +31,7 @@ abstract class IncomingMessageEventListener<T : EventProcessingError> :
     protected abstract fun processEvent(event: IncomingMessageEvent): Either<T, Unit>
 
     protected fun IncomingMessageEvent.acceptForListener(button: Button) =
-        this.update.fetchText().endsWith(button.javaClass.simpleName)
+        this.update.fetchText() == button.javaClass.simpleName
 
     companion object {
         private val logger = KotlinLogging.logger { }

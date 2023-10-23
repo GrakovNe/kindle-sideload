@@ -90,7 +90,7 @@ class BookConversionRequestListener(
 
         return converterProperties
             .sourceFileExtensions
-            .any { file.fileName().endsWith(it) }
+            .any { file.fileName().equals(it) }
     }
 
     companion object {
