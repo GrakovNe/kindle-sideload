@@ -11,7 +11,7 @@ import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
-import org.grakovne.sideload.kindle.telegram.listeners.ButtonResolvingEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.InputRequiredEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.main.RequestConvertationPromptButton
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
@@ -29,9 +29,9 @@ class BookConversionRequestListener(
     private val properties: FileUploadProperties,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
-) : ButtonResolvingEventListener<FileUploadFailedError>(userActivityStateService, buttonService) {
+) : InputRequiredEventListener<FileUploadFailedError>(userActivityStateService, buttonService) {
 
-    override fun getResolvingButton(): List<Button> = listOf(RequestConvertationPromptButton)
+    override fun getRequiredButton(): List<Button> = listOf(RequestConvertationPromptButton)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender.sendResponse(

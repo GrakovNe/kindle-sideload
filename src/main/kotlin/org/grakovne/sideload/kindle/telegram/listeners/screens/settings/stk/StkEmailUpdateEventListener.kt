@@ -3,7 +3,7 @@ package org.grakovne.sideload.kindle.telegram.listeners.screens.settings.stk
 import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
-import org.grakovne.sideload.kindle.telegram.listeners.ButtonResolvingEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.InputRequiredEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
@@ -19,7 +19,7 @@ class StkEmailUpdateEventListener(
     buttonService: ButtonService,
     private val messageSender: NavigatedMessageSender,
     private val userPreferencesService: UserPreferencesService
-) : ButtonResolvingEventListener<EventProcessingError>(userActivityStateService, buttonService) {
+) : InputRequiredEventListener<EventProcessingError>(userActivityStateService, buttonService) {
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender
@@ -34,7 +34,7 @@ class StkEmailUpdateEventListener(
             )
     }
 
-    override fun getResolvingButton(): List<Button> = listOf(UpdateStkEmailButton)
+    override fun getRequiredButton(): List<Button> = listOf(UpdateStkEmailButton)
 
     override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> {
         val email = event.update.message()?.text() ?: return Either.Right(Unit)

@@ -10,14 +10,14 @@ import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 
-abstract class ButtonResolvingEventListener<T : EventProcessingError>(
+abstract class InputRequiredEventListener<T : EventProcessingError>(
     private val userActivityStateService: UserActivityStateService,
     private val buttonService: ButtonService
 ) : ReplyingEventListener<ButtonPressedEvent, T>() {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
-    open fun getResolvingButton(): List<Button> = emptyList()
+    open fun getRequiredButton(): List<Button> = emptyList()
 
     override fun onEvent(event: ButtonPressedEvent): Either<T, EventProcessingResult> {
         val requestedButton = userActivityStateService
@@ -25,7 +25,7 @@ abstract class ButtonResolvingEventListener<T : EventProcessingError>(
             ?.let { buttonService.fetchButtonForName(it) }
             ?: return Either.Right(EventProcessingResult.SKIPPED)
 
-        return when (getResolvingButton().any { it == requestedButton }) {
+        return when (getRequiredButton().any { it == requestedButton }) {
             true -> logger.info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
                 .tap {

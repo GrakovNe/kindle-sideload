@@ -7,7 +7,7 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
-import org.grakovne.sideload.kindle.telegram.listeners.ButtonResolvingEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.InputRequiredEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.UploadConfigurationButton
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
@@ -33,9 +33,9 @@ class UserConfigurationUploadSubmitListener(
     private val messageSender: NavigatedMessageSender,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
-) : ButtonResolvingEventListener<UserConverterConfigurationError>(userActivityStateService, buttonService) {
+) : InputRequiredEventListener<UserConverterConfigurationError>(userActivityStateService, buttonService) {
 
-    override fun getResolvingButton(): List<Button> = listOf(UploadConfigurationButton)
+    override fun getRequiredButton(): List<Button> = listOf(UploadConfigurationButton)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender.sendResponse(
