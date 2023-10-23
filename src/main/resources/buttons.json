@@ -5,15 +5,15 @@
   },
   {
     "name": "RequestConvertationPromptButton",
-    "template": "Convert book"
+    "template": "Convert Book"
   },
   {
     "name": "RequestProjectInfoButton",
-    "template": "Project info"
+    "template": "Project Info"
   },
   {
     "name": "MainScreenButton",
-    "template": "Back to Home Screen"
+    "template": "Home"
   },
   {
     "name": "DebugModeSettingScreenButton",
@@ -21,35 +21,27 @@
   },
   {
     "name": "ConverterConfigurationSettingsScreenButton",
-    "template": "Advanced"
+    "template": "Advanced Settings"
   },
   {
     "name": "OutputFileTypeSettingsScreenButton",
-    "template": "Output format"
+    "template": "Output Format"
   },
   {
     "name": "FetchConfigurationButton",
-    "template": "Download current config"
+    "template": "Download Current Config"
   },
   {
     "name": "FetchDefaultConfigurationButton",
-    "template": "Download default config"
+    "template": "Download Default Config"
   },
   {
     "name": "RemoveConfigurationButton",
-    "template": "Reset to default"
+    "template": "Reset to Default"
   },
   {
     "name": "UploadConfigurationButton",
-    "template": "Upload config file"
-  },
-  {
-    "name": "CancelUploadConfigurationButton",
-    "template": "Cancel"
-  },
-  {
-    "name": "UploadConfigurationButton",
-    "template": "Upload config file"
+    "template": "Upload Config File"
   },
   {
     "name": "CancelUploadConfigurationButton",
@@ -65,18 +57,18 @@
   },
   {
     "name": "BackToSettingsButton",
-    "template": "Return to Settings"
+    "template": "Back to Settings"
   },
   {
     "name": "EpubOutputButton",
-    "template": "Epub"
+    "template": "EPUB"
   },
   {
     "name": "KEpubOutputButton",
-    "template": "KEpub"
+    "template": "KEPUB"
   },
   {
     "name": "Azw3ModeButton",
-    "template": "AWZ3"
+    "template": "AZW3"
   }
 ]

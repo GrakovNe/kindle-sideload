@@ -1,13 +1,5 @@
 [
   {
-    "name": "CommandType",
-    "values": {
-      "SEND_HELP": "Prints help",
-      "UPLOAD_CONFIGURATION_REQUEST": "Upload converter configuration",
-      "REMOVE_CONFIGURATION_REQUEST": "Remove converter configuration"
-    }
-  },
-  {
     "name": "FileUploadFailedReason",
     "values": {
       "FILE_IS_TOO_LARGE": "Sorry, but your file must be below 20MB"
