@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.telegram.listeners
+package org.grakovne.sideload.kindle.telegram.listeners.screens.convertation
 
 import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
@@ -15,6 +15,7 @@ import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
+import org.grakovne.sideload.kindle.telegram.listeners.ReplyingEventListener
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailed
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccess
@@ -27,8 +28,7 @@ class BookConversionFinishListener(
     private val messageSender: NavigatedMessageSender,
     private val userService: UserService,
     private val eventSender: EventSender
-) : ReplyingEventListener<ConvertationFinishedEvent, EventProcessingError>(),
-    SilentEventListener {
+) : ReplyingEventListener<ConvertationFinishedEvent, EventProcessingError>() {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)
 

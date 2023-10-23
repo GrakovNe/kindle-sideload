@@ -13,8 +13,6 @@ import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converte
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
-import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationFileAbsentMessage
-import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmissionFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmittedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationValidationFailedMessage
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService

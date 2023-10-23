@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.telegram.listeners.screens.conversation.prompt
+package org.grakovne.sideload.kindle.telegram.listeners.screens.convertation
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
