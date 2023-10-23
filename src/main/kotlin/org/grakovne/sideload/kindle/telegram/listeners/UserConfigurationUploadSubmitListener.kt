@@ -7,16 +7,14 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
-import org.grakovne.sideload.kindle.events.core.EventProcessingResult.PROCESSED
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
-import org.grakovne.sideload.kindle.events.core.EventType
-import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
+import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationFileAbsentMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmissionFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmittedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationValidationFailedMessage
-import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
 import org.grakovne.sideload.kindle.user.configuration.domain.FileAbsentError
@@ -30,25 +28,24 @@ import org.springframework.stereotype.Service
 class UserConfigurationUploadSubmitListener(
     private val bot: TelegramBot,
     private val fileDownloadService: FileDownloadService,
-    private val userActivityStateService: UserActivityStateService,
     private val userConverterConfigurationService: UserConverterConfigurationService,
     private val properties: FileUploadProperties,
     private val messageSender: NavigatedMessageSender,
-    private val userConfigurationUploadRequestListener: UserConfigurationUploadRequestListener
-) : IncomingMessageEventListener<UserConverterConfigurationError>(), SilentEventListener {
+    private val userConfigurationUploadRequestListener: UserConfigurationUploadRequestListener,
+    private val buttonService: ButtonService,
+    private val userActivityStateService: UserActivityStateService,
+) : ButtonPressedEventListener<UserConverterConfigurationError>(buttonService, userActivityStateService),
+    SilentEventListener {
 
-    override fun onEvent(event: IncomingMessageEvent): Either<UserConverterConfigurationError, EventProcessingResult> {
+    override fun onEvent(event: ButtonPressedEvent): Either<UserConverterConfigurationError, EventProcessingResult> {
         if (userConfigurationUploadRequestListener.getOperatingButtons().any { event.acceptForListener(it) }) {
             return Either.Right(SKIPPED)
         }
 
-        return when (userActivityStateService.fetchCurrentState(event.user.id)) {
-            ActivityState.UPLOADING_CONFIGURATION_REQUESTED -> processEvent(event).map { PROCESSED }
-            else -> return Either.Right(SKIPPED)
-        }
+        return Either.Right(SKIPPED)
     }
 
-    override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
+    override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender.sendResponse(
             origin = event.update,
             user = event.user,
@@ -56,7 +53,7 @@ class UserConfigurationUploadSubmitListener(
         )
     }
 
-    override fun sendFailureResponse(event: IncomingMessageEvent, code: UserConverterConfigurationError) {
+    override fun sendFailureResponse(event: ButtonPressedEvent, code: UserConverterConfigurationError) {
         when (code) {
             is ValidationError -> messageSender.sendResponse(
                 origin = event.update,
@@ -78,7 +75,7 @@ class UserConfigurationUploadSubmitListener(
         }
     }
 
-    override fun processEvent(event: IncomingMessageEvent): Either<UserConverterConfigurationError, Unit> {
+    override fun processEvent(event: ButtonPressedEvent): Either<UserConverterConfigurationError, Unit> {
         val file = event
             .update
             .message()
@@ -99,7 +96,6 @@ class UserConfigurationUploadSubmitListener(
         return userConverterConfigurationService
             .updateConverterConfiguration(event.user, configurationFile)
             .map { }
-            .also { userActivityStateService.dropCurrentState(event.user.id) }
     }
 
     companion object {

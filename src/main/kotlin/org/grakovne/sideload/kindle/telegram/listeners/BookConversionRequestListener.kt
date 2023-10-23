@@ -11,14 +11,13 @@ import org.grakovne.sideload.kindle.common.TaskQueueingError
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
-import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.telegram.configuration.ConverterProperties
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
-import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
+import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertationRequestedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileUploadFailedMessage
-import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState.UPLOADING_CONFIGURATION_REQUESTED
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.springframework.stereotype.Service
 
@@ -26,13 +25,14 @@ import org.springframework.stereotype.Service
 class BookConversionRequestListener(
     private val converterProperties: ConverterProperties,
     private val convertationTaskService: ConvertationTaskService,
+    private val buttonService: ButtonService,
     private val userActivityStateService: UserActivityStateService,
     private val messageSender: NavigatedMessageSender,
     private val bot: TelegramBot,
     private val properties: FileUploadProperties,
-) : IncomingMessageEventListener<FileUploadFailedError>(), SilentEventListener {
+) : ButtonPressedEventListener<FileUploadFailedError>(buttonService, userActivityStateService), SilentEventListener {
 
-    override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
+    override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender.sendResponse(
             origin = event.update,
             user = event.user,
@@ -40,7 +40,7 @@ class BookConversionRequestListener(
         )
     }
 
-    override fun sendFailureResponse(event: IncomingMessageEvent, code: FileUploadFailedError) {
+    override fun sendFailureResponse(event: ButtonPressedEvent, code: FileUploadFailedError) {
         messageSender
             .sendResponse(
                 origin = event.update,
@@ -49,10 +49,10 @@ class BookConversionRequestListener(
             )
     }
 
-    override fun onEvent(event: IncomingMessageEvent): Either<FileUploadFailedError, EventProcessingResult> {
+    override fun onEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, EventProcessingResult> {
         return when {
-            userActivityStateService.fetchCurrentState(event.user.id) == UPLOADING_CONFIGURATION_REQUESTED ->
-                return Either.Right(EventProcessingResult.SKIPPED)
+//            userActivityStateService.fetchCurrentState(event.user.id) == UPLOADING_CONFIGURATION_REQUESTED ->
+//                return Either.Right(EventProcessingResult.SKIPPED)
 
             receivedSourceFile(event.update) ->
                 processEvent(event).map { EventProcessingResult.PROCESSED }
@@ -61,7 +61,7 @@ class BookConversionRequestListener(
         }
     }
 
-    override fun processEvent(event: IncomingMessageEvent): Either<FileUploadFailedError, Unit> {
+    override fun processEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, Unit> {
         val file = event
             .update
             .message()

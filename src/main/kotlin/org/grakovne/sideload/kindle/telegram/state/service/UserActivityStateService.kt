@@ -2,7 +2,6 @@ package org.grakovne.sideload.kindle.telegram.state.service
 
 import arrow.core.Either
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.domain.UserActivityState
 import org.grakovne.sideload.kindle.telegram.state.repository.UserActivityStateRepository
 import org.springframework.stereotype.Service
@@ -14,21 +13,17 @@ class UserActivityStateService(
     private val repository: UserActivityStateRepository
 ) {
 
-    fun fetchCurrentState(userId: String): ActivityState? = repository
+    fun fetchCurrentState(userId: String): String? = repository
         .also { logger.debug { "Fetching current activity state for $userId" } }
         .findByUserIdOrderByCreatedAtDesc(userId)
         .firstOrNull()
         ?.activityState
 
-    fun dropCurrentState(userId: String) = logger
-        .debug { "Dropping current activity state for $userId" }
-        .let { setCurrentState(userId, ActivityState.NOT_SPECIFIED) }
-
-    fun setCurrentState(userId: String, state: ActivityState): Either<UserActivityStateError, Unit> {
+    fun setCurrentState(userId: String, state: String?): Either<UserActivityStateError, Unit> {
         val entity = UserActivityState(
             id = UUID.randomUUID(),
             userId = userId,
-            activityState = state,
+            activityState = state ?: "",
             createdAt = Instant.now()
         )
 

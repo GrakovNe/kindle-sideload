@@ -3,23 +3,22 @@ package org.grakovne.sideload.kindle.telegram.listeners
 import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
-import org.grakovne.sideload.kindle.events.core.EventType
-import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
-import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
+import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.UploadConfigurationButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
+import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRequestedMessage
-import org.grakovne.sideload.kindle.telegram.state.domain.ActivityState
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.springframework.stereotype.Service
 
 @Service
 class UserConfigurationUploadRequestListener(
-    private val userActivityStateService: UserActivityStateService,
     private val messageSender: NavigatedMessageSender,
-) : IncomingMessageEventListener<EventProcessingError>() {
+    private val buttonService: ButtonService,
+    private val userActivityStateService: UserActivityStateService,
+) : ButtonPressedEventListener<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun sendSuccessfulResponse(event: IncomingMessageEvent) {
+    override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender
             .sendResponse(
                 event.update,
@@ -30,10 +29,7 @@ class UserConfigurationUploadRequestListener(
 
     override fun getOperatingButtons() = listOf(UploadConfigurationButton)
 
-    override fun processEvent(event: IncomingMessageEvent): Either<EventProcessingError, Unit> =
-        userActivityStateService
-            .setCurrentState(event.user.id, ActivityState.UPLOADING_CONFIGURATION_REQUESTED)
-            .mapLeft { UnknownError }
+    override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> = Either.Right(Unit)
 
     companion object {
         private val logger = KotlinLogging.logger { }

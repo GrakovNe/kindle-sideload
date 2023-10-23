@@ -2,19 +2,6 @@ package org.grakovne.sideload.kindle.telegram
 
 import com.pengrad.telegrambot.model.Update
 
-
-fun Update.fetchText(): String {
-    if (null != this.message()) {
-        return this.message().text()
-    }
-
-    if (null != this.callbackQuery()) {
-        return this.callbackQuery().data()
-    }
-
-    throw IllegalArgumentException("Change me later")
-}
-
 fun Update.fetchUniqueIdentifier(): String {
     if (null != this.message()) {
         return this.message().messageId().toString()

@@ -94,5 +94,9 @@
   {
     "name": "UpdateStkEmailButton",
     "template": "Update Email"
+  },
+  {
+    "name": "CancelInteractiveActionButton",
+    "template": "Cancel"
   }
 ]

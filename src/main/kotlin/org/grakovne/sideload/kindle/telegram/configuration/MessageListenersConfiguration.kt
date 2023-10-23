@@ -12,11 +12,11 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.LogLevel.WARN
 import org.grakovne.sideload.kindle.events.internal.LoggingEvent
-import org.grakovne.sideload.kindle.telegram.domain.IncomingMessageEvent
+import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.fetchLanguage
 import org.grakovne.sideload.kindle.telegram.fetchUniqueIdentifier
 import org.grakovne.sideload.kindle.telegram.fetchUserId
-import org.grakovne.sideload.kindle.telegram.listeners.IncomingMessageEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventService
 import org.grakovne.sideload.kindle.telegram.localization.EnumLocalizationService
 import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service
 @Service
 class MessageListenersConfiguration(
     private val bot: TelegramBot,
-    private val incomingMessageEventListeners: List<IncomingMessageEventListener<*>>,
+    private val incomingMessageEventListeners: List<ButtonPressedEventListener<*>>,
     private val eventSender: EventSender,
     private val userService: UserService,
     private val enumLocalizationService: EnumLocalizationService,
@@ -70,7 +70,7 @@ class MessageListenersConfiguration(
 
         logger.debug { "Processing incoming message ${update.updateId()} for user ${user.id}" }
 
-        val incomingMessageEvent = IncomingMessageEvent(update, user)
+        val incomingMessageEvent = ButtonPressedEvent(update, user)
 
         eventSender
             .sendEvent(incomingMessageEvent)
