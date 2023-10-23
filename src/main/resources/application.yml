@@ -33,6 +33,7 @@ converter:
   source:
     releasesUrl: "https://api.github.com/repos/rupor-github/fb2converter/releases/latest"
   binary:
+    verboseFileName: "conversion.log"
     binaryPersistencePath: "fb2_converter"
     converterFileName: "fb2c"
     shell: "/bin/bash"

@@ -14,4 +14,5 @@ class ConverterBinaryProperties {
     var converterFileName: String by Delegates.notNull()
     var configurationExtensions: List<String> by Delegates.notNull()
     var converterParameters: String by Delegates.notNull()
+    var verboseFileName: String by Delegates.notNull()
 }

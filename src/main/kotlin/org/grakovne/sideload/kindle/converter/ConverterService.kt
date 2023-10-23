@@ -45,7 +45,7 @@ class ConverterService(
         val environmentFiles = environment.snapshotDirectory()
         val userPreferences = userPreferencesService.fetchPreferences(userId)
         val result = convertBook(inputFile, environment, userPreferences)
-        val outputFiles = environment.snapshotDirectory() - environmentFiles.toSet()
+        val outputFiles = dropVerboseFile(userPreferences, environment.snapshotDirectory() - environmentFiles.toSet())
 
         return result
             .tap { logger.info { "The convertation of ${book.name} for user id: $userId finished successfully. Output files are: ${outputFiles.map { it.name }}" } }
@@ -57,6 +57,15 @@ class ConverterService(
                 )
                     .also { logger.error { "The convertation of ${book.name} for user id: $userId failed. See details: $it" } }
             }
+    }
+
+    private fun dropVerboseFile(
+        userPreferences: UserPreferences,
+        outputFiles: List<File>
+    ) = if (userPreferences.debugMode.not()) {
+        outputFiles.filterNot { it.name == properties.verboseFileName }
+    } else {
+        outputFiles
     }
 
     private fun File.fetchConfigurationFileName(): String? = this
