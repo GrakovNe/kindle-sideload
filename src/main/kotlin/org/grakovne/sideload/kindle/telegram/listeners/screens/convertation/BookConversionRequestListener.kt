@@ -9,6 +9,7 @@ import org.grakovne.sideload.kindle.common.FileUploadFailedError
 import org.grakovne.sideload.kindle.common.TaskQueueingError
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
+import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.listeners.InputRequiredEventListener
@@ -48,6 +49,15 @@ class BookConversionRequestListener(
                 user = event.user,
                 message = FileUploadFailedMessage(FileUploadFailedReason.FILE_IS_TOO_LARGE)
             )
+    }
+
+    override fun onEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, EventProcessingResult> {
+        return event
+            .update
+            .message()
+            ?.document()
+            ?.let { super.onEvent(event) }
+            ?: Either.Right(EventProcessingResult.SKIPPED)
     }
 
     override fun processEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, Unit> {
