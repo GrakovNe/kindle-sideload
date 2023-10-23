@@ -45,7 +45,7 @@ class BookConversionFinishListener(
                 user = user,
                 message = FileConvertarionSuccess(event.log),
                 navigation = listOf(
-                    listOf(SendConvertedToEmailButton),
+                    listOf(SendConvertedToEmailButton(event.output)),
                     listOf(MainScreenButton),
                 )
             )
@@ -57,13 +57,13 @@ class BookConversionFinishListener(
                         .parallelMap { bot.execute(it) }
                 }
             }
-            .also {
-                eventSender.sendEvent(
-                    UserEnvironmentUnnecessaryEvent(
-                        environmentId = event.environmentId
-                    )
-                )
-            }
+//            .also {
+//                eventSender.sendEvent(
+//                    UserEnvironmentUnnecessaryEvent(
+//                        environmentId = event.environmentId
+//                    )
+//                )
+//            }
     }
 
     override fun sendFailureResponse(event: ConvertationFinishedEvent, code: EventProcessingError) {

@@ -74,6 +74,7 @@ class NavigatedMessageSender(
             .replyMarkup(navigation.toReplyKeyboard())
             .setParseMode(type)
             .disableWebPagePreview(message.enablePreview.not())
+            .entities()
 
         private fun List<List<PreparedButton>>.toReplyKeyboard(): Keyboard {
             if (this.isEmpty()) {
