@@ -102,8 +102,6 @@ class UserConfigurationUploadSubmitListener(
             .also { userActivityStateService.dropCurrentState(event.user.id) }
     }
 
-    override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
-
     companion object {
         private val logger = KotlinLogging.logger { }
     }

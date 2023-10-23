@@ -35,8 +35,6 @@ class UserConfigurationUploadRequestListener(
             .setCurrentState(event.user.id, ActivityState.UPLOADING_CONFIGURATION_REQUESTED)
             .mapLeft { UnknownError }
 
-    override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
-
     companion object {
         private val logger = KotlinLogging.logger { }
     }

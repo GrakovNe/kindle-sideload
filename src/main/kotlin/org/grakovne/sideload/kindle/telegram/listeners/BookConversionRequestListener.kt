@@ -82,8 +82,6 @@ class BookConversionRequestListener(
             .mapLeft { TaskQueueingError }
     }
 
-    override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
-
     private fun receivedSourceFile(update: Update): Boolean {
         val file = update
             .message()

@@ -16,8 +16,6 @@ abstract class IncomingMessageEventListener<T : EventProcessingError> :
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
-    open fun redirectSuccessfully(): Button? = null
-
     override fun onEvent(event: IncomingMessageEvent) =
         when (getOperatingButtons().any { event.acceptForListener(it) }) {
             true -> logger
