@@ -6,7 +6,7 @@ import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
-import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.file.output.Awz3ModeButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.file.output.Azw3ModeButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
@@ -15,14 +15,14 @@ import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesServ
 import org.springframework.stereotype.Service
 
 @Service
-class Awz3OutputTypeSettingsScreenEventListener(
+class Azw3OutputTypeSettingsScreenEventListener(
     private val userPreferencesService: UserPreferencesService,
     private val messageSender: NavigatedMessageSender,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventListener<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(Awz3ModeButton)
+    override fun getOperatingButtons() = listOf(Azw3ModeButton)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender
@@ -38,7 +38,7 @@ class Awz3OutputTypeSettingsScreenEventListener(
 
     override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> =
         userPreferencesService
-            .updateOutputFormat(event.user.id, OutputFormat.AWZ3).let {
+            .updateOutputFormat(event.user.id, OutputFormat.AZW3).let {
                 Either.Right(Unit)
             }
 }

@@ -4,4 +4,4 @@ import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 
 object EpubOutputButton : Button()
 object KEpubOutputButton : Button()
-object Awz3ModeButton : Button()
+object Azw3ModeButton : Button()

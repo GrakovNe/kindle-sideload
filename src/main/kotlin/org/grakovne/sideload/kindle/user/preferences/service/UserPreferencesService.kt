@@ -11,6 +11,8 @@ class UserPreferencesService(
     private val repository: UserPreferencesRepository
 ) {
 
+    fun fetchPreferences(userId: String) = fetchOrCreate(userId)
+
     fun updateOutputFormat(userId: String, outputFormat: OutputFormat) = fetchOrCreate(userId)
         .copy(outputFormat = outputFormat)
         .let { repository.save(it) }
@@ -25,12 +27,11 @@ class UserPreferencesService(
 
     private fun fetchOrCreate(userId: String) = repository.findByUserId(userId) ?: createNew(userId)
 
-    private
-    fun createNew(userId: String) =
+    private fun createNew(userId: String) =
         UserPreferences(
             id = UUID.randomUUID(),
             userId = userId,
-            outputFormat = null,
+            outputFormat = OutputFormat.EPUB,
             email = null,
             debugMode = false
         ).let { repository.save(it) }

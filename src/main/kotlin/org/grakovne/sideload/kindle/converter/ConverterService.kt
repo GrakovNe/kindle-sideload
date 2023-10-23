@@ -6,6 +6,8 @@ import org.grakovne.sideload.kindle.common.CliRunner
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinaryProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
+import org.grakovne.sideload.kindle.user.preferences.domain.UserPreferences
+import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import java.io.File
@@ -16,7 +18,8 @@ class ConverterService(
     private val cliRunner: CliRunner,
     private val userEnvironmentService: UserEnvironmentService,
     private val binaryProvider: ConverterBinaryProvider,
-    private val properties: ConverterBinaryProperties
+    private val properties: ConverterBinaryProperties,
+    private val userPreferencesService: UserPreferencesService
 ) {
 
     fun convertAndCollect(
@@ -40,7 +43,8 @@ class ConverterService(
         val inputFile = deployContent(environment, book)
 
         val environmentFiles = environment.snapshotDirectory()
-        val result = convertBook(inputFile, environment)
+        val userPreferences = userPreferencesService.fetchPreferences(userId)
+        val result = convertBook(inputFile, environment, userPreferences)
         val outputFiles = environment.snapshotDirectory() - environmentFiles.toSet()
 
         return result
@@ -62,12 +66,13 @@ class ConverterService(
 
     private fun buildShellCommand(
         inputFile: File,
-        environment: File
+        environment: File,
+        userPreferences: UserPreferences
     ): String {
         val path = binaryProvider.provideBinaryConverter().absolutePath
         val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
 
-        return "$path $configurationKey convert ${properties.converterParameters} ${inputFile.name}"
+        return "$path $configurationKey convert --to ${userPreferences.outputFormat.name.lowercase()} ${properties.converterParameters} ${inputFile.name}"
             .also { logger.debug { "Shell command build: $it" } }
     }
 
@@ -98,10 +103,11 @@ class ConverterService(
 
     private fun convertBook(
         inputFile: File,
-        environment: File
+        environment: File,
+        configuration: UserPreferences
     ) = environment
         .let {
-            val runCommand = buildShellCommand(inputFile, environment)
+            val runCommand = buildShellCommand(inputFile, environment, configuration)
             logger.debug { "Running $runCommand on ${properties.shell} with args ${properties.shellArgs}" }
 
             cliRunner.runCli(

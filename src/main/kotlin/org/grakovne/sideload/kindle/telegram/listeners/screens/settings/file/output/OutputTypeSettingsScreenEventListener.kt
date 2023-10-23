@@ -28,7 +28,7 @@ class OutputTypeSettingsScreenEventListener(
                 event.user,
                 MainScreenRequestedMessage,
                 listOf(
-                    listOf(EpubOutputButton, KEpubOutputButton, Awz3ModeButton),
+                    listOf(EpubOutputButton, KEpubOutputButton, Azw3ModeButton),
                     listOf(BackToSettingsButton),
                 )
             )
