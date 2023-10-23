@@ -32,8 +32,8 @@ class UserConfigurationUploadSubmitListener(
     private val properties: FileUploadProperties,
     private val messageSender: NavigatedMessageSender,
     private val userConfigurationUploadRequestListener: UserConfigurationUploadRequestListener,
-    private val buttonService: ButtonService,
-    private val userActivityStateService: UserActivityStateService,
+    buttonService: ButtonService,
+    userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventListener<UserConverterConfigurationError>(buttonService, userActivityStateService),
     SilentEventListener {
 

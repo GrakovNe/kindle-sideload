@@ -7,11 +7,9 @@ import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListene
 import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.debug.EnableDebugModeButton
-import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.file.output.Awz3ModeButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
-import org.grakovne.sideload.kindle.user.common.OutputFormat
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.springframework.stereotype.Service
 

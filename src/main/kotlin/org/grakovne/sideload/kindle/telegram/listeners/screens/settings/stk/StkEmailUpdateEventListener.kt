@@ -3,7 +3,7 @@ package org.grakovne.sideload.kindle.telegram.listeners.screens.settings.stk
 import arrow.core.Either
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
-import org.grakovne.sideload.kindle.telegram.listeners.screens.ButtonResolvingEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.ButtonResolvingEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button

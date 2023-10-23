@@ -12,8 +12,8 @@ import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.configuration.ConverterProperties
-import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
+import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertationRequestedMessage
@@ -25,11 +25,11 @@ import org.springframework.stereotype.Service
 class BookConversionRequestListener(
     private val converterProperties: ConverterProperties,
     private val convertationTaskService: ConvertationTaskService,
-    private val buttonService: ButtonService,
-    private val userActivityStateService: UserActivityStateService,
     private val messageSender: NavigatedMessageSender,
     private val bot: TelegramBot,
     private val properties: FileUploadProperties,
+    buttonService: ButtonService,
+    userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventListener<FileUploadFailedError>(buttonService, userActivityStateService), SilentEventListener {
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {

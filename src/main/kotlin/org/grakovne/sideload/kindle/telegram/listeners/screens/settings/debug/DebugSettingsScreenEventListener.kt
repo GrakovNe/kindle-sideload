@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service
 @Service
 class DebugSettingsScreenEventListener(
     private val messageSender: NavigatedMessageSender,
-    private val buttonService: ButtonService,
-    private val userActivityStateService: UserActivityStateService,
+    buttonService: ButtonService,
+    userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventListener<EventProcessingError>(buttonService, userActivityStateService) {
 
     override fun getOperatingButtons() = listOf(DebugModeSettingScreenButton)

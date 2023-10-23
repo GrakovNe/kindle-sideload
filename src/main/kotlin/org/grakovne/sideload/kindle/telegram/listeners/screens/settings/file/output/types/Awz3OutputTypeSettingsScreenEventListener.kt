@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service
 class Awz3OutputTypeSettingsScreenEventListener(
     private val userPreferencesService: UserPreferencesService,
     private val messageSender: NavigatedMessageSender,
-    private val buttonService: ButtonService,
-    private val userActivityStateService: UserActivityStateService,
+    buttonService: ButtonService,
+    userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventListener<EventProcessingError>(buttonService, userActivityStateService) {
 
     override fun getOperatingButtons() = listOf(Awz3ModeButton)
