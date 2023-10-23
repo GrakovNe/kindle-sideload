@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.telegram.listeners
+package org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.upload
 
 import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
@@ -6,9 +6,11 @@ import com.pengrad.telegrambot.request.GetFile
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
-import org.grakovne.sideload.kindle.events.core.EventProcessingResult
-import org.grakovne.sideload.kindle.events.core.EventProcessingResult.SKIPPED
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
+import org.grakovne.sideload.kindle.telegram.listeners.ButtonResolvingEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.UploadConfigurationButton
+import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationFileAbsentMessage
@@ -31,25 +33,20 @@ class UserConfigurationUploadSubmitListener(
     private val userConverterConfigurationService: UserConverterConfigurationService,
     private val properties: FileUploadProperties,
     private val messageSender: NavigatedMessageSender,
-    private val userConfigurationUploadRequestListener: UserConfigurationUploadRequestListener,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
-) : ButtonPressedEventListener<UserConverterConfigurationError>(buttonService, userActivityStateService),
-    SilentEventListener {
+) : ButtonResolvingEventListener<UserConverterConfigurationError>(userActivityStateService, buttonService) {
 
-    override fun onEvent(event: ButtonPressedEvent): Either<UserConverterConfigurationError, EventProcessingResult> {
-        if (userConfigurationUploadRequestListener.getOperatingButtons().any { event.acceptForListener(it) }) {
-            return Either.Right(SKIPPED)
-        }
-
-        return Either.Right(SKIPPED)
-    }
+    override fun getResolvingButton(): List<Button> = listOf(UploadConfigurationButton)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender.sendResponse(
             origin = event.update,
             user = event.user,
-            message = UserConfigurationSubmittedMessage
+            message = UserConfigurationSubmittedMessage,
+            listOf(
+                listOf(BackToSettingsButton),
+            )
         )
     }
 

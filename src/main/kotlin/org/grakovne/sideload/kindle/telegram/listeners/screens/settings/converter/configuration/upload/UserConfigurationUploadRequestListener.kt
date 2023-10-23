@@ -1,9 +1,11 @@
-package org.grakovne.sideload.kindle.telegram.listeners
+package org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.upload
 
 import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
+import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
+import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.listeners.screens.settings.converter.configuration.UploadConfigurationButton
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
@@ -23,7 +25,10 @@ class UserConfigurationUploadRequestListener(
             .sendResponse(
                 event.update,
                 event.user,
-                UserConfigurationRequestedMessage
+                UserConfigurationRequestedMessage,
+                listOf(
+                    listOf(BackToSettingsButton),
+                )
             )
     }
 
