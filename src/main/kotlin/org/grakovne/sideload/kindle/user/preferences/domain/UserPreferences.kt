@@ -15,4 +15,5 @@ data class UserPreferences(
     @Enumerated(EnumType.STRING)
     val outputFormat: OutputFormat?,
     val email: String?,
+    val debugMode: Boolean
 )

@@ -15,6 +15,10 @@ class UserPreferencesService(
         .copy(outputFormat = outputFormat)
         .let { repository.save(it) }
 
+    fun updateDebugMode(userId: String, debugMode: Boolean) = fetchOrCreate(userId)
+        .copy(debugMode = debugMode)
+        .let { repository.save(it) }
+
     fun updateEmail(userId: String, email: String) = fetchOrCreate(userId)
         .copy(email = email)
         .let { repository.save(it) }
@@ -27,6 +31,7 @@ class UserPreferencesService(
             id = UUID.randomUUID(),
             userId = userId,
             outputFormat = null,
-            email = null
+            email = null,
+            debugMode = false
         ).let { repository.save(it) }
 }
