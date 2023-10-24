@@ -9,5 +9,5 @@ import kotlin.properties.Delegates
 class EnvironmentProperties {
 
     var temporaryFolder: String by Delegates.notNull()
-    var outputFileExtensions: String by Delegates.notNull()
+    var outputFileExtensions: List<String> by Delegates.notNull()
 }
