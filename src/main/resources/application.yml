@@ -42,6 +42,7 @@ user:
       file-name: "configuration.zip"
   environment:
     temporaryFolder: "user_environments"
+    outputFileExtensions: ["epub", "azw3"]
 
 file:
   upload:

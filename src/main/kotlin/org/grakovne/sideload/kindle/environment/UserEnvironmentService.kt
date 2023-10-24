@@ -18,10 +18,10 @@ class UserEnvironmentService(
     private val zipArchiveService: ZipArchiveService
 ) {
 
-    private fun provideBinaryFolder(): File = Path
-        .of(environmentProperties.temporaryFolder)
-        .toFile()
-        .also { it.mkdirs() }
+    fun provideEnvironmentFiles(environmentId: String) = provideEnvironmentFolder(environmentId)
+        .listFiles()
+        ?.filter { environmentProperties.outputFileExtensions.contains(it.extension) }
+        ?: emptyList()
 
     fun deployEnvironment(userId: String): Either<EnvironmentError, File> {
         logger.info { "Deploying temporary environment for user: $userId" }
@@ -64,6 +64,11 @@ class UserEnvironmentService(
     private fun provideEnvironmentFolder(environmentId: String) = provideBinaryFolder()
         .toPath()
         .resolve(environmentId)
+        .toFile()
+        .also { it.mkdirs() }
+
+    private fun provideBinaryFolder(): File = Path
+        .of(environmentProperties.temporaryFolder)
         .toFile()
         .also { it.mkdirs() }
 
