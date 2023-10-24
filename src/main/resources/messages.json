@@ -103,5 +103,20 @@
     "name": "SetOutputTypeMessage",
     "type": "HTML",
     "template": "Output format configured"
+  },
+  {
+    "name": "StkScreenMessage",
+    "type": "HTML",
+    "template": "Define Send To Kindle settings to get converted file right to your Device"
+  },
+  {
+    "name": "UpdateEmailUpdatedMessage",
+    "type": "HTML",
+    "template": "Your E-Mail has been updated. Chose option \"Send To E-Mail\" after book conversion"
+  },
+  {
+    "name": "UpdateEmailPromptMessage",
+    "type": "HTML",
+    "template": "Input up your E-Reader email"
   }
 ]

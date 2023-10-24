@@ -13,6 +13,10 @@ class UserPreferencesService(
 
     fun fetchPreferences(userId: String) = fetchOrCreate(userId)
 
+    fun updateEmail(userId: String, email: String) = fetchOrCreate(userId)
+        .copy(email = email)
+        .let { repository.save(it) }
+
     fun updateOutputFormat(userId: String, outputFormat: OutputFormat) = fetchOrCreate(userId)
         .copy(outputFormat = outputFormat)
         .let { repository.save(it) }
@@ -28,6 +32,7 @@ class UserPreferencesService(
             id = UUID.randomUUID(),
             userId = userId,
             outputFormat = OutputFormat.EPUB,
-            debugMode = false
+            debugMode = false,
+            email = null,
         ).let { repository.save(it) }
 }

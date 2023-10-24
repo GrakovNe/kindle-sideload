@@ -1,0 +1,1 @@
+alter table user_preferences add column email text;

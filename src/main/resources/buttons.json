@@ -70,5 +70,21 @@
   {
     "name": "Azw3ModeButton",
     "template": "AZW3"
+  },
+  {
+    "name": "StkSettingsScreenButton",
+    "template": "STK"
+  },
+  {
+    "name": "EnableStkButton",
+    "template": "Enable"
+  },
+  {
+    "name": "DisableStkButton",
+    "template": "Disable"
+  },
+  {
+    "name": "UpdateStkEmailButton",
+    "template": "Update Email"
   }
 ]
