@@ -1,7 +1,6 @@
 package org.grakovne.sideload.kindle.telegram.messaging
 
 import arrow.core.Either
-import arrow.core.flatMap
 import arrow.core.sequence
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton
@@ -20,6 +19,7 @@ import org.grakovne.sideload.kindle.telegram.localization.NavigationLocalization
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.localization.domain.Message
 import org.grakovne.sideload.kindle.telegram.localization.template.MessageType
+import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 
@@ -27,7 +27,8 @@ import org.springframework.stereotype.Service
 class NavigatedMessageSender(
     private val responseSender: ResponseSender,
     private val navigationLocalizationService: NavigationLocalizationService,
-    private val messageLocalizationService: MessageLocalizationService
+    private val messageLocalizationService: MessageLocalizationService,
+    private val buttonService: ButtonService
 ) {
 
     fun <T : Message> sendResponse(
@@ -36,24 +37,43 @@ class NavigatedMessageSender(
         message: T,
         navigation: List<List<Button>> = emptyList()
     ): Either<EventProcessingError, Unit> {
-        val localizedMessage = messageLocalizationService.localize(message, user.language)
+        val localizedMessage = messageLocalizationService
+            .localize(message, user.language)
+            .fold(
+                ifLeft = { return Either.Left(LocalizationError) },
+                ifRight = { it }
+            )
+
         val localizedNavigation =
             navigation
                 .map { row ->
                     row
-                        .map { navigationLocalizationService.localize(it, user.language) }
+                        .map { button ->
+                            navigationLocalizationService.localize(button, user.language)
+                                .map { button to it }
+                        }
                         .sequence()
                 }
                 .sequence()
+                .fold(
+                    ifLeft = { return Either.Left(LocalizationError) },
+                    ifRight = { it }
+                )
 
-        return localizedMessage
-            .flatMap { preparedMessage ->
-                localizedNavigation.flatMap { preparedNavigation ->
-                    prepareMessage(chatId, preparedMessage, preparedNavigation).let(responseSender::sendMessage)
-                }
-            }
-            .mapLeft { LocalizationError }
+        return prepareMessage(chatId, localizedMessage, localizedNavigation).let { responseSender.sendMessage(it) }
+    }
 
+    private fun prepareMessage(
+        chatId: String,
+        message: PreparedMessage,
+        navigation: List<List<Pair<Button, PreparedButton>>>,
+        type: MessageType = MessageType.HTML,
+    ): SendMessage {
+        return SendMessage(chatId, message.text)
+            .replyMarkup(navigation.toReplyKeyboard())
+            .setParseMode(type)
+            .disableWebPagePreview(message.enablePreview.not())
+            .entities()
     }
 
     fun <T : Message> sendResponse(
@@ -63,33 +83,26 @@ class NavigatedMessageSender(
         navigation: List<List<Button>> = emptyList()
     ) = sendResponse(origin.fetchUserId(), user, message, navigation)
 
-
-    companion object {
-        private fun prepareMessage(
-            chatId: String,
-            message: PreparedMessage,
-            navigation: List<List<PreparedButton>>,
-            type: MessageType = MessageType.HTML,
-        ): SendMessage = SendMessage(chatId, message.text)
-            .replyMarkup(navigation.toReplyKeyboard())
-            .setParseMode(type)
-            .disableWebPagePreview(message.enablePreview.not())
-            .entities()
-
-        private fun List<List<PreparedButton>>.toReplyKeyboard(): Keyboard {
-            if (this.isEmpty()) {
-                return ReplyKeyboardRemove()
-            }
-
-            val layout: List<List<InlineKeyboardButton>> = this
-                .map { row -> row.map { it.toButton() } }
-
-            return InlineKeyboardMarkup(*layout.map { it.toTypedArray() }.toTypedArray())
-
+    private fun List<List<Pair<Button, PreparedButton>>>.toReplyKeyboard(): Keyboard {
+        if (this.isEmpty()) {
+            return ReplyKeyboardRemove()
         }
 
-        private fun PreparedButton.toButton() = InlineKeyboardButton(this.text)
-            .callbackData(this.action)
+        val layout: List<List<InlineKeyboardButton>> = this
+            .map { row -> row.map { it.toButton() } }
+
+        return InlineKeyboardMarkup(*layout.map { it.toTypedArray() }.toTypedArray())
+    }
+
+    private fun Pair<Button, PreparedButton>.toButton(): InlineKeyboardButton {
+        val (button, preparedButton) = this
+
+        return InlineKeyboardButton(preparedButton.text)
+            .callbackData(buttonService.buildPayload(button))
+    }
+
+
+    companion object {
 
         private fun SendMessage.setParseMode(type: MessageType): SendMessage = when (type) {
             MessageType.PLAIN -> this

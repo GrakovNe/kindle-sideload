@@ -55,6 +55,7 @@ class BookConversionFinishListener(
                         user = user,
                         message = FileConvertarionSuccess(event.log),
                         navigation = listOf(
+                            listOf(SendConvertedToEmailButton(event.environmentId)),
                             listOf(MainScreenButton),
                         )
                     )
@@ -71,13 +72,13 @@ class BookConversionFinishListener(
                 message = FileConvertarionFailed(event.log)
             )
             .map { EventProcessingResult.PROCESSED }
-            .also {
-                eventSender.sendEvent(
-                    UserEnvironmentUnnecessaryEvent(
-                        environmentId = event.environmentId
-                    )
-                )
-            }
+//            .also {
+//                eventSender.sendEvent(
+//                    UserEnvironmentUnnecessaryEvent(
+//                        environmentId = event.environmentId
+//                    )
+//                )
+//            }
     }
 
     override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> =

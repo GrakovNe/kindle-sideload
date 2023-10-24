@@ -86,5 +86,9 @@
   {
     "name": "UpdateStkEmailButton",
     "template": "Update Email"
+  },
+  {
+    "name": "SendConvertedToEmailButton",
+    "template": "Sideload via E-Mail"
   }
 ]

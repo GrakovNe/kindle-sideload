@@ -18,7 +18,7 @@ class SendToEmailEventListener(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventListener<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(SendConvertedToEmailButton)
+    override fun getOperatingButtons() = listOf(SendConvertedToEmailButton())
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

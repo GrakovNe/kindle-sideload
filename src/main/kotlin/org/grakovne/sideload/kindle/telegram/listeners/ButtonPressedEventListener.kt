@@ -47,8 +47,10 @@ abstract class ButtonPressedEventListener<T : EventProcessingError>(
         return null
     }
 
-    protected fun ButtonPressedEvent.acceptForListener(button: Button) =
-        this.update.fetchPressedButton() == button
+    protected fun ButtonPressedEvent.acceptForListener(button: Button): Boolean {
+        val pressedButton = this.update.fetchPressedButton()
+        return this.update.fetchPressedButton() == button
+    }
 
     companion object {
         private val logger = KotlinLogging.logger { }
