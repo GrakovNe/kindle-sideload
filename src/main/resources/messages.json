@@ -37,7 +37,7 @@
   {
     "name": "UserConfigurationValidationFailedMessage",
     "type": "HTML",
-    "template": "Configuration validation failed due to:\n\n<pre>${reason}</pre>\n\nCheck your configuration and try again"
+    "template": "Configuration validation failed due to:\n\n${reason}\n\nCheck your configuration and try again"
   },
   {
     "name": "UserConfigurationSubmissionFailedMessage",
