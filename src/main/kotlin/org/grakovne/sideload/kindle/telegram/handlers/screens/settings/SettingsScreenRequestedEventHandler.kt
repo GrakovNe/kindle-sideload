@@ -27,7 +27,7 @@ class SettingsScreenRequestedEventHandler(
                 SettingsScreenRequestedMessage,
                 listOf(
                     listOf(OutputFileTypeSettingsScreenButton, StkSettingsScreenButton),
-                    listOf(ConverterConfigurationSettingsScreenButton, DebugModeSettingScreenButton),
+                    listOf(AdvancedSettingsScreenButton),
                     listOf(MainScreenButton),
                 )
             )

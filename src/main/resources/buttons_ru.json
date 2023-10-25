@@ -1,63 +1,59 @@
 [
   {
     "name": "RequestSettingButton",
-    "template": "Settings"
+    "template": "Настройки"
   },
   {
     "name": "RequestConvertationPromptButton",
-    "template": "Convert Book"
+    "template": "Сконвертировать книгу"
   },
   {
     "name": "RequestProjectInfoButton",
-    "template": "Project Info"
+    "template": "О проекте"
   },
   {
     "name": "MainScreenButton",
-    "template": "Home"
+    "template": "Домой"
   },
   {
     "name": "DebugModeSettingScreenButton",
-    "template": "Verbose Mode"
+    "template": "Подробный режим"
   },
   {
     "name": "AdvancedSettingsScreenButton",
-    "template": "Advanced Settings"
+    "template": "Расширенные настройки"
   },
   {
     "name": "OutputFileTypeSettingsScreenButton",
-    "template": "Output Format"
+    "template": "Формат файла"
   },
   {
     "name": "FetchConfigurationButton",
-    "template": "Download Current Config"
+    "template": "Скачать текущую конфигурацию"
   },
   {
     "name": "FetchDefaultConfigurationButton",
-    "template": "Download Default Config"
+    "template": "Скачать дефолтную конфигурацию"
   },
   {
     "name": "RemoveConfigurationButton",
-    "template": "Reset to Default"
+    "template": "Сбросить конфигурацию"
   },
   {
     "name": "UploadConfigurationButton",
-    "template": "Upload Config File"
-  },
-  {
-    "name": "CancelUploadConfigurationButton",
-    "template": "Cancel"
+    "template": "Загрузить конфигурацию"
   },
   {
     "name": "EnableDebugModeButton",
-    "template": "Enable"
+    "template": "Включить"
   },
   {
     "name": "DisableDebugModeButton",
-    "template": "Disable"
+    "template": "Выключить"
   },
   {
     "name": "BackToSettingsButton",
-    "template": "Back to Settings"
+    "template": "В настройки"
   },
   {
     "name": "EpubOutputButton",
@@ -76,19 +72,11 @@
     "template": "STK"
   },
   {
-    "name": "EnableStkButton",
-    "template": "Enable"
-  },
-  {
-    "name": "DisableStkButton",
-    "template": "Disable"
-  },
-  {
     "name": "UpdateStkEmailButton",
-    "template": "Update Email"
+    "template": "Обновить E-Mail"
   },
   {
     "name": "SendConvertedToEmailButton",
-    "template": "Sideload via E-Mail"
+    "template": "Отправить на почту"
   }
 ]

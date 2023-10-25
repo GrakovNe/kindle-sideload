@@ -5,4 +5,3 @@ import org.grakovne.sideload.kindle.common.navigation.domain.Button
 object FetchDefaultConfigurationButton : Button()
 object RemoveConfigurationButton : Button()
 object UploadConfigurationButton : Button()
-object CancelUploadConfigurationButton : Button()
