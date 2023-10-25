@@ -124,7 +124,7 @@
   {
     "name": "StkFailedMessage",
     "type": "HTML",
-    "template": "Something went wrong, and the files couldn't be sent to E-Mail. Please contact @maxgrakov."
+    "template": "Something went wrong, and the files couldn't be sent to E-Mail. If you didn't set E-Mail yet, it could be done in the Settings\n\nIf E-Mail set already, please contact @maxgrakov."
   },
   {
     "name": "StkSubmittedMessage",

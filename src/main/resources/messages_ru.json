@@ -124,7 +124,7 @@
   {
     "name": "StkFailedMessage",
     "type": "HTML",
-    "template": "Что-то пошло не так, и файлы на E-Mail отправить не получилось. Пожалуйста, напиши @maxgrakov"
+    "template": "Что-то пошло не так, и файлы на E-Mail отправить не получилось. Если E-Mail еще не настроен, это можно сделать в настройках\n\nЕсли E-Mail в настройках правильный, то напиши @maxgrakov"
   },
   {
     "name": "StkSubmittedMessage",
