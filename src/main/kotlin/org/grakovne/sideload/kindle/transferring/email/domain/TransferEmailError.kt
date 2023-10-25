@@ -2,8 +2,8 @@ package org.grakovne.sideload.kindle.transferring.email.domain
 
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 
-interface TransferEmailError: EventProcessingError
+interface TransferEmailError : EventProcessingError
 
-object InternalError: TransferEmailError
-object UserEmailAbsent: TransferEmailError
-object SendingError: TransferEmailError
+object InternalError : TransferEmailError
+object UserEmailAbsent : TransferEmailError
+object SendingError : TransferEmailError

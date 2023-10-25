@@ -17,6 +17,7 @@ import org.grakovne.sideload.kindle.telegram.fetchUserId
 import org.grakovne.sideload.kindle.telegram.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.localization.NavigationLocalizationService
 import org.grakovne.sideload.kindle.telegram.localization.domain.Button
+import org.grakovne.sideload.kindle.telegram.localization.domain.Button.Companion.buildQualifiedName
 import org.grakovne.sideload.kindle.telegram.localization.domain.Message
 import org.grakovne.sideload.kindle.telegram.localization.template.MessageType
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
@@ -98,7 +99,7 @@ class NavigatedMessageSender(
         val (button, preparedButton) = this
 
         return InlineKeyboardButton(preparedButton.text)
-            .callbackData(buttonService.buildPayload(button))
+            .callbackData(button.buildQualifiedName())
     }
 
 

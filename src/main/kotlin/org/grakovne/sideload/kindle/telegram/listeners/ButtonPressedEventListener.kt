@@ -26,8 +26,9 @@ abstract class ButtonPressedEventListener<T : EventProcessingError>(
                 .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .also {
                     userActivityStateService.setCurrentState(
-                        event.user.id,
-                        event.update.fetchPressedButton()?.let { buttonService.fetchButtonName(it) })
+                        userId = event.user.id,
+                        state = event.update.fetchPressedButton()?.name
+                    )
                 }
                 .let { processEvent(event) }
                 .map { EventProcessingResult.PROCESSED }
@@ -41,16 +42,14 @@ abstract class ButtonPressedEventListener<T : EventProcessingError>(
 
     private fun Update.fetchPressedButton(): Button? {
         if (null != this.callbackQuery()?.data()) {
-            return buttonService.fetchButtonForName(this.callbackQuery().data())
+            return buttonService.instance(this.callbackQuery().data())
         }
 
         return null
     }
 
-    protected fun ButtonPressedEvent.acceptForListener(button: Button): Boolean {
-        val pressedButton = this.update.fetchPressedButton()
-        return this.update.fetchPressedButton() == button
-    }
+    private fun ButtonPressedEvent.acceptForListener(button: Button) =
+        this.update.fetchPressedButton() == button
 
     companion object {
         private val logger = KotlinLogging.logger { }

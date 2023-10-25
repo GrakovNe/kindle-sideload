@@ -22,7 +22,7 @@ abstract class InputRequiredEventListener<T : EventProcessingError>(
     override fun onEvent(event: ButtonPressedEvent): Either<T, EventProcessingResult> {
         val requestedButton = userActivityStateService
             .fetchCurrentState(event.user.id)
-            ?.let { buttonService.fetchButtonForName(it) }
+            ?.let { buttonService.instance(it) }
             ?: return Either.Right(EventProcessingResult.SKIPPED)
 
         return when (getRequiredButton().any { it == requestedButton }) {

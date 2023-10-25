@@ -1,6 +1,5 @@
 package org.grakovne.sideload.kindle.telegram.configuration
 
-import arrow.core.Either
 import arrow.core.sequence
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
@@ -19,7 +18,6 @@ import org.grakovne.sideload.kindle.telegram.fetchUserId
 import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
 import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventService
 import org.grakovne.sideload.kindle.telegram.localization.EnumLocalizationService
-import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
 import org.grakovne.sideload.kindle.telegram.message.reference.service.MessageReferenceService
 import org.grakovne.sideload.kindle.user.message.report.service.UserMessageReportService
 import org.grakovne.sideload.kindle.user.reference.service.UserService

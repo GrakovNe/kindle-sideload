@@ -14,18 +14,9 @@ class ButtonService {
         .getSubTypesOf(Button::class.java)
         .associate { it.simpleName to getObjectByClassName(it.canonicalName) }
 
-    fun fetchButtonName(button: Button): String = button.javaClass.simpleName
-
-    fun buildPayload(button: Button) =
-        if (button.payload == null) fetchButtonName(button) else fetchButtonName(button) + "#" + button.payload
-
-    fun fetchButtonForName(name: String): Button? {
-        val buttonName = name.split(buttonPayloadDelimiter).first()
+    fun instance(name: String): Button? {
+        val buttonName = Button.fetchButtonName(name)
         return buttons[buttonName]?.let { it as Button }
-    }
-
-    fun fetchButtonPayload(update: String): String? {
-        return update.split(buttonPayloadDelimiter).last()
     }
 
     private fun getObjectByClassName(className: String): Any? {
@@ -36,6 +27,4 @@ class ButtonService {
             null
         }
     }
-
-    private val buttonPayloadDelimiter = "#"
 }

@@ -6,7 +6,6 @@ import org.grakovne.sideload.kindle.events.core.EventListener
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
-import org.springframework.stereotype.Service
 
 //@Service
 class UserEnvironmentUnnecessaryListener(
