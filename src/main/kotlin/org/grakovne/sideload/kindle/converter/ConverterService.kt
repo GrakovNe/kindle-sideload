@@ -6,6 +6,7 @@ import org.grakovne.sideload.kindle.common.CliRunner
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinaryProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
+import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.user.preferences.domain.UserPreferences
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.springframework.stereotype.Service
@@ -18,7 +19,8 @@ class ConverterService(
     private val cliRunner: CliRunner,
     private val userEnvironmentService: UserEnvironmentService,
     private val binaryProvider: ConverterBinaryProvider,
-    private val properties: ConverterBinaryProperties,
+    private val binaryProperties: ConverterBinaryProperties,
+    private val environmentProperties: EnvironmentProperties,
     private val userPreferencesService: UserPreferencesService
 ) {
 
@@ -63,14 +65,14 @@ class ConverterService(
         userPreferences: UserPreferences,
         outputFiles: List<File>
     ) = if (userPreferences.debugMode.not()) {
-        outputFiles.filterNot { it.name == properties.verboseFileName }
+        outputFiles.filter { environmentProperties.outputFileExtensions.contains(it.extension) }
     } else {
         outputFiles
     }
 
     private fun File.fetchConfigurationFileName(): String? = this
         .listFiles()
-        ?.find { file -> properties.configurationExtensions.any { file.extension == it } }
+        ?.find { file -> binaryProperties.configurationExtensions.any { file.extension == it } }
         ?.name
 
     private fun buildShellCommand(
@@ -81,7 +83,7 @@ class ConverterService(
         val path = binaryProvider.provideBinaryConverter().absolutePath
         val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
 
-        return "$path $configurationKey convert --to ${userPreferences.outputFormat.name.lowercase()} ${properties.converterParameters} ${inputFile.name}"
+        return "$path $configurationKey convert --to ${userPreferences.outputFormat.name.lowercase()} ${binaryProperties.converterParameters} ${inputFile.name}"
             .also { logger.debug { "Shell command build: $it" } }
     }
 
@@ -95,7 +97,7 @@ class ConverterService(
         .also {
             it
                 .toPath()
-                .resolve(properties.converterFileName)
+                .resolve(binaryProperties.converterFileName)
                 .toFile()
                 .setExecutable(true)
         }
@@ -117,11 +119,11 @@ class ConverterService(
     ) = environment
         .let {
             val runCommand = buildShellCommand(inputFile, environment, configuration)
-            logger.debug { "Running $runCommand on ${properties.shell} with args ${properties.shellArgs}" }
+            logger.debug { "Running $runCommand on ${binaryProperties.shell} with args ${binaryProperties.shellArgs}" }
 
             cliRunner.runCli(
-                properties.shell,
-                properties.shellArgs,
+                binaryProperties.shell,
+                binaryProperties.shellArgs,
                 runCommand,
                 it
             )
