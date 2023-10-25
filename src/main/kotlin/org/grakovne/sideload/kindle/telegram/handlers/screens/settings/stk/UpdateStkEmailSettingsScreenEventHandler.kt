@@ -21,7 +21,7 @@ class UpdateStkEmailSettingsScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(UpdateStkEmailButton)
+    override fun getOperatingButtons() = listOf(UpdateStkEmailButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

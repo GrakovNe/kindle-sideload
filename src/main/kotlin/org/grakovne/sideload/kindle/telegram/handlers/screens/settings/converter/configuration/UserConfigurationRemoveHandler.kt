@@ -22,7 +22,7 @@ class UserConfigurationRemoveHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(RemoveConfigurationButton)
+    override fun getOperatingButtons() = listOf(RemoveConfigurationButton::class.java)
 
     override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> =
         userConverterConfigurationService

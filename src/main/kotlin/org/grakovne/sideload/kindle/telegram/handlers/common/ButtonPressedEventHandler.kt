@@ -16,7 +16,7 @@ abstract class ButtonPressedEventHandler<T : EventProcessingError>(
     private val userActivityStateService: UserActivityStateService
 ) : ReplyingEventHandler<ButtonPressedEvent, T>() {
 
-    open fun getOperatingButtons(): List<Button> = emptyList()
+    open fun getOperatingButtons(): List<Class<*>> = emptyList()
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
 
@@ -48,8 +48,8 @@ abstract class ButtonPressedEventHandler<T : EventProcessingError>(
         return null
     }
 
-    private fun ButtonPressedEvent.acceptForListener(button: Button) =
-        this.update.fetchPressedButton() == button
+    private fun ButtonPressedEvent.acceptForListener(button: Class<*>) =
+        this.update.fetchPressedButton()?.javaClass == button
 
     companion object {
         private val logger = KotlinLogging.logger { }

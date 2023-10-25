@@ -17,7 +17,7 @@ class SettingsScreenRequestedEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(BackToSettingsButton, RequestSettingButton)
+    override fun getOperatingButtons() = listOf(BackToSettingsButton::class.java, RequestSettingButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

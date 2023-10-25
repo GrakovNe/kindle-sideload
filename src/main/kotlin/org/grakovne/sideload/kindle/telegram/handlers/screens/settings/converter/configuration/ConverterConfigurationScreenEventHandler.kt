@@ -18,7 +18,7 @@ class ConverterConfigurationScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(ConverterConfigurationSettingsScreenButton)
+    override fun getOperatingButtons() = listOf(ConverterConfigurationSettingsScreenButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

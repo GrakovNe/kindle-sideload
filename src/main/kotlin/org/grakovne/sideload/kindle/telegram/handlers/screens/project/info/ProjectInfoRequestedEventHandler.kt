@@ -18,7 +18,7 @@ class ProjectInfoRequestedEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(RequestProjectInfoButton)
+    override fun getOperatingButtons() = listOf(RequestProjectInfoButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

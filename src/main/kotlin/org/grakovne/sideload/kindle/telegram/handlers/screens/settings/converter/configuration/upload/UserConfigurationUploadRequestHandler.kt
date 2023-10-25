@@ -34,7 +34,7 @@ class UserConfigurationUploadRequestHandler(
             )
     }
 
-    override fun getOperatingButtons() = listOf(UploadConfigurationButton)
+    override fun getOperatingButtons() = listOf(UploadConfigurationButton::class.java)
 
     override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> = Either.Right(Unit)
 

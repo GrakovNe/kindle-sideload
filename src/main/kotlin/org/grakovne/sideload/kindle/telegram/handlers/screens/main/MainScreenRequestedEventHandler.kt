@@ -17,7 +17,7 @@ class MainScreenRequestedEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(MainScreenButton)
+    override fun getOperatingButtons() = listOf(MainScreenButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

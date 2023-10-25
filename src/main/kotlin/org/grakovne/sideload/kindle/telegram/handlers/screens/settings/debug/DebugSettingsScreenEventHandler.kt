@@ -18,7 +18,7 @@ class DebugSettingsScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(DebugModeSettingScreenButton)
+    override fun getOperatingButtons() = listOf(DebugModeSettingScreenButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

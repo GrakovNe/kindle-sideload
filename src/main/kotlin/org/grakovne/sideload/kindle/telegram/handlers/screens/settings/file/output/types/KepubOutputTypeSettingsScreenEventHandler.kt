@@ -22,7 +22,7 @@ class KepubOutputTypeSettingsScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(KEpubOutputButton)
+    override fun getOperatingButtons() = listOf(KEpubOutputButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

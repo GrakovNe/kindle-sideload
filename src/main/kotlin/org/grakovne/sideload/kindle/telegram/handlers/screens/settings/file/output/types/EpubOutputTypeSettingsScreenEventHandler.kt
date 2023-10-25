@@ -22,7 +22,7 @@ class EpubOutputTypeSettingsScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(EpubOutputButton)
+    override fun getOperatingButtons() = listOf(EpubOutputButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

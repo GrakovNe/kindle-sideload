@@ -18,7 +18,7 @@ class StkSettingsScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(StkSettingsScreenButton)
+    override fun getOperatingButtons() = listOf(StkSettingsScreenButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

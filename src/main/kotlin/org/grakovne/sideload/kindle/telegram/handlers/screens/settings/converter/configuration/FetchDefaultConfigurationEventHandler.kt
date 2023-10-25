@@ -23,7 +23,7 @@ class FetchDefaultConfigurationEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(FetchDefaultConfigurationButton)
+    override fun getOperatingButtons() = listOf(FetchDefaultConfigurationButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         defaultConfigurationAssetService

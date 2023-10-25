@@ -22,7 +22,7 @@ class Azw3OutputTypeSettingsScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(Azw3ModeButton)
+    override fun getOperatingButtons() = listOf(Azw3ModeButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender

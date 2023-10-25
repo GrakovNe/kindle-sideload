@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service
 class BookEmailSideloadRequestHandler(
     private val transferEmailTaskService: TransferEmailTaskService,
     private val messageSender: NavigatedMessageSender,
-    private val buttonService: ButtonService,
+    buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<InternalError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(SendConvertedToEmailButton())
+    override fun getOperatingButtons() = listOf(SendConvertedToEmailButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender.sendResponse(

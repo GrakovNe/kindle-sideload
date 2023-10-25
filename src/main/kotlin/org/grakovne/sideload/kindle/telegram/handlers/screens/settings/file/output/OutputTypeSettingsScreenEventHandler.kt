@@ -18,7 +18,7 @@ class OutputTypeSettingsScreenEventHandler(
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
 
-    override fun getOperatingButtons() = listOf(OutputFileTypeSettingsScreenButton)
+    override fun getOperatingButtons() = listOf(OutputFileTypeSettingsScreenButton::class.java)
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         messageSender
