@@ -8,18 +8,16 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.parallelMap
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
-import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
-import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.handlers.common.ReplyingEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendConvertedToEmailButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 
@@ -27,8 +25,7 @@ import org.springframework.stereotype.Service
 class BookConversionFinishHandler(
     private val bot: TelegramBot,
     private val messageSender: MessageWithNavigationSender,
-    private val userService: UserService,
-    private val eventSender: EventSender
+    private val userService: UserService
 ) : ReplyingEventHandler<ConvertationFinishedEvent, EventProcessingError>() {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)
@@ -42,13 +39,6 @@ class BookConversionFinishHandler(
                 .map { SendDocument(event.userId, it) }
                 .parallelMap { bot.execute(it) }
         }
-            .also {
-                eventSender.sendEvent(
-                    UserEnvironmentUnnecessaryEvent(
-                        environmentId = event.environmentId
-                    )
-                )
-            }
             .also {
                 messageSender
                     .sendResponse(

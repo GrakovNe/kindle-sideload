@@ -19,7 +19,7 @@ class EnvironmentTerminationPeriodicTask(
     private val userEnvironmentService: UserEnvironmentService
 ) {
 
-    @Scheduled(fixedDelay = 60_1000)
+    @Scheduled(fixedDelay = 5000)
     fun terminateOutdatedEnvironments() {
         val terminateCreatedBefore = Instant.now().minusSeconds(environmentProperties.ttlInSeconds)
 
