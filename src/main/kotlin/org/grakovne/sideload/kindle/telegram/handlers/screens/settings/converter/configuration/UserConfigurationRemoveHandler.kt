@@ -7,8 +7,8 @@ import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.common.ButtonPressedEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
-import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRemovedMessage
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.configuration.UserConverterConfigurationService
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserConfigurationRemoveHandler(
-    private val messageSender: NavigatedMessageSender,
+    private val messageSender: MessageWithNavigation,
     private val userConverterConfigurationService: UserConverterConfigurationService,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,

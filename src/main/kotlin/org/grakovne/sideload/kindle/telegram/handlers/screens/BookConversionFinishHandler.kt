@@ -17,16 +17,16 @@ import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.handlers.common.ReplyingEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendConvertedToEmailButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
-import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailed
-import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccess
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedMessage
+import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 
 @Service
 class BookConversionFinishHandler(
     private val bot: TelegramBot,
-    private val messageSender: NavigatedMessageSender,
+    private val messageSender: MessageWithNavigation,
     private val userService: UserService,
     private val eventSender: EventSender
 ) : ReplyingEventHandler<ConvertationFinishedEvent, EventProcessingError>() {
@@ -54,7 +54,7 @@ class BookConversionFinishHandler(
                     .sendResponse(
                         chatId = user.id,
                         user = user,
-                        message = FileConvertarionSuccess(event.log),
+                        message = FileConvertarionSuccessMessage(event.log),
                         navigation = listOf(
                             listOf(SendConvertedToEmailButton(event.environmentId)),
                             listOf(MainScreenButton),
@@ -70,7 +70,7 @@ class BookConversionFinishHandler(
             .sendResponse(
                 chatId = user.id,
                 user = user,
-                message = FileConvertarionFailed(event.log)
+                message = FileConvertarionFailedMessage(event.log)
             )
             .map { EventProcessingResult.PROCESSED }
     }

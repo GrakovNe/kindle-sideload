@@ -63,6 +63,7 @@ converter:
 
 environment:
   temporaryFolder: "temporary_user_environments"
+  outputFileExtensions: ["epub", "azw3"]
 
 logging:
   level:

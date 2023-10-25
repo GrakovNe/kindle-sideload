@@ -6,9 +6,9 @@ import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.common.InputRequiredEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.localization.domain.Button
-import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
-import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.springframework.stereotype.Service
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 class StkEmailUpdateEventHandler(
     userActivityStateService: UserActivityStateService,
     buttonService: ButtonService,
-    private val messageSender: NavigatedMessageSender,
+    private val messageSender: MessageWithNavigation,
     private val userPreferencesService: UserPreferencesService
 ) : InputRequiredEventHandler<EventProcessingError>(userActivityStateService, buttonService) {
 

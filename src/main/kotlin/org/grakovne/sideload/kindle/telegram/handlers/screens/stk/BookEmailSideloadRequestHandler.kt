@@ -2,35 +2,24 @@ package org.grakovne.sideload.kindle.telegram.handlers.screens.stk
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.navigation.ButtonService
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
+import org.grakovne.sideload.kindle.stk.email.task.domain.InternalError
+import org.grakovne.sideload.kindle.stk.email.task.service.TransferEmailTaskService
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.common.ButtonPressedEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendConvertedToEmailButton
-import org.grakovne.sideload.kindle.telegram.handlers.screens.project.info.ProjectInfoMessage
-import org.grakovne.sideload.kindle.telegram.localization.domain.Button
-import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
-import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
-import org.grakovne.sideload.kindle.stk.email.task.domain.InternalError
-import org.grakovne.sideload.kindle.stk.email.task.service.TransferEmailTaskService
 import org.springframework.stereotype.Service
 
 @Service
 class BookEmailSideloadRequestHandler(
     private val transferEmailTaskService: TransferEmailTaskService,
-    private val messageSender: NavigatedMessageSender,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<InternalError>(buttonService, userActivityStateService) {
 
     override fun getOperatingButtons() = listOf(SendConvertedToEmailButton::class.java)
-
-    override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
-        messageSender.sendResponse(
-            origin = event.update,
-            user = event.user,
-            message = ProjectInfoMessage
-        )
-    }
 
     override fun processEvent(event: ButtonPressedEvent): Either<InternalError, Unit> {
         if (event.update.callbackQuery()?.data() == null) {

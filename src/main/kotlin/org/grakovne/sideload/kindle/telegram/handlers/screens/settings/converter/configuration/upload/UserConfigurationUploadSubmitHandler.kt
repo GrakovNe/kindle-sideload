@@ -11,9 +11,9 @@ import org.grakovne.sideload.kindle.telegram.handlers.common.InputRequiredEventH
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.converter.configuration.UploadConfigurationButton
-import org.grakovne.sideload.kindle.telegram.localization.domain.Button
-import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
-import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmittedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationValidationFailedMessage
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
@@ -31,7 +31,7 @@ class UserConfigurationUploadSubmitHandler(
     private val fileDownloadService: FileDownloadService,
     private val userConverterConfigurationService: UserConverterConfigurationService,
     private val properties: FileUploadProperties,
-    private val messageSender: NavigatedMessageSender,
+    private val messageSender: MessageWithNavigation,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
 ) : InputRequiredEventHandler<UserConverterConfigurationError>(userActivityStateService, buttonService) {

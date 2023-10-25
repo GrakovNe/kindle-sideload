@@ -6,8 +6,8 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
-import org.grakovne.sideload.kindle.telegram.localization.domain.Button
-import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
+import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 
 abstract class InputRequiredEventHandler<T : EventProcessingError>(

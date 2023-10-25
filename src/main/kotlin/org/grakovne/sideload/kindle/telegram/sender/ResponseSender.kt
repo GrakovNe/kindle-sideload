@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.telegram.messaging
+package org.grakovne.sideload.kindle.telegram.sender
 
 import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot

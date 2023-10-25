@@ -1,6 +1,6 @@
-package org.grakovne.sideload.kindle.telegram.navigation
+package org.grakovne.sideload.kindle.common.navigation
 
-import org.grakovne.sideload.kindle.telegram.localization.domain.Button
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.reflections.Reflections
 import org.reflections.util.ConfigurationBuilder
 import org.springframework.stereotype.Service

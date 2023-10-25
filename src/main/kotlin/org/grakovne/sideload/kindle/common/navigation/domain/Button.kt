@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.telegram.localization.domain
+package org.grakovne.sideload.kindle.common.navigation.domain
 
 open class Button(
     val payload: String? = null

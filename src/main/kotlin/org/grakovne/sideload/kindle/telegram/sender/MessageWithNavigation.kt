@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.telegram.messaging
+package org.grakovne.sideload.kindle.telegram.sender
 
 import arrow.core.Either
 import arrow.core.sequence
@@ -16,20 +16,18 @@ import org.grakovne.sideload.kindle.telegram.domain.error.LocalizationError
 import org.grakovne.sideload.kindle.telegram.fetchUserId
 import org.grakovne.sideload.kindle.telegram.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.localization.NavigationLocalizationService
-import org.grakovne.sideload.kindle.telegram.localization.domain.Button
-import org.grakovne.sideload.kindle.telegram.localization.domain.Button.Companion.buildQualifiedName
-import org.grakovne.sideload.kindle.telegram.localization.domain.Message
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
+import org.grakovne.sideload.kindle.common.navigation.domain.Button.Companion.buildQualifiedName
+import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.telegram.localization.template.MessageType
-import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 
 @Service
-class NavigatedMessageSender(
+class MessageWithNavigation(
     private val responseSender: ResponseSender,
     private val navigationLocalizationService: NavigationLocalizationService,
-    private val messageLocalizationService: MessageLocalizationService,
-    private val buttonService: ButtonService
+    private val messageLocalizationService: MessageLocalizationService
 ) {
 
     fun <T : Message> sendResponse(
