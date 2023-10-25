@@ -9,6 +9,7 @@ import com.pengrad.telegrambot.model.request.Keyboard
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove
 import com.pengrad.telegrambot.request.SendMessage
+import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.PreparedButton
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
@@ -39,7 +40,10 @@ class MessageWithNavigationSender(
         val localizedMessage = messageLocalizationService
             .localize(message, user.language)
             .fold(
-                ifLeft = { return Either.Left(LocalizationError) },
+                ifLeft = {
+                    logger.error { "Unable to localize message $message due to: $it" }
+                    return Either.Left(LocalizationError)
+                },
                 ifRight = { it }
             )
 
@@ -55,7 +59,10 @@ class MessageWithNavigationSender(
                 }
                 .sequence()
                 .fold(
-                    ifLeft = { return Either.Left(LocalizationError) },
+                    ifLeft = {
+                        logger.error { "Unable to localize navigation $message due to: $it" }
+                        return Either.Left(LocalizationError)
+                    },
                     ifRight = { it }
                 )
 
@@ -102,6 +109,8 @@ class MessageWithNavigationSender(
 
 
     companion object {
+
+        private val logger = KotlinLogging.logger { }
 
         private fun SendMessage.setParseMode(type: MessageType): SendMessage = when (type) {
             MessageType.PLAIN -> this

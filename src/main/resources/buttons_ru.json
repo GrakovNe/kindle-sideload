@@ -20,7 +20,7 @@
     "template": "Подробный режим"
   },
   {
-    "name": "ConverterConfigurationSettingsScreenButton",
+    "name": "AdvancedSettingsScreenButton",
     "template": "Расширенные настройки"
   },
   {
