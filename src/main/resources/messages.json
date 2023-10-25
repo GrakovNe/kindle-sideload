@@ -2,17 +2,17 @@
   {
     "name": "UserConfigurationRequestedMessage",
     "type": "HTML",
-    "template": "Please upload a configuration .zip archive in the next message"
+    "template": "Upload a ZIP archive with extended configuration files\n\nIf you're unsure about the configuration or where to find an example, a detailed description can be found in the advanced settings"
   },
   {
     "name": "UserConfigurationSubmittedMessage",
     "type": "HTML",
-    "template": "Configuration saved and will be applied during each book conversion"
+    "template": "Settings saved. They will be applied during book conversion\n\nIf there's an STK section in the configuration, it will also be considered"
   },
   {
     "name": "UserConfigurationRemovedMessage",
     "type": "HTML",
-    "template": "Configuration removed; default settings will now be applied"
+    "template": "Configuration removed. Default settings will be applied during file conversion\n\nAfter converting the book, you can still send them to your E-Mail."
   },
   {
     "name": "FileUploadFailedMessage",
@@ -22,116 +22,113 @@
   {
     "name": "FileConvertationRequestedMessage",
     "type": "HTML",
-    "template": "File is converting in few moments"
+    "template": "File is being converted, it will be ready soon"
   },
   {
     "name": "FileConvertarionSuccessMessage",
     "type": "HTML",
-    "template": "File is ready! Download your files now"
+    "template": "Conversion was successful\n\nFiles can be downloaded anytime or sent to the configured E-Mail within 24 hours"
   },
   {
     "name": "FileConvertarionFailedMessage",
     "type": "HTML",
-    "template": "File conversion failed; see the detailed converter log below:\n\n<pre>${details}</pre>"
+    "template": "Something went wrong during the conversion. Here are the details:\n\n<pre>${details}</pre>\n\nIf you're unsure what to do, contact @maxgrakov"
   },
   {
     "name": "UserConfigurationValidationFailedMessage",
     "type": "HTML",
-    "template": "Configuration validation failed due to:\n\n${reason}\n\nCheck your configuration and try again"
+    "template": "It seems the configuration file contains errors:\n\n${reason}\n\nIf you're unsure about the configuration or where to find an example, check the advanced settings section"
   },
   {
     "name": "UserConfigurationSubmissionFailedMessage",
     "type": "HTML",
-    "template": "Configuration file processing failed; please contact support"
-  },
-  {
-    "name": "UserConfigurationFileAbsentMessage",
-    "type": "HTML",
-    "template": "Upload the configuration ZIP archive"
+    "template": "Something went wrong while processing the settings file. Please contact @maxgrakov"
   },
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Unofficial Kindle Sideload tool\n\n<pre>Author: @maxgrakov</pre>\n\nSelect the desired action below"
+    "template": "Kindle Sideload Tool\n\n<pre>Author: @maxgrakov</pre>\n\nThis is an unofficial way to upload books in fb2 format to Amazon Kindle without losing quality.\n\nClick the \"Convert Book\" button and upload the file"
   },
   {
     "name": "SettingsScreenRequestedMessage",
     "type": "HTML",
-    "template": "Want a tailored experience? Configure the bot now"
+    "template": "Here you can configure the conversion and file sending parameters"
   },
   {
     "name": "ConversationPromptMessage",
     "type": "HTML",
-    "template": "Submit your book file for conversion"
+    "template": "Upload a book in fb2 format to convert it into a Kindle-compatible format"
   },
   {
     "name": "ProjectInfoMessage",
     "type": "HTML",
-    "template": "This bot is designed to seamlessly convert fb2 files for Kindle, ensuring that essential formatting elements like pages and footnotes are retained.\n\nTo utilize its capabilities, simply upload an fb2 file and let the bot manage the conversion.\n\nFor a more tailored experience, there's an option to customize the conversion process by uploading advanced configuration settings.\n\n"
+    "enablePreview": "false",
+    "template": "Unfortunately, Kindle reading devices do not support FB2, and most EPUB files from bookstores are converted by Amazon services with significant losses\n\nI created this service to solve both problems at once:\n\nnow you can quickly get quality converted books on Kindle, with preserved page layout, margins, indents, and fonts\n\nI tried to make the service's use not too different from using the official Kindle app from Google Play or App Store, and I hope I succeeded\n\nThe service will remain free and available to all users without restrictions as long as possible\n\n___\n\nThe project uses the <a href=\"https://github.com/rupor-github/fb2converter\">fb2converter</a> under the GPL-3.0 license, and I would like to thank the author for his work\n\nThe service is distributed under the MIT license, the source codes are available <a href = \"https://github.com/GrakovNe/kindle-sideload/\">here</a>\n\n___\n\nPlease use the service for good and do not deprive authors of the opportunity to earn from their books\n\nIf you want to support the service, contact @maxgrakov and we'll find a way\n\nSincerely, Max Grakov"
   },
   {
-    "name": "ConverterConfigurationMessage",
+    "name": "AdvancedConfigurationMessage",
     "type": "HTML",
-    "template": "Configure the bot to best suit your preferences in the settings section"
+    "template": "Here you can upload an archive with book settings.\n\nThis will allow you to modify parameters such as font, margins, and more.\n\nThe \"STK\" section will also be applied if it's correctly configured."
   },
   {
     "name": "ConverterDefaultConfigurationMessage",
     "type": "HTML",
-    "template": "Download the default configuration file below, customize it, and re-upload the adjusted file for optimal bot performance"
+    "template": "A file with the default configuration has been sent.\n\nIt contains basic parameters that are easy to customize. Upload the modified file back after making changes."
   },
   {
     "name": "DebugSettingsMessage",
     "type": "HTML",
-    "template": "You're in verbose mode configuration; adjust how detailed the responses will be"
+    "template": "Here you can enable or disable detailed conversion reports.\n\nThis might be useful for configuration debugging."
   },
   {
     "name": "DisableDebugSettingsMessage",
     "type": "HTML",
-    "template": "Verbose mode disabled"
+    "template": "Detailed reports are disabled."
   },
   {
     "name": "EnableDebugSettingsMessage",
     "type": "HTML",
-    "template": "Verbose mode activated"
+    "template": "Detailed reports are enabled."
   },
   {
     "name": "OutputTypeSettingsMessage",
     "type": "HTML",
-    "template": "Define the file format post-conversion in this section; choose the best option for your needs"
+    "template": "Here you can choose the format you want to receive the file in after conversion."
   },
   {
     "name": "SetOutputTypeMessage",
     "type": "HTML",
-    "template": "Output format configured"
+    "template": "File format has been set."
   },
   {
     "name": "StkScreenMessage",
     "type": "HTML",
-    "template": "Define Send To Kindle settings to get converted file right to your Device"
+    "template": "Here you can configure the sending of books to E-Mail after conversion."
   },
   {
     "name": "UpdateEmailUpdatedMessage",
     "type": "HTML",
-    "template": "Your E-Mail has been updated. Chose option \"Send To E-Mail\" after book conversion"
+    "enablePreview": "false",
+    "template": "The E-Mail to which files will be sent after conversion has been updated. Click the \"Send to email\" button to receive the files.\n\nDon't forget to add the E-Mail sideload@grakovne.org to the trusted list so that books arrive automatically.\n\nYou can read more about how to do this here: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
   },
   {
     "name": "UpdateEmailPromptMessage",
     "type": "HTML",
-    "template": "Input up your E-Reader email"
+    "template": "Send the E-Mail to which you want to receive books after conversion. After that, don't forget to set it up on the reading device."
   },
   {
     "name": "StkSuccessMessage",
     "type": "HTML",
-    "template": "Your E-Mail has been sent. Processing with 3rd party services could take a few minutes"
+    "template": "Files have been sent to E-Mail. Their processing by Kindle services may take some time."
   },
   {
     "name": "StkFailedMessage",
     "type": "HTML",
-    "template": "Email sending has been failed. Please, contact the support"
+    "template": "Something went wrong, and the files couldn't be sent to E-Mail. Please contact @maxgrakov."
   },
   {
     "name": "StkSubmittedMessage",
     "type": "HTML",
-    "template": "Email sending just in few moments"
+    "template": "Sending. Everything will be ready in a few seconds."
   }
 ]
