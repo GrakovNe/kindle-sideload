@@ -26,7 +26,7 @@ class AdvancedScreenEventHandler(
             .sendResponse(
                 event.update,
                 event.user,
-                ConverterConfigurationMessage,
+                AdvancedConfigurationMessage,
                 listOf(
                     listOf(UploadConfigurationButton, RemoveConfigurationButton),
                     listOf(FetchDefaultConfigurationButton),

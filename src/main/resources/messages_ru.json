@@ -1,0 +1,133 @@
+[
+  {
+    "name": "UserConfigurationRequestedMessage",
+    "type": "HTML",
+    "template": "Загрузите ZIP архив с файлами расширенной конфигурации\n\nЕсли вы не знаете, что такое конфигурация и где взять пример, вы можете найти подробное описание в расширенных настройках"
+  },
+  {
+    "name": "UserConfigurationSubmittedMessage",
+    "type": "HTML",
+    "template": "Конфигурация успешно сохранена. Она будет применяться при конвертации книг автоматически, пока вы ее не измените или не удалите\n\nЕсли в конфигурации присутсутвует раздел STK, он так же будет применен"
+  },
+  {
+    "name": "UserConfigurationRemovedMessage",
+    "type": "HTML",
+    "template": "Конфигурация удалена. При конвертации файлов будет применяться настройка по умолчанию\n\nДля отправки книг по E-Mail все еще можно воспользоваться кнопкой, которая появится после успешной конвертации"
+  },
+  {
+    "name": "FileUploadFailedMessage",
+    "type": "HTML",
+    "template": "${reason}"
+  },
+  {
+    "name": "FileConvertationRequestedMessage",
+    "type": "HTML",
+    "template": "Файл конвертируется. Он будет готов через несколько секунд"
+  },
+  {
+    "name": "FileConvertarionSuccessMessage",
+    "type": "HTML",
+    "template": "Конвертация успешно завершена\n\nВы можете скачать готовые файлы в любое время или отправить их себе на E-Mail в течении 24 часов"
+  },
+  {
+    "name": "FileConvertarionFailedMessage",
+    "type": "HTML",
+    "template": "Ошибка конвертации. Ниже представлен подробный отчет. Если вы не знаете, что с ними делать, напишите @maxgrakov:\n\n<pre>${details}</pre>"
+  },
+  {
+    "name": "UserConfigurationValidationFailedMessage",
+    "type": "HTML",
+    "template": "К сожалению, файл конфигурации невалидный:\n\n${reason}\n\nЕсли вы не знаете, что такое конфигурация и где взять пример, вы можете найти подробное описание в расширенных настройка"
+  },
+  {
+    "name": "UserConfigurationSubmissionFailedMessage",
+    "type": "HTML",
+    "template": "Обработка файла конфигурации завершилась ошибкой. Пожалуйста, напишите @maxgrakov"
+  },
+  {
+    "name": "MainScreenRequestedMessage",
+    "type": "HTML",
+    "template": "Kindle Sideload Tool\n\n<pre>Author: @maxgrakov</pre>\n\nЭто - неофициальный способ загружать на Amazon Kindle книги в форматах Fb2 и Fb2.zip без потери качества\n\nНажмите кнопку \"Сконвертировать книгу\" и загрузите файл"
+  },
+  {
+    "name": "SettingsScreenRequestedMessage",
+    "type": "HTML",
+    "template": ""
+  },
+  {
+    "name": "ConversationPromptMessage",
+    "type": "HTML",
+    "template": "Загрузите книгу в формате fb2 или fb2.zip"
+  },
+  {
+    "name": "ProjectInfoMessage",
+    "type": "HTML",
+    "template": "This bot is designed to seamlessly convert fb2 files for Kindle, ensuring that essential formatting elements like pages and footnotes are retained.\n\nTo utilize its capabilities, simply upload an fb2 file and let the bot manage the conversion.\n\nFor a more tailored experience, there's an option to customize the conversion process by uploading advanced configuration settings.\n\n"
+  },
+  {
+    "name": "AdvancedConfigurationMessage",
+    "type": "HTML",
+    "template": "Здесь вы можете загрузить архив с конфигурацией для кастомизации параметров вашей книги. Это позволит вам изменить такие параметры, как шрифт, отступы, поля и нумерацию страниц.\n\nДля этого:\n\nПодготовьте архив с нужными настройками.\nЗагрузите его с помощью соответствующей кнопки.\nПосле загрузки настройки будут автоматически применены к вашей книге."
+  },
+  {
+    "name": "ConverterDefaultConfigurationMessage",
+    "type": "HTML",
+    "template": "Если вы не уверены, с каких параметров начать, мы предлагаем скачать стандартный файл конфигурации. В нём вы найдёте базовые настройки, которые можно легко адаптировать под свои предпочтения.\n\nСкачайте файл с дефолтной конфигурацией.\nВнесите в него желаемые изменения.\nЗагрузите изменённый файл обратно на эту страницу.\n"
+  },
+  {
+    "name": "DebugSettingsMessage",
+    "type": "HTML",
+    "template": "Здесь вы можете включить или выключить генерацию подробных отчетов о конвертации. Они могут быть полезны при отладке"
+  },
+  {
+    "name": "DisableDebugSettingsMessage",
+    "type": "HTML",
+    "template": "Подробный режим выключен"
+  },
+  {
+    "name": "EnableDebugSettingsMessage",
+    "type": "HTML",
+    "template": "Подробный режим включен"
+  },
+  {
+    "name": "OutputTypeSettingsMessage",
+    "type": "HTML",
+    "template": ""
+  },
+  {
+    "name": "SetOutputTypeMessage",
+    "type": "HTML",
+    "template": "Формат файла успешно настроен"
+  },
+  {
+    "name": "StkScreenMessage",
+    "type": "HTML",
+    "template": "Здесь вы можете настроить отправку книг на E-Mail после конвертации"
+  },
+  {
+    "name": "UpdateEmailUpdatedMessage",
+    "type": "HTML",
+    "enablePreview": "false",
+    "template": "E-Mail, на который будут отправляться файлы после конвертации обновлен. Нажмите на кнопку \"Отправить на почту\", чтобы получить файлы. Не забудьте добавить E-Mail sideload@grakovne.org в список доверенных, чтобы книги приходили автоматически\n\n Подробнее о том, как это сделать, можно прочитать здесь: https://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
+  },
+  {
+    "name": "UpdateEmailPromptMessage",
+    "type": "HTML",
+    "template": "Пожалуйста, пришлите E-Mail, на который должны приходить книги после конвертации\n\nНе забудьте после этого настроить его на устройстве для чтения"
+  },
+  {
+    "name": "StkSuccessMessage",
+    "type": "HTML",
+    "template": "Файлы успешно отправлены на E-Mail. Обработка файлов сторонними сервисами скорее всего займет несколько минут"
+  },
+  {
+    "name": "StkFailedMessage",
+    "type": "HTML",
+    "template": "Отправить файлы на E-Mail не получилось. Напишите @maxgrakov"
+  },
+  {
+    "name": "StkSubmittedMessage",
+    "type": "HTML",
+    "template": "Отправляем. Все будет готово через несколько секунд"
+  }
+]
