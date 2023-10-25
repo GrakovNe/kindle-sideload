@@ -22,15 +22,15 @@
   {
     "name": "FileConvertationRequestedMessage",
     "type": "HTML",
-    "template": "File submitted to the queue and will be processed shortly"
+    "template": "File is converting in few moments"
   },
   {
-    "name": "FileConvertarionSuccess",
+    "name": "FileConvertarionSuccessMessage",
     "type": "HTML",
     "template": "File is ready! Download your files now"
   },
   {
-    "name": "FileConvertarionFailed",
+    "name": "FileConvertarionFailedMessage",
     "type": "HTML",
     "template": "File conversion failed; see the detailed converter log below:\n\n<pre>${details}</pre>"
   },
@@ -118,5 +118,20 @@
     "name": "UpdateEmailPromptMessage",
     "type": "HTML",
     "template": "Input up your E-Reader email"
+  },
+  {
+    "name": "StkSuccessMessage",
+    "type": "HTML",
+    "template": "Your E-Mail has been sent. Processing with 3rd party services could take a few minutes"
+  },
+  {
+    "name": "StkFailedMessage",
+    "type": "HTML",
+    "template": "Email sending has been failed. Please, contact the support"
+  },
+  {
+    "name": "StkSubmittedMessage",
+    "type": "HTML",
+    "template": "Email sending just in few moments"
   }
 ]
