@@ -11,12 +11,13 @@ open class Button(
     override fun hashCode(): Int = this.javaClass.simpleName.hashCode()
 
     companion object {
-        fun Button.buildQualifiedName() = if (this.payload == null) this.name else this.name + "#" + this.payload
+        fun Button.buildQualifiedName() =
+            if (this.payload == null) this.name else this.name + buttonPayloadDelimiter + this.payload
 
         fun fetchButtonName(raw: String) = raw.split(buttonPayloadDelimiter).first()
 
         fun fetchButtonPayload(raw: String) = raw.split(buttonPayloadDelimiter).last()
 
-        private val buttonPayloadDelimiter = "#"
+        private const val buttonPayloadDelimiter = "#"
     }
 }

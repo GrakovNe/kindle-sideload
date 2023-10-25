@@ -10,8 +10,8 @@ import org.grakovne.sideload.kindle.telegram.localization.domain.Button
 import org.grakovne.sideload.kindle.telegram.messaging.NavigatedMessageSender
 import org.grakovne.sideload.kindle.telegram.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
-import org.grakovne.sideload.kindle.transferring.email.domain.InternalError
-import org.grakovne.sideload.kindle.transferring.email.service.TransferEmailTaskService
+import org.grakovne.sideload.kindle.transferring.email.task.domain.InternalError
+import org.grakovne.sideload.kindle.transferring.email.task.service.TransferEmailTaskService
 import org.springframework.stereotype.Service
 
 @Service

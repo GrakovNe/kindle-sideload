@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.transferring.email.domain
+package org.grakovne.sideload.kindle.transferring.email.task.domain
 
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType

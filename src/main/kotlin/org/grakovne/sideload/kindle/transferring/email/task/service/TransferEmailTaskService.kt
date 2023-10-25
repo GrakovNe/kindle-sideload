@@ -1,10 +1,10 @@
-package org.grakovne.sideload.kindle.transferring.email.service
+package org.grakovne.sideload.kindle.transferring.email.task.service
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.converter.ConvertationError
-import org.grakovne.sideload.kindle.transferring.email.domain.TransferEmailTask
-import org.grakovne.sideload.kindle.transferring.email.domain.TransferEmailTaskStatus
-import org.grakovne.sideload.kindle.transferring.email.repository.TransferEmailTaskRepository
+import org.grakovne.sideload.kindle.transferring.email.task.domain.TransferEmailTask
+import org.grakovne.sideload.kindle.transferring.email.task.domain.TransferEmailTaskStatus
+import org.grakovne.sideload.kindle.transferring.email.task.repository.TransferEmailTaskRepository
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -38,6 +38,6 @@ class TransferEmailTaskService(
 
     }
 
-    fun fetchTasksForProcessing() =
+    fun fetchTasksForProcessing(): List<TransferEmailTask> =
         repository.findByStatusInAndCreatedAtLessThan(listOf(TransferEmailTaskStatus.ACTIVE), Instant.now())
 }
