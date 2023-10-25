@@ -12,7 +12,7 @@ import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSet
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.converter.configuration.UploadConfigurationButton
 import org.grakovne.sideload.kindle.common.navigation.domain.Button
-import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationSubmittedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationValidationFailedMessage
@@ -31,7 +31,7 @@ class UserConfigurationUploadSubmitHandler(
     private val fileDownloadService: FileDownloadService,
     private val userConverterConfigurationService: UserConverterConfigurationService,
     private val properties: FileUploadProperties,
-    private val messageSender: MessageWithNavigation,
+    private val messageSender: MessageWithNavigationSender,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
 ) : InputRequiredEventHandler<UserConverterConfigurationError>(userActivityStateService, buttonService) {

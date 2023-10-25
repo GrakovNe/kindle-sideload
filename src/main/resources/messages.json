@@ -22,7 +22,7 @@
   {
     "name": "FileConvertationRequestedMessage",
     "type": "HTML",
-    "template": "File submitted to the queue and will be processed shortly"
+    "template": "File is converting in few moments"
   },
   {
     "name": "FileConvertarionSuccessMessage",
@@ -128,5 +128,10 @@
     "name": "StkFailedMessage",
     "type": "HTML",
     "template": "Email sending has been failed. Please, contact the support"
+  },
+  {
+    "name": "StkSubmittedMessage",
+    "type": "HTML",
+    "template": "Email sending just in few moments"
   }
 ]

@@ -9,7 +9,7 @@ import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.common.ButtonPressedEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.springframework.stereotype.Service
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service
 class FetchDefaultConfigurationEventHandler(
     private val bot: TelegramBot,
     private val defaultConfigurationAssetService: DefaultConfigurationAssetService,
-    private val messageSender: MessageWithNavigation,
+    private val messageSender: MessageWithNavigationSender,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {

@@ -17,7 +17,7 @@ import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.handlers.common.ReplyingEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendConvertedToEmailButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
 import org.grakovne.sideload.kindle.user.reference.service.UserService
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service
 @Service
 class BookConversionFinishHandler(
     private val bot: TelegramBot,
-    private val messageSender: MessageWithNavigation,
+    private val messageSender: MessageWithNavigationSender,
     private val userService: UserService,
     private val eventSender: EventSender
 ) : ReplyingEventHandler<ConvertationFinishedEvent, EventProcessingError>() {

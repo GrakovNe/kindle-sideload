@@ -24,7 +24,7 @@ import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 
 @Service
-class MessageWithNavigation(
+class MessageWithNavigationSender(
     private val responseSender: ResponseSender,
     private val navigationLocalizationService: NavigationLocalizationService,
     private val messageLocalizationService: MessageLocalizationService

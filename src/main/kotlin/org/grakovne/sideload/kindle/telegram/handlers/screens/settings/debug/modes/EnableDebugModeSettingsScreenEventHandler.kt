@@ -7,7 +7,7 @@ import org.grakovne.sideload.kindle.telegram.handlers.common.ButtonPressedEventH
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.debug.EnableDebugModeButton
-import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigation
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 @Service
 class EnableDebugModeSettingsScreenEventHandler(
     private val userPreferencesService: UserPreferencesService,
-    private val messageSender: MessageWithNavigation,
+    private val messageSender: MessageWithNavigationSender,
     buttonService: ButtonService,
     userActivityStateService: UserActivityStateService,
 ) : ButtonPressedEventHandler<EventProcessingError>(buttonService, userActivityStateService) {
