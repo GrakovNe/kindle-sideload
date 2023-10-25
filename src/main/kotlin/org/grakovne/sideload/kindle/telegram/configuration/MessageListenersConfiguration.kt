@@ -1,5 +1,6 @@
 package org.grakovne.sideload.kindle.telegram.configuration
 
+import arrow.core.Either
 import arrow.core.sequence
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
@@ -15,9 +16,10 @@ import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.fetchLanguage
 import org.grakovne.sideload.kindle.telegram.fetchUniqueIdentifier
 import org.grakovne.sideload.kindle.telegram.fetchUserId
-import org.grakovne.sideload.kindle.telegram.listeners.ButtonPressedEventListener
-import org.grakovne.sideload.kindle.telegram.listeners.UnprocessedIncomingEventService
+import org.grakovne.sideload.kindle.telegram.handlers.common.ButtonPressedEventHandler
+import org.grakovne.sideload.kindle.telegram.handlers.UnprocessedIncomingEventService
 import org.grakovne.sideload.kindle.telegram.localization.EnumLocalizationService
+import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
 import org.grakovne.sideload.kindle.telegram.message.reference.service.MessageReferenceService
 import org.grakovne.sideload.kindle.user.message.report.service.UserMessageReportService
 import org.grakovne.sideload.kindle.user.reference.service.UserService
@@ -26,7 +28,7 @@ import org.springframework.stereotype.Service
 @Service
 class MessageListenersConfiguration(
     private val bot: TelegramBot,
-    private val incomingMessageEventListeners: List<ButtonPressedEventListener<*>>,
+    private val incomingMessageEventListeners: List<ButtonPressedEventHandler<*>>,
     private val eventSender: EventSender,
     private val userService: UserService,
     private val enumLocalizationService: EnumLocalizationService,
@@ -52,14 +54,14 @@ class MessageListenersConfiguration(
     }
 
     private fun onMessage(update: Update) = try {
-//        messageReferenceService
-//            .fetchMessage(update.fetchUniqueIdentifier())
-//            ?.let {
-//                if (it.status == MessageStatus.PROCESSED) {
-//                    logger.debug { "Got same message twice, message id: ${it.id}, skipping" }
-//                    return Either.Right(listOf(EventProcessingResult.SKIPPED))
-//                }
-//            }
+        messageReferenceService
+            .fetchMessage(update.fetchUniqueIdentifier())
+            ?.let {
+                if (it.status == MessageStatus.PROCESSED) {
+                    logger.debug { "Got same message twice, message id: ${it.id}, skipping" }
+                    return Either.Right(listOf(EventProcessingResult.SKIPPED))
+                }
+            }
 
         val user = userService.fetchOrCreateUser(
             userId = update.fetchUserId(),

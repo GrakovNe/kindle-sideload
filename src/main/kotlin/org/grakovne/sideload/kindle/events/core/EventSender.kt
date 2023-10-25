@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
 @Service
-class EventSender(@Lazy private val listeners: List<EventListener<out Event, *>>) {
+class EventSender(@Lazy private val listeners: List<EventHandler<out Event, *>>) {
 
     fun <E : Event> sendEvent(event: E): List<Either<EventProcessingError, EventProcessingResult>> {
         return runBlocking {
