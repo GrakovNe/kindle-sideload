@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.platform
+package org.grakovne.sideload.kindle.common.platform
 
 enum class PlatformError {
     ONLY_64_BIT_PLATFORM_ARE_SUPPORTED_EXCEPT_LINUX,

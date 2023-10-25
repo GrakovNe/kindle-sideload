@@ -7,7 +7,7 @@ import org.grakovne.sideload.kindle.converter.binary.fetch.GithubConverterBinary
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.BinaryError
 import org.grakovne.sideload.kindle.converter.binary.reference.service.ConverterBinaryReferenceService
-import org.grakovne.sideload.kindle.platform.PlatformService
+import org.grakovne.sideload.kindle.common.platform.PlatformService
 import org.springframework.stereotype.Service
 import java.nio.file.Files
 import java.time.Instant

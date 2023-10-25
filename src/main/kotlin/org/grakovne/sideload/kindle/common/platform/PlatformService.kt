@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.platform
+package org.grakovne.sideload.kindle.common.platform
 
 import arrow.core.Either
 import mu.KotlinLogging
