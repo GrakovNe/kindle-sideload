@@ -10,4 +10,5 @@ class EnvironmentProperties {
 
     var temporaryFolder: String by Delegates.notNull()
     var outputFileExtensions: List<String> by Delegates.notNull()
+    var ttlInSeconds: Long by Delegates.notNull()
 }

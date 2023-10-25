@@ -52,7 +52,6 @@ converter:
   source:
     releasesUrl: "https://api.github.com/repos/rupor-github/fb2converter/releases/latest"
   binary:
-    verboseFileName: "conversion.log"
     binaryPersistencePath: "fb2_converter"
     converterFileName: "fb2c"
     shell: "/bin/bash"
@@ -64,6 +63,7 @@ converter:
 environment:
   temporaryFolder: "temporary_user_environments"
   outputFileExtensions: ["epub", "azw3"]
+  ttlInSeconds: 86400
 
 logging:
   level:

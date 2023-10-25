@@ -61,14 +61,14 @@ class UserEnvironmentService(
                 }
             }
 
-    private fun provideEnvironmentFolder(environmentId: String) = provideBinaryFolder()
-        .toPath()
-        .resolve(environmentId)
+    fun provideTemporaryEnvironmentsFolder(): File = Path
+        .of(environmentProperties.temporaryFolder)
         .toFile()
         .also { it.mkdirs() }
 
-    private fun provideBinaryFolder(): File = Path
-        .of(environmentProperties.temporaryFolder)
+    private fun provideEnvironmentFolder(environmentId: String): File = provideTemporaryEnvironmentsFolder()
+        .toPath()
+        .resolve(environmentId)
         .toFile()
         .also { it.mkdirs() }
 
