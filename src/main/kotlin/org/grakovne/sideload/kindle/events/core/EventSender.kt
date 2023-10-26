@@ -17,7 +17,7 @@ class EventSender(@Lazy private val listeners: List<EventHandler<out Event, *>>)
                 .filter { it.acceptableEvents().contains(event.eventType) }
                 .parallelMap {
                     it
-                        .also { logger.debug { "Found for event ${event.eventType} acceptable processor ${it.javaClass.simpleName}. Sending" } }
+                        .also { logger.trace { "Found for event ${event.eventType} acceptable processor ${it.javaClass.simpleName}. Sending" } }
                         .handleEvent(event)
                 }
         }

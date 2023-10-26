@@ -48,7 +48,7 @@ class MessageListenersConfiguration(
         batch
             .forEach { update ->
                 update
-                    .also { logger.debug { "Received update $it. Processing" } }
+                    .also { logger.trace { "Received update $it. Processing" } }
                     .let { onMessage(it) }
             }
     }
@@ -87,10 +87,6 @@ class MessageListenersConfiguration(
                                 }
                             }
                     }
-            }
-            .also {
-                bot
-                    .also { logger.debug { "Updated set of available commands for ${user.id}" } }
             }
             .also {
                 userMessageReportService
