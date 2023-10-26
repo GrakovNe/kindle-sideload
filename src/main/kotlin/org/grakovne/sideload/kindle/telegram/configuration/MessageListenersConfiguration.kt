@@ -50,7 +50,6 @@ class MessageListenersConfiguration(
             .forEach { update ->
                 update
                     .also { logger.trace { "Received update $it. Processing" } }
-                    .also { bot.execute(SetMyCommands()) }
                     .let { onMessage(it) }
             }
     }
