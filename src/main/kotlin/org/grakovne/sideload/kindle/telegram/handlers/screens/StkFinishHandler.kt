@@ -11,31 +11,48 @@ import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.handlers.common.ReplyingEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.navigation.StkFailedMessage
+import org.grakovne.sideload.kindle.telegram.navigation.StkSuccessAzwMessage
 import org.grakovne.sideload.kindle.telegram.navigation.StkSuccessMessage
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
+import org.grakovne.sideload.kindle.user.common.OutputFormat
+import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 
 @Service
 class StkFinishHandler(
     private val messageSender: MessageWithNavigationSender,
-    private val userService: UserService
+    private val userService: UserService,
+    private val userPreferencesService: UserPreferencesService
 ) : ReplyingEventHandler<StkFinishedEvent, EventProcessingError>() {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.STK_FINISHED)
 
     override fun sendSuccessfulResponse(event: StkFinishedEvent) {
         val user = userService.fetchUser(event.userId)
+        val preferences = userPreferencesService.fetchPreferences(event.userId)
 
-        messageSender
-            .sendResponse(
-                chatId = user.id,
-                user = user,
-                message = StkSuccessMessage,
-                navigation = listOf(
-                    listOf(MainScreenButton),
+        when (preferences.outputFormat) {
+            OutputFormat.AZW3 -> messageSender
+                .sendResponse(
+                    chatId = user.id,
+                    user = user,
+                    message = StkSuccessAzwMessage,
+                    navigation = listOf(
+                        listOf(MainScreenButton),
+                    )
                 )
-            )
+
+            else -> messageSender
+                .sendResponse(
+                    chatId = user.id,
+                    user = user,
+                    message = StkSuccessMessage,
+                    navigation = listOf(
+                        listOf(MainScreenButton),
+                    )
+                )
+        }
     }
 
     override fun sendFailureResponse(event: StkFinishedEvent, code: EventProcessingError) {

@@ -48,7 +48,8 @@ class BookEmailSideloadRequestHandler(
             .sendResponse(
                 chatId = user.id,
                 user = user,
-                message = StkSubmittedMessage
+                message = StkSubmittedMessage,
+                navigation = emptyList()
             )
     }
 

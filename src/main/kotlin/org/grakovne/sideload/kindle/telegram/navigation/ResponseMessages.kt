@@ -14,8 +14,10 @@ data object FileConvertationRequestedMessage : Message
 data class FileUploadFailedMessage(val reason: FileUploadFailedReason) : Message
 
 data class FileConvertarionSuccessMessage(val result: String) : Message
+data class FileConvertarionSuccessEmptyOutputMessage(val result: String) : Message
 data class FileConvertarionFailedMessage(val details: String) : Message
 
 data object StkSubmittedMessage : Message
 data object StkSuccessMessage : Message
+data object StkSuccessAzwMessage : Message
 data object StkFailedMessage : Message

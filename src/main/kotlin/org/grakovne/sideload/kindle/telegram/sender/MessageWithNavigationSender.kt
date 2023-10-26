@@ -35,7 +35,7 @@ class MessageWithNavigationSender(
         chatId: String,
         user: User,
         message: T,
-        navigation: List<List<Button>> = emptyList()
+        navigation: List<List<Button>>
     ): Either<EventProcessingError, Unit> {
         val localizedMessage = messageLocalizationService
             .localize(message, user.language)

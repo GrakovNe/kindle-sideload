@@ -16,8 +16,10 @@ import org.grakovne.sideload.kindle.telegram.handlers.common.ReplyingEventHandle
 import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendConvertedToEmailButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedMessage
+import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessEmptyOutputMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
+import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 
@@ -39,18 +41,34 @@ class BookConversionFinishHandler(
                 .map { SendDocument(event.userId, it) }
                 .parallelMap { bot.execute(it) }
         }
-            .also {
-                messageSender
-                    .sendResponse(
-                        chatId = user.id,
-                        user = user,
-                        message = FileConvertarionSuccessMessage(event.log),
-                        navigation = listOf(
-                            listOf(SendConvertedToEmailButton(event.environmentId)),
-                            listOf(MainScreenButton),
-                        )
+            .also { sendSuccessMessage(event, user) }
+    }
+
+    private fun sendSuccessMessage(event: ConvertationFinishedEvent, user: User) {
+        when (event.output.isEmpty()) {
+            true -> messageSender
+                .sendResponse(
+                    chatId = user.id,
+                    user = user,
+                    message = FileConvertarionSuccessEmptyOutputMessage(event.log),
+                    navigation = listOf(
+                        listOf(MainScreenButton),
                     )
-            }
+                )
+
+            false -> messageSender
+                .sendResponse(
+                    chatId = user.id,
+                    user = user,
+                    message = FileConvertarionSuccessMessage(event.log),
+                    navigation = listOf(
+                        listOf(SendConvertedToEmailButton(event.environmentId)),
+                        listOf(MainScreenButton),
+                    )
+                )
+        }
+
+
     }
 
     override fun sendFailureResponse(event: ConvertationFinishedEvent, code: EventProcessingError) {
@@ -60,7 +78,8 @@ class BookConversionFinishHandler(
             .sendResponse(
                 chatId = user.id,
                 user = user,
-                message = FileConvertarionFailedMessage(event.log)
+                message = FileConvertarionFailedMessage(event.log),
+                navigation = listOf(listOf(MainScreenButton))
             )
             .map { EventProcessingResult.PROCESSED }
     }
