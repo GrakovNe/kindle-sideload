@@ -1,6 +1,6 @@
 package org.grakovne.sideload.kindle.telegram
 
-import org.grakovne.sideload.kindle.events.internal.LogLevel
+import ch.qos.logback.classic.Level
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import kotlin.properties.Delegates
@@ -9,5 +9,5 @@ import kotlin.properties.Delegates
 @ConfigurationProperties(prefix = "telegram")
 class ConfigurationProperties {
     var token: String by Delegates.notNull()
-    var level: LogLevel by Delegates.notNull()
+    var level: Level by Delegates.notNull()
 }
