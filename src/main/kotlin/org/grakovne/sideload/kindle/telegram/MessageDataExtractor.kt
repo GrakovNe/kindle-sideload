@@ -1,6 +1,8 @@
 package org.grakovne.sideload.kindle.telegram
 
 import com.pengrad.telegrambot.model.Update
+import mu.KotlinLogging
+import java.util.UUID
 
 fun Update.fetchUniqueIdentifier(): String {
     if (null != this.message()) {
@@ -11,7 +13,8 @@ fun Update.fetchUniqueIdentifier(): String {
         return this.callbackQuery().message().messageId().toString()
     }
 
-    throw IllegalArgumentException("Change me later")
+    logger.error { "Unable to extract unique message identifier from $this" }
+    return UUID.randomUUID().toString()
 }
 
 fun Update.fetchUserId(): String {
@@ -23,7 +26,8 @@ fun Update.fetchUserId(): String {
         return this.callbackQuery().from().id().toString()
     }
 
-    throw IllegalArgumentException("Change me later")
+    logger.error { "Unable to extract user identifier from $this" }
+    throw IllegalArgumentException("Unable to extract user identifier from $this")
 }
 
 fun Update.fetchLanguage(): String {
@@ -37,3 +41,5 @@ fun Update.fetchLanguage(): String {
 
     return "en"
 }
+
+private val logger = KotlinLogging.logger { }

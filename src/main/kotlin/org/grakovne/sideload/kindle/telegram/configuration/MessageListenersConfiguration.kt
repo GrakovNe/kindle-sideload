@@ -91,7 +91,7 @@ class MessageListenersConfiguration(
             }
             .also {
                 userMessageReportService
-                    .createReportEntry(user.id, update.message()?.text())
+                    .createReportEntry(user.id, update.message()?.text() ?: update.callbackQuery()?.data())
                     .also { logger.debug { "Raw user message has been logged: ${it.text}" } }
             }
             .also { messageReferenceService.markAsProcessed(update.fetchUniqueIdentifier()) }

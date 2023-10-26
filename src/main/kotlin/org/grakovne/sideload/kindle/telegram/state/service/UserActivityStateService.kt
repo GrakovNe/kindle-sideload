@@ -27,12 +27,12 @@ class UserActivityStateService(
             createdAt = Instant.now()
         )
 
-        logger.debug { "Setting current state for user $userId to $entity" }
+        logger.debug { "Setting current state for user $userId to ${entity.activityState}" }
 
         return repository
             .save(entity)
             .let { Either.Right(Unit) }
-            .tap { logger.debug { logger.debug("Activity state for user $userId has been updated") } }
+            .tap { logger.debug("Activity state for user $userId has been updated") }
     }
 
     companion object {

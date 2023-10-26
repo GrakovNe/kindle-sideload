@@ -31,11 +31,11 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
     ): Either<LocalizationError, R>
 
     fun localize(message: T, language: Language?): Either<LocalizationError, R> {
-        logger.info { "Localize $message with $language language" }
+        logger.info { "Localize ${message.javaClass.simpleName} with $language language" }
 
         val localizationTemplate: F = findLocalizationResources(language)
             .find { it.name == message.javaClass.simpleName }
-            ?.also { logger.debug { "Found acceptable template for message $message: ${it.name}" } }
+            ?.also { logger.trace { "Found acceptable template for message $message: ${it.name}" } }
             ?: return Either
                 .Left(LocalizationError.TEMPLATE_NOT_FOUND)
                 .also { logger.error { "Unable to find acceptable template for message $message. Skipping responding" } }
