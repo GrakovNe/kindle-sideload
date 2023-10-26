@@ -5,6 +5,7 @@ import arrow.core.sequence
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.Update
+import com.pengrad.telegrambot.request.SetMyCommands
 import jakarta.annotation.PostConstruct
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.ifTrue
@@ -49,6 +50,7 @@ class MessageListenersConfiguration(
             .forEach { update ->
                 update
                     .also { logger.trace { "Received update $it. Processing" } }
+                    .also { bot.execute(SetMyCommands()) }
                     .let { onMessage(it) }
             }
     }
