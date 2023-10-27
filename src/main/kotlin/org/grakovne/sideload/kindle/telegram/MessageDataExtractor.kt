@@ -18,11 +18,23 @@ fun Update.fetchUniqueIdentifier(): String {
 }
 
 fun Update.fetchUserId(): String {
+    if (null != this.myChatMember()?.chat()?.id()) {
+        return this.myChatMember().chat().id().toString()
+    }
+
     if (null != this.message()) {
+        if (null != this.message().chat().id()) {
+            return this.message().chat().id().toString()
+        }
+
         return this.message().from().id().toString()
     }
 
     if (null != this.callbackQuery()) {
+        if (null != this.callbackQuery()?.message()?.chat()?.id()) {
+            return this.callbackQuery().message().chat().id().toString()
+        }
+
         return this.callbackQuery().from().id().toString()
     }
 
