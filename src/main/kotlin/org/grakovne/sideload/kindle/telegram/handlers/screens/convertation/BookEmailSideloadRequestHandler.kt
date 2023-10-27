@@ -4,13 +4,11 @@ import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.common.navigation.domain.Button
-import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.stk.email.task.domain.InternalError
 import org.grakovne.sideload.kindle.stk.email.task.service.TransferEmailTaskService
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.common.ButtonPressedEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.StkFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.StkSubmittedMessage
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender

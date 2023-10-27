@@ -1,14 +1,14 @@
 package org.grakovne.sideload.kindle.telegram.handlers.screens.settings.stk
 
 import arrow.core.Either
+import org.grakovne.sideload.kindle.common.navigation.ButtonService
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.common.InputRequiredEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSettingsButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
-import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.springframework.stereotype.Service

@@ -3,9 +3,9 @@ package org.grakovne.sideload.kindle.telegram.localization
 import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.Language
+import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.telegram.domain.PreparedItem
 import org.grakovne.sideload.kindle.telegram.localization.converter.toMessage
-import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.telegram.localization.template.TextTemplate
 import org.springframework.core.io.ClassPathResource
 import java.io.FileNotFoundException

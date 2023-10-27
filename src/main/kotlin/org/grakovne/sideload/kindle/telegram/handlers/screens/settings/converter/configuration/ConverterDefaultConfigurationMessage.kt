@@ -2,4 +2,5 @@ package org.grakovne.sideload.kindle.telegram.handlers.screens.settings.converte
 
 import org.grakovne.sideload.kindle.common.navigation.domain.Message
 
+data object ConverterUserConfigurationMessage : Message
 data object ConverterDefaultConfigurationMessage : Message

@@ -3,11 +3,11 @@ package org.grakovne.sideload.kindle.converter.binary.update
 import arrow.core.Either
 import arrow.core.flatMap
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.platform.PlatformService
 import org.grakovne.sideload.kindle.converter.binary.fetch.GithubConverterBinaryFetchService
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.BinaryError
 import org.grakovne.sideload.kindle.converter.binary.reference.service.ConverterBinaryReferenceService
-import org.grakovne.sideload.kindle.common.platform.PlatformService
 import org.springframework.stereotype.Service
 import java.nio.file.Files
 import java.time.Instant

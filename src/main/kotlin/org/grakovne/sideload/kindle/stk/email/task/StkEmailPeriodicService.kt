@@ -3,12 +3,12 @@ package org.grakovne.sideload.kindle.stk.email.task
 import arrow.core.Either
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.mail.MailSendingService
 import org.grakovne.sideload.kindle.common.parallelMap
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.StkFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.StkFinishedStatus
-import org.grakovne.sideload.kindle.common.mail.MailSendingService
 import org.grakovne.sideload.kindle.stk.email.task.domain.SendingError
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailError
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTask

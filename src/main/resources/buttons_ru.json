@@ -36,12 +36,16 @@
     "template": "Скачать дефолтную конфигурацию"
   },
   {
+    "name": "FetchUserConfigurationButton",
+    "template": "Скачать текущую конфигурацию"
+  },
+  {
     "name": "RemoveConfigurationButton",
     "template": "Сбросить конфигурацию"
   },
   {
     "name": "UploadConfigurationButton",
-    "template": "Загрузить конфигурацию"
+    "template": "Обновить конфигурацию"
   },
   {
     "name": "EnableDebugModeButton",

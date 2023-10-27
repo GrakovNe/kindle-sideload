@@ -36,6 +36,10 @@
     "template": "Download Default Config"
   },
   {
+    "name": "FetchUserConfigurationButton",
+    "template": "Download Current Config"
+  },
+  {
     "name": "RemoveConfigurationButton",
     "template": "Reset to Default"
   },

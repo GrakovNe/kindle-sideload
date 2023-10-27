@@ -8,17 +8,17 @@ import org.grakovne.sideload.kindle.common.BookIsTooLargeError
 import org.grakovne.sideload.kindle.common.FileUploadFailedError
 import org.grakovne.sideload.kindle.common.TaskQueueingError
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
+import org.grakovne.sideload.kindle.common.navigation.ButtonService
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.handlers.common.InputRequiredEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.RequestConvertationPromptButton
-import org.grakovne.sideload.kindle.common.navigation.domain.Button
-import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
-import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertationRequestedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileUploadFailedMessage
+import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.springframework.stereotype.Service
 

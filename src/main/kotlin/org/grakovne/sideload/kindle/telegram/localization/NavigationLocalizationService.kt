@@ -4,8 +4,8 @@ import arrow.core.Either
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.text.StringSubstitutor
-import org.grakovne.sideload.kindle.telegram.domain.PreparedButton
 import org.grakovne.sideload.kindle.common.navigation.domain.Button
+import org.grakovne.sideload.kindle.telegram.domain.PreparedButton
 import org.grakovne.sideload.kindle.telegram.localization.template.ButtonTemplate
 import org.springframework.stereotype.Service
 

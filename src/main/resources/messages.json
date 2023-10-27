@@ -81,6 +81,11 @@
     "template": "A file with the default configuration has been sent.\n\nIt contains basic parameters that are easy to customize. Upload the modified file back after making changes."
   },
   {
+    "name": "ConverterUserConfigurationMessage",
+    "type": "HTML",
+    "template": "Configuration file sent\n\nIt can be changed and loaded back"
+  },
+  {
     "name": "DebugSettingsMessage",
     "type": "HTML",
     "template": "Here you can enable or disable detailed conversion reports.\n\nThis might be useful for configuration debugging."

@@ -10,6 +10,9 @@ import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove
 import com.pengrad.telegrambot.request.SendMessage
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.navigation.domain.Button
+import org.grakovne.sideload.kindle.common.navigation.domain.Button.Companion.buildQualifiedName
+import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.telegram.domain.PreparedButton
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
@@ -17,9 +20,6 @@ import org.grakovne.sideload.kindle.telegram.domain.error.LocalizationError
 import org.grakovne.sideload.kindle.telegram.fetchUserId
 import org.grakovne.sideload.kindle.telegram.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.localization.NavigationLocalizationService
-import org.grakovne.sideload.kindle.common.navigation.domain.Button
-import org.grakovne.sideload.kindle.common.navigation.domain.Button.Companion.buildQualifiedName
-import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.telegram.localization.template.MessageType
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
@@ -49,6 +49,7 @@ class MessageWithNavigationSender(
 
         val localizedNavigation =
             navigation
+                .filter { it.isNotEmpty() }
                 .map { row ->
                     row
                         .map { button ->
