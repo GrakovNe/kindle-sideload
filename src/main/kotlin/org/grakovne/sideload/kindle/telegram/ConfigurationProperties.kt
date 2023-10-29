@@ -12,4 +12,5 @@ class ConfigurationProperties {
     var token: String by Delegates.notNull()
     var level: Level by Delegates.notNull()
     var loggingTimeout: Duration = Duration.ofSeconds(15)
+    var deduplicateMessages: Boolean = true
 }

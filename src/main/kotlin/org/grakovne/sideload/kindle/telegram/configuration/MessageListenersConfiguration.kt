@@ -10,6 +10,7 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.ifTrue
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventSender
+import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.fetchLanguage
 import org.grakovne.sideload.kindle.telegram.fetchUniqueIdentifier
@@ -28,7 +29,8 @@ class MessageListenersConfiguration(
     private val userService: UserService,
     private val userMessageReportService: UserMessageReportService,
     private val unprocessedIncomingEventService: UnprocessedIncomingEventService,
-    private val messageReferenceService: MessageReferenceService
+    private val messageReferenceService: MessageReferenceService,
+    private val configurationProperties: ConfigurationProperties
 ) {
 
     @PostConstruct
@@ -48,14 +50,16 @@ class MessageListenersConfiguration(
     }
 
     private fun onMessage(update: Update) = try {
-        messageReferenceService
-            .fetchMessage(update.fetchUniqueIdentifier())
-            ?.let {
-                if (it.status == MessageStatus.PROCESSED) {
-                    logger.debug { "Got same message twice, message id: ${it.id}, skipping" }
-                    return Either.Right(listOf(EventProcessingResult.SKIPPED))
+        if (configurationProperties.deduplicateMessages) {
+            messageReferenceService
+                .fetchMessage(update.fetchUniqueIdentifier())
+                ?.let {
+                    if (it.status == MessageStatus.PROCESSED) {
+                        logger.debug { "Got same message twice, message id: ${it.id}, skipping" }
+                        return Either.Right(listOf(EventProcessingResult.SKIPPED))
+                    }
                 }
-            }
+        }
 
         val user = userService.fetchOrCreateUser(
             userId = update.fetchUserId(),
