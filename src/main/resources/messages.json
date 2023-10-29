@@ -68,7 +68,7 @@
     "name": "ProjectInfoMessage",
     "type": "HTML",
     "enablePreview": "false",
-    "template": "Unfortunately, Kindle reading devices do not support FB2, and most EPUB files from bookstores are converted by Amazon services with significant losses\n\nI created this service to solve both problems at once:\n\nnow you can quickly get quality converted books on Kindle, with preserved page layout, margins, indents, and fonts\n\nI tried to make the service's use not too different from using the official Kindle app from Google Play or App Store, and I hope I succeeded\n\nThe service will remain free and available to all users without restrictions as long as possible\n\n___\n\nThe project uses the <a href=\"https://github.com/rupor-github/fb2converter\">fb2converter</a> under the GPL-3.0 license, and I would like to thank the author for his work\n\nThe service is distributed under the MIT license, the source codes are available <a href = \"https://github.com/GrakovNe/kindle-sideload/\">here</a>\n\n___\n\nPlease use the service for good and do not deprive authors of the opportunity to earn from their books\n\nIf you want to support the service, contact @maxgrakov and we'll find a way\n\nSincerely, Max Grakov"
+    "template": "Unfortunately, Kindle reading devices do not support FB2, and most EPUB files from bookstores are converted by Amazon services with significant losses\n\nI created this service to solve both problems at once:\n\nnow you can quickly get quality converted books on Kindle, with preserved page layout, margins, indents, and fonts\n\nI tried to make the service's use not too different from using the official Kindle app from Google Play or App Store, and I hope I succeeded\n\nThe service will remain free and available to all users without restrictions as long as possible\n\n___\n\nThe project uses the <a href=\"https://github.com/rupor-github/fb2converter\">fb2converter</a> under the GPL-3.0, and I would like to thank the author for his work\n\nThe service is distributed under the MIT license, the source codes are available <a href = \"https://github.com/GrakovNe/kindle-sideload/\">here</a>\n\n___\n\nPlease use the service for good and do not deprive authors of the opportunity to earn from their books\n\nIf you want to support the service, contact @maxgrakov and we'll find a way\n\nSincerely, Max Grakov"
   },
   {
     "name": "AdvancedConfigurationMessage",
@@ -119,7 +119,7 @@
     "name": "UpdateEmailUpdatedMessage",
     "type": "HTML",
     "enablePreview": "false",
-    "template": "The E-Mail to which files will be sent after conversion has been updated. Click the \"Send to email\" button to receive the files.\n\nDon't forget to add the E-Mail sideload@grakovne.org to the trusted list so that books arrive automatically.\n\nYou can read more about how to do this here: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
+    "template": "The E-Mail to which files will be sent after conversion has been updated\n\nClick the \"Send to email\" button to receive the files.\n\nDon't forget to add the E-Mail sideload@grakovne.org to the trusted list so that books arrive automatically.\n\nYou can read more about how to do this here: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
   },
   {
     "name": "UpdateEmailPromptMessage",

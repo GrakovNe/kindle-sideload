@@ -27,7 +27,7 @@ class StkSettingsScreenEventHandler(
                 event.user,
                 StkScreenMessage,
                 listOf(
-                    listOf(UpdateStkEmailButton),
+                    listOf(UpdateStkEmailPromptButton),
                     listOf(BackToSettingsButton),
                 )
             )

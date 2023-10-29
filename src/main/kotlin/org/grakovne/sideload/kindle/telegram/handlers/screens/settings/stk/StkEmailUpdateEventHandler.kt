@@ -1,9 +1,11 @@
 package org.grakovne.sideload.kindle.telegram.handlers.screens.settings.stk
 
 import arrow.core.Either
+import org.grakovne.sideload.kindle.common.FileUploadFailedError
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
+import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.common.InputRequiredEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.BackToSettingsButton
@@ -34,7 +36,14 @@ class StkEmailUpdateEventHandler(
             )
     }
 
-    override fun getRequiredButton(): List<Button> = listOf(UpdateStkEmailButton)
+    override fun onEvent(event: ButtonPressedEvent) = event
+        .update
+        .message()
+        ?.text()
+        ?.let { super.onEvent(event) }
+        ?: Either.Right(EventProcessingResult.SKIPPED)
+
+    override fun getRequiredButton(): List<Button> = listOf(UpdateStkEmailPromptButton)
 
     override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> {
         val email = event.update.message()?.text() ?: return Either.Right(Unit)

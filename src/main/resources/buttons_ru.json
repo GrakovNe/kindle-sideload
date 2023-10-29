@@ -73,10 +73,10 @@
   },
   {
     "name": "StkSettingsScreenButton",
-    "template": "STK"
+    "template": "Экспорт книг"
   },
   {
-    "name": "UpdateStkEmailButton",
+    "name": "UpdateStkEmailPromptButton",
     "template": "Обновить E-Mail"
   },
   {
