@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.user.configuration
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.assets.configuration.default.DefaultConfigurationAssetService
 import org.grakovne.sideload.kindle.user.configuration.domain.ConfigurationNotFoundError
 import org.grakovne.sideload.kindle.user.configuration.domain.UnableUpdateConfigurationError
 import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
@@ -17,7 +18,8 @@ import java.nio.file.Path
 @Service
 class UserConverterConfigurationService(
     private val properties: UserConverterConfigurationProperties,
-    private val validationService: ConfigurationValidationService
+    private val validationService: ConfigurationValidationService,
+    private val defaultConfigurationAssetService: DefaultConfigurationAssetService,
 ) {
 
     fun fetchConverterConfiguration(userId: String): Either<UserConverterConfigurationError, File> {
@@ -25,12 +27,16 @@ class UserConverterConfigurationService(
 
         val asset = provideConfigurationAsset(userId)
 
-        return when (asset.exists()) {
-            true -> Either.Right(asset).also { logger.debug { "Found requested configuration file for user $userId" } }
-            false -> Either
+        if (asset.exists()) {
+            return Either.Right(asset).also { logger.debug { "Found requested configuration file for user $userId" } }
+        }
+
+        return defaultConfigurationAssetService
+            .fetchDefaultConfiguration()
+            ?.let { Either.Right(it) }
+            ?: Either
                 .Left(ConfigurationNotFoundError)
                 .also { logger.info { "Requested configuration file for user $userId was not found" } }
-        }
     }
 
     fun removeConverterConfiguration(userId: String): Either<UserConverterConfigurationError, Unit> {
