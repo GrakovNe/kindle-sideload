@@ -52,7 +52,7 @@
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Kindle Sideload Tool\n\n<pre>Автор: @maxgrakov</pre>\n\nЭто неофициальный способ загрузить на Amazon Kindle книги в форматах fb2 без потерь качества.\n\nНажми кнопку \"Сконвертировать книгу\" и загрузи файл"
+    "template": "Kindle Sideload Tool\n\nЭто неофициальный способ загрузить на Amazon Kindle книги в форматах fb2 без потерь качества.\n\nНажми кнопку \"Сконвертировать книгу\" и загрузи файл"
   },
   {
     "name": "SettingsScreenRequestedMessage",
@@ -120,6 +120,12 @@
     "type": "HTML",
     "enablePreview": "false",
     "template": "E-Mail, на который будут отправляться файлы после конвертации обновлен\n\nНажмите на кнопку \"Отправить на почту\", чтобы получить файлы\n\nНе забудь добавить E-Mail sideload@grakovne.org в список доверенных, чтобы книги приходили автоматически\n\nПодробнее о том, как это сделать, можно прочитать здесь: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
+  },
+  {
+    "name": "UpdateEmailUpdateFailedMessage",
+    "type": "HTML",
+    "enablePreview": "false",
+    "template": "${reason}"
   },
   {
     "name": "UpdateEmailPromptMessage",

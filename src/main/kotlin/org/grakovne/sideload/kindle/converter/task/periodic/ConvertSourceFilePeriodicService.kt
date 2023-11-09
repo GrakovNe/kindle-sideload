@@ -18,6 +18,7 @@ import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskServi
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
+import org.grakovne.sideload.kindle.stk.email.task.periodic.StkEmailPeriodicService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
@@ -88,6 +89,7 @@ class ConvertSourceFilePeriodicService(
             ?.let { converterService.convertAndCollect(task.userId, it) }
             ?: Either.Left(UnableFetchFile)
     } catch (ex: Exception) {
+        logger.error("Fatal error occurred while file convert task: $ex")
         Either.Left(FatalError(ex.stackTraceToString()))
     }
 

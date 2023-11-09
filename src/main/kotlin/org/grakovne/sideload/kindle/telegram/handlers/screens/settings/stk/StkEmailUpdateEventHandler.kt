@@ -13,6 +13,7 @@ import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScree
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
+import org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationError
 import org.springframework.stereotype.Service
 
 @Service
@@ -36,6 +37,19 @@ class StkEmailUpdateEventHandler(
             )
     }
 
+    override fun sendFailureResponse(event: ButtonPressedEvent, code: EventProcessingError) {
+        messageSender
+            .sendResponse(
+                event.update,
+                event.user,
+                UpdateEmailUpdateFailedMessage(UpdateEmailValidationError.NOT_VALID_EMAIL),
+                listOf(
+                    listOf(BackToSettingsButton),
+                    listOf(MainScreenButton),
+                    )
+            )
+    }
+
     override fun onEvent(event: ButtonPressedEvent) = event
         .update
         .message()
@@ -50,6 +64,5 @@ class StkEmailUpdateEventHandler(
 
         return userPreferencesService
             .updateEmail(event.user.id, email)
-            .let { Either.Right(Unit) }
     }
 }

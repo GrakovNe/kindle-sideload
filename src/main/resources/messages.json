@@ -52,7 +52,7 @@
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Kindle Sideload Tool\n\n<pre>Author: @maxgrakov</pre>\n\nThis is an unofficial way to upload books in fb2 format to Amazon Kindle without losing quality.\n\nClick the \"Convert Book\" button and upload the file"
+    "template": "Kindle Sideload Tool\n\nThis is an unofficial way to upload books in fb2 format to Amazon Kindle without losing quality.\n\nClick the \"Convert Book\" button and upload the file"
   },
   {
     "name": "SettingsScreenRequestedMessage",
@@ -120,6 +120,12 @@
     "type": "HTML",
     "enablePreview": "false",
     "template": "The E-Mail to which files will be sent after conversion has been updated\n\nClick the \"Send to email\" button to receive the files.\n\nDon't forget to add the E-Mail sideload@grakovne.org to the trusted list so that books arrive automatically.\n\nYou can read more about how to do this here: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
+  },
+  {
+    "name": "UpdateEmailUpdateFailedMessage",
+    "type": "HTML",
+    "enablePreview": "false",
+    "template": "${reason}"
   },
   {
     "name": "UpdateEmailPromptMessage",

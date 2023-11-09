@@ -6,6 +6,7 @@ import org.grakovne.sideload.kindle.user.configuration.validation.ConfigurationV
 interface UserConverterConfigurationError : EventProcessingError
 
 data object ConfigurationNotFoundError : UserConverterConfigurationError
+data object EmailNotValidError : UserConverterConfigurationError
 data object UnableUpdateConfigurationError : UserConverterConfigurationError
 object InternalError : UserConverterConfigurationError
 object FileAbsentError : UserConverterConfigurationError

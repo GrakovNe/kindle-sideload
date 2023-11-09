@@ -10,5 +10,11 @@
     "values": {
       "FILE_IS_NOT_ZIP_FILE": "Поддерживаются только ZIP файлы"
     }
+  },
+  {
+    "name": "UpdateEmailValidationError",
+    "values": {
+      "NOT_VALID_EMAIL": "Некорректный формат адреса электронной почты"
+    }
   }
 ]
