@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.stk.email.task
+package org.grakovne.sideload.kindle.stk.email.task.periodic
 
 import arrow.core.Either
 import kotlinx.coroutines.runBlocking
@@ -67,22 +67,26 @@ class StkEmailPeriodicService(
     }
 
     private fun processTask(task: TransferEmailTask): Either<TransferEmailError, Unit> {
-        val targetEmail = userPreferencesService
-            .fetchPreferences(task.userId)
-            .email
-            ?: return Either.Left(UserEmailAbsent)
+        try {
+            val targetEmail = userPreferencesService
+                .fetchPreferences(task.userId)
+                .email
+                ?: return Either.Left(UserEmailAbsent)
 
-        val files = userEnvironmentService
-            .provideEnvironmentFiles(task.environmentId)
-            .mapNotNull { it }
+            val files = userEnvironmentService
+                .provideEnvironmentFiles(task.environmentId)
+                .mapNotNull { it }
 
-
-        return mailSendingService
-            .sendFile(
-                address = targetEmail,
-                files = files
-            )
-            .mapLeft { SendingError }
+            return mailSendingService
+                .sendFile(
+                    address = targetEmail,
+                    files = files
+                )
+                .mapLeft { SendingError }
+        } catch (ex: Exception) {
+            logger.error("Fatal error occurred while email sending task: $ex")
+            return Either.Left(SendingError)
+        }
     }
 
     private fun updateStatus(
