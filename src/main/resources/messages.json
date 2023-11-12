@@ -52,7 +52,7 @@
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Kindle Sideload Tool\n\nThis is an unofficial way to upload books in fb2 format to Amazon Kindle without losing quality.\n\nClick the \"Convert Book\" button and upload the file"
+    "template": "This is an unofficial way to upload books in fb2 format to Amazon Kindle without losing quality.\n\nClick the \"Convert Book\" button and upload the file"
   },
   {
     "name": "SettingsScreenRequestedMessage",

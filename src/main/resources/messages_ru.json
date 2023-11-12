@@ -52,7 +52,7 @@
   {
     "name": "MainScreenRequestedMessage",
     "type": "HTML",
-    "template": "Kindle Sideload Tool\n\nЭто неофициальный способ загрузить на Amazon Kindle книги в формате fb2 без потерь качества.\n\nНажми кнопку \"Сконвертировать книгу\" и загрузи файл"
+    "template": "Это неофициальный способ загрузить на Amazon Kindle книги в формате fb2 без потерь качества.\n\nНажми кнопку \"Сконвертировать книгу\" и загрузи файл"
   },
   {
     "name": "SettingsScreenRequestedMessage",

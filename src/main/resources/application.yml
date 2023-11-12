@@ -1,23 +1,25 @@
 spring:
   mail:
-    from: "grakovne@gmail.com"
-    subject: "Kindle Sideload Book"
-    text: "Your Books are ready!"
-    host: "smtp.gmail.com"
+    from: "sideload@grakovne.org"
+    subject: "Your Subject Here"
+    text: "Your Text Here"
+    host: "smtp.mail.me.com"
     port: "587"
     username: "grakovne@gmail.com"
-    password: "pass"
+    password: "gael-seus-akal-habk"
     properties:
       mail:
         transport:
           protocol: smtp
         smtp:
-          port: 25
+          port: 587
           auth: true
           starttls:
             enable: true
             required: true
+
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
   datasource:
@@ -29,7 +31,8 @@ spring:
 
 telegram:
   token: 6774391168:AAHvA34GxLg6g5x4joR85fax_rZdnuUM8dY
-  level: DEBUG
+  level: WARN
+  deduplicateMessages: false
 
 ads:
   blockDelimiter: "\n\n_____\n\n"
@@ -42,7 +45,6 @@ user:
       file-name: "configuration.zip"
   environment:
     temporaryFolder: "user_environments"
-    outputFileExtensions: ["epub", "azw3"]
 
 file:
   upload:
@@ -57,7 +59,7 @@ converter:
     shell: "/bin/bash"
     shellArgs: "-c"
     configurationExtensions: [ "toml", "yaml", "json" ]
-    converterParameters: ""
+    converterParameters: "--stk"
   sourceFileExtensions: [ "fb2", "fb2.zip" ]
 
 environment:
@@ -70,4 +72,3 @@ logging:
     root: INFO
     org.grakovne: DEBUG
     org.hibernate: ERROR
-    com.pengrad.telegrambot: TRACE
