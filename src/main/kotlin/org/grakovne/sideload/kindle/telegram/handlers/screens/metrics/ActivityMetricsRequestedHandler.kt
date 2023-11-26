@@ -36,8 +36,8 @@ class ActivityMetricsRequestedHandler(
                     fileConvertationsYearly = snapshot.fileConvertations.yearly,
 
                     usersToday = snapshot.users.today,
-                    usersWeekly = snapshot.users.today,
-                    usersYearly = snapshot.users.today,
+                    usersWeekly = snapshot.users.weekly,
+                    usersYearly = snapshot.users.yearly,
                 ),
                 listOf(
                     listOf(MainScreenButton)
