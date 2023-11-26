@@ -94,5 +94,9 @@
   {
     "name": "SendConvertedToEmailButton",
     "template": "Sideload via E-Mail"
+  },
+  {
+    "name": "RequestMetricsButton",
+    "template": "Activity Metrics"
   }
 ]

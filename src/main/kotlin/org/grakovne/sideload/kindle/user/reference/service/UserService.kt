@@ -10,6 +10,8 @@ import java.time.Instant
 @Service
 class UserService(private val userRepository: UserRepository) {
 
+    fun fetchActiveUsers(from: Instant, to: Instant) = userRepository.findByLastActivityTimestampGreaterThanAndLastActivityTimestampLessThan(from, to)
+
     fun fetchSuperUsers() = userRepository.findByType(Type.SUPER_USER)
 
     fun fetchUser(userId: String): User = userRepository

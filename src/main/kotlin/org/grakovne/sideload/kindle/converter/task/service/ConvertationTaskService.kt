@@ -16,6 +16,8 @@ class ConvertationTaskService(
     private val repository: ConvertationTaskRepository
 ) {
 
+    fun fetchTasks(from: Instant, to: Instant) = repository.findByCreatedAtGreaterThanAndCreatedAtLessThan(from, to)
+
     fun updateTask(task: ConvertationTask) = repository
         .also { logger.debug { "Updating periodic task: $task" } }
         .save(task)

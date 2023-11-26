@@ -151,5 +151,10 @@
     "name": "StkSubmittedMessage",
     "type": "HTML",
     "template": "Sending. Everything will be ready in a few seconds."
+  },
+  {
+    "name": "ActivityMetricsMessage",
+    "type": "HTML",
+    "template": "Application Metrics\n\n<b>Active Users</b>:\n\nToday: ${usersToday}\nLast Week: ${usersWeekly}\nLast Year: ${usersYearly}\n\n<b>File converted</b>:\n\nToday: ${fileConvertationsToday}\nLast Week: ${fileConvertationsWeekly}\nLast Year: ${fileConvertationsYearly}"
   }
 ]

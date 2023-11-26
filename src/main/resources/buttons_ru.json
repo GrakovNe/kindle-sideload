@@ -82,5 +82,9 @@
   {
     "name": "SendConvertedToEmailButton",
     "template": "Отправить на почту"
+  },
+  {
+    "name": "RequestMetricsButton",
+    "template": "Метрики активности"
   }
 ]
