@@ -19,7 +19,7 @@ class PlatformService {
 
         if (System.getProperty("sun.arch.data.model") == "32" && SystemUtils.IS_OS_LINUX) {
             logger.debug { "Found host OS and architecture. Working on 32-Bit Linux" }
-            return Either.Right("linux_i386")
+            return Either.Right("linux-i386")
         }
 
         if (System.getProperty("sun.arch.data.model") != "64") {
@@ -29,7 +29,7 @@ class PlatformService {
 
         if (SystemUtils.IS_OS_MAC) {
             logger.debug { "Found host OS and architecture. Working on 64-Bit MacOS" }
-            return Either.Right("darwin_arm64")
+            return Either.Right("darwin-arm64")
         }
 
         if (SystemUtils.IS_OS_LINUX) {
@@ -37,10 +37,10 @@ class PlatformService {
             logger.debug { "Found host OS and architecture. Working on 64-Bit Linux" }
 
             return when {
-                architecture.contains("arm") -> Either.Right("linux_arm64")
-                architecture.contains("aarch64") -> Either.Right("linux_arm64")
-                architecture.contains("amd64") -> Either.Right("linux_amd64")
-                architecture.contains("x86_64") -> Either.Right("linux_amd64")
+                architecture.contains("arm") -> Either.Right("linux-arm64")
+                architecture.contains("aarch64") -> Either.Right("linux-arm64")
+                architecture.contains("amd64") -> Either.Right("linux-amd64")
+                architecture.contains("x86_64") -> Either.Right("linux-amd64")
                 else -> Either.Left(PlatformError.UNABLE_TO_DEFINE_LINUX_PLATFORM)
                     .also { logger.warn { "Linux detected but arch not supported. Your arch is: $architecture" } }
             }
