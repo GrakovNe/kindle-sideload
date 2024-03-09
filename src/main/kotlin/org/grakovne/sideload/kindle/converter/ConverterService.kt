@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.CliRunner
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinaryProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
+import org.grakovne.sideload.kindle.converter.validation.ConvertationFileValidationService
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.user.preferences.domain.UserPreferences
@@ -21,7 +22,8 @@ class ConverterService(
     private val binaryProvider: ConverterBinaryProvider,
     private val binaryProperties: ConverterBinaryProperties,
     private val environmentProperties: EnvironmentProperties,
-    private val userPreferencesService: UserPreferencesService
+    private val userPreferencesService: UserPreferencesService,
+    private val validationService: ConvertationFileValidationService
 ) {
 
     fun convertAndCollect(
@@ -43,6 +45,13 @@ class ConverterService(
             )
 
         val inputFile = deployContent(environment, book)
+
+        validationService
+            .validate(inputFile)
+            .fold(
+                ifLeft = { return Either.Left(FileNotSupported) },
+                ifRight = {}
+            )
 
         val environmentFiles = environment.snapshotDirectory()
         val userPreferences = userPreferencesService.fetchPreferences(userId)

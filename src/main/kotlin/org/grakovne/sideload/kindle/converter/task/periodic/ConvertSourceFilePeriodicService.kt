@@ -66,7 +66,8 @@ class ConvertSourceFilePeriodicService(
                         status = ConvertationFinishedStatus.FAILED,
                         log = if (it is FatalError) "Fatal Error occurred on file processing. " else it.details ?: "",
                         output = emptyList(),
-                        environmentId = it.environmentId
+                        environmentId = it.environmentId,
+                        failureReason = it
                     )
                 },
                 ifRight = {

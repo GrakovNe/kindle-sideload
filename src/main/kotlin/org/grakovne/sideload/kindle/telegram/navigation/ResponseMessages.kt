@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.telegram.navigation
 
 import org.grakovne.sideload.kindle.common.navigation.domain.Message
+import org.grakovne.sideload.kindle.converter.ConvertationError
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.user.configuration.validation.ConfigurationValidationError
 
@@ -15,7 +16,9 @@ data class FileUploadFailedMessage(val reason: FileUploadFailedReason) : Message
 
 data class FileConvertarionSuccessMessage(val result: String) : Message
 data class FileConvertarionSuccessEmptyOutputMessage(val result: String) : Message
-data class FileConvertarionFailedMessage(val details: String) : Message
+
+data object FileConvertarionFailedUnsupportedMessage : Message
+data class FileConvertarionErrorMessage(val details: String) : Message
 
 data object StkSubmittedMessage : Message
 data object StkSuccessMessage : Message

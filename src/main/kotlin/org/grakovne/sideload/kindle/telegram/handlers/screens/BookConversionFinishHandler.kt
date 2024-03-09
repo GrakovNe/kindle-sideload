@@ -5,7 +5,10 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendDocument
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.common.parallelMap
+import org.grakovne.sideload.kindle.converter.ConvertationError
+import org.grakovne.sideload.kindle.converter.FileNotSupported
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
@@ -15,7 +18,8 @@ import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.handlers.common.ReplyingEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendConvertedToEmailButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
-import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedMessage
+import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionErrorMessage
+import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedUnsupportedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessEmptyOutputMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
@@ -78,10 +82,9 @@ class BookConversionFinishHandler(
             .sendResponse(
                 chatId = user.id,
                 user = user,
-                message = FileConvertarionFailedMessage(event.log),
+                message = event.failureReason.toMessage(event.log),
                 navigation = listOf(listOf(MainScreenButton))
             )
-            .map { EventProcessingResult.PROCESSED }
     }
 
     override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> =
@@ -91,6 +94,13 @@ class BookConversionFinishHandler(
         }
 
     companion object {
+        private fun ConvertationError?.toMessage(log: String): Message {
+            return when (this) {
+                FileNotSupported -> FileConvertarionFailedUnsupportedMessage
+                else -> FileConvertarionErrorMessage(log)
+            }
+        }
+
         private val logger = KotlinLogging.logger { }
     }
 

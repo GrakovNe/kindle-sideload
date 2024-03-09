@@ -35,9 +35,14 @@
     "template": "Conversion was successful, but the finished book was removed during the process\n\nIf your advanced configuration includes automatic file sending to E-Mail, the books have already been sent"
   },
   {
-    "name": "FileConvertarionFailedMessage",
+    "name": "FileConvertarionErrorMessage",
     "type": "HTML",
     "template": "Something went wrong during the conversion. Here are the details:\n\n<pre>${details}</pre>\n\nIf you're unsure what to do, contact @maxgrakov"
+  },
+  {
+    "name": "FileConvertarionFailedUnsupportedMessage",
+    "type": "HTML",
+    "template": "Seems like that converted doesn't supports your book format\n\nThe only FB2 books are supported\n\nIf you're unsure what to do, contact @maxgrakov"
   },
   {
     "name": "UserConfigurationValidationFailedMessage",
