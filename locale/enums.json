@@ -1,0 +1,20 @@
+[
+  {
+    "name": "FileUploadFailedReason",
+    "values": {
+      "FILE_IS_TOO_LARGE": "Sorry, but your file must be below 20MB"
+    }
+  },
+  {
+    "name": "ConfigurationValidationError",
+    "values": {
+      "FILE_IS_NOT_ZIP_FILE": "Only ZIP files are supported as configuration"
+    }
+  },
+  {
+    "name": "UpdateEmailValidationError",
+    "values": {
+      "NOT_VALID_EMAIL": "E-Mail is incorrect"
+    }
+  }
+]

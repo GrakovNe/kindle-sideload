@@ -1,0 +1,102 @@
+[
+  {
+    "name": "RequestSettingButton",
+    "template": "Settings"
+  },
+  {
+    "name": "RequestConvertationPromptButton",
+    "template": "Convert Book"
+  },
+  {
+    "name": "RequestProjectInfoButton",
+    "template": "Project Info"
+  },
+  {
+    "name": "MainScreenButton",
+    "template": "Home"
+  },
+  {
+    "name": "DebugModeSettingScreenButton",
+    "template": "Verbose Mode"
+  },
+  {
+    "name": "AdvancedSettingsScreenButton",
+    "template": "Advanced Settings"
+  },
+  {
+    "name": "OutputFileTypeSettingsScreenButton",
+    "template": "Output Format"
+  },
+  {
+    "name": "FetchConfigurationButton",
+    "template": "Download Current Config"
+  },
+  {
+    "name": "FetchDefaultConfigurationButton",
+    "template": "Download Default Config"
+  },
+  {
+    "name": "FetchUserConfigurationButton",
+    "template": "Download Current Config"
+  },
+  {
+    "name": "RemoveConfigurationButton",
+    "template": "Reset to Default"
+  },
+  {
+    "name": "UploadConfigurationButton",
+    "template": "Upload Config File"
+  },
+  {
+    "name": "CancelUploadConfigurationButton",
+    "template": "Cancel"
+  },
+  {
+    "name": "EnableDebugModeButton",
+    "template": "Enable"
+  },
+  {
+    "name": "DisableDebugModeButton",
+    "template": "Disable"
+  },
+  {
+    "name": "BackToSettingsButton",
+    "template": "Back to Settings"
+  },
+  {
+    "name": "EpubOutputButton",
+    "template": "EPUB"
+  },
+  {
+    "name": "KEpubOutputButton",
+    "template": "KEPUB"
+  },
+  {
+    "name": "Azw3ModeButton",
+    "template": "AZW3"
+  },
+  {
+    "name": "StkSettingsScreenButton",
+    "template": "Book Export"
+  },
+  {
+    "name": "EnableStkButton",
+    "template": "Enable"
+  },
+  {
+    "name": "DisableStkButton",
+    "template": "Disable"
+  },
+  {
+    "name": "UpdateStkEmailPromptButton",
+    "template": "Update Email"
+  },
+  {
+    "name": "SendConvertedToEmailButton",
+    "template": "Sideload via E-Mail"
+  },
+  {
+    "name": "RequestMetricsButton",
+    "template": "Activity Metrics"
+  }
+]

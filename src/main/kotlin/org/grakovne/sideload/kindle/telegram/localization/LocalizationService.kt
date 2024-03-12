@@ -8,9 +8,9 @@ import org.grakovne.sideload.kindle.telegram.domain.PreparedItem
 import org.grakovne.sideload.kindle.telegram.localization.converter.toMessage
 import org.grakovne.sideload.kindle.telegram.localization.template.TextTemplate
 import org.springframework.core.io.ClassPathResource
-import java.io.FileNotFoundException
 import java.io.InputStream
 import java.time.Instant
+import kotlin.io.path.Path
 import kotlin.reflect.full.memberProperties
 
 abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTemplate>(
@@ -49,14 +49,15 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
     }
 
     private fun getLocalizationResource(language: Language?): InputStream {
-        if (null == language) {
-            return ClassPathResource("$resourceName.json").inputStream
-        }
+        val resourceFile = language
+            ?.let { "${resourceName}_${language}.json" }
+            ?: "${resourceName}.json"
 
-        return try {
-            ClassPathResource("${resourceName}_${language}.json").inputStream
-        } catch (ex: FileNotFoundException) {
-            ClassPathResource("$resourceName.json").inputStream
+        return Path("locale").resolve(Path(resourceFile)).toFile().let {
+            when (it.exists()) {
+                true -> it.inputStream()
+                false -> ClassPathResource("${resourceName}.json").inputStream
+            }
         }
     }
 

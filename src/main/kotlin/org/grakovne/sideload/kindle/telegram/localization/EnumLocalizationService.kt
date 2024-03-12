@@ -6,8 +6,8 @@ import org.grakovne.sideload.kindle.common.Language
 import org.grakovne.sideload.kindle.telegram.localization.template.EnumTemplate
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
-import java.io.FileNotFoundException
 import java.io.InputStream
+import kotlin.io.path.Path
 
 @Service
 class EnumLocalizationService(val objectMapper: ObjectMapper) {
@@ -28,14 +28,15 @@ class EnumLocalizationService(val objectMapper: ObjectMapper) {
     }
 
     private fun getLocalizationResource(language: Language?): InputStream {
-        if (language == null) {
-            return ClassPathResource("enums.json").inputStream
-        }
+        val resourceName = language
+            ?.let { "enums_${language}.json" }
+            ?: "enums.json"
 
-        return try {
-            ClassPathResource("enums_${language}.json").inputStream
-        } catch (ex: FileNotFoundException) {
-            ClassPathResource("enums.json").inputStream
+        return Path("locale").resolve(Path(resourceName)).toFile().let {
+            when (it.exists()) {
+                true -> it.inputStream()
+                false -> ClassPathResource("enums_.json").inputStream
+            }
         }
     }
 }
