@@ -35,7 +35,7 @@ class EnumLocalizationService(val objectMapper: ObjectMapper) {
         return Path("locale").resolve(Path(resourceName)).toFile().let {
             when (it.exists()) {
                 true -> it.inputStream()
-                false -> ClassPathResource("enums_.json").inputStream
+                false -> ClassPathResource("enums.json").inputStream
             }
         }
     }
