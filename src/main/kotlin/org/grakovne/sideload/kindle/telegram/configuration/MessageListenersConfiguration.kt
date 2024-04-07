@@ -80,7 +80,7 @@ class MessageListenersConfiguration(
                         unprocessedIncomingEventService
                             .handle(incomingMessageEvent)
                             .also {
-                                logger.warn {
+                                logger.info {
                                     val text = incomingMessageEvent.update.message()?.text()
                                         ?: incomingMessageEvent.update.callbackQuery()?.data()
                                     "Unable to find acceptable listener for message: $text. Sending default one response instead"
