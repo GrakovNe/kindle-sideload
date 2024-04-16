@@ -38,6 +38,8 @@ class TransferEmailTaskService(
 
     }
 
-    fun fetchTasksForProcessing(): List<TransferEmailTask> =
-        repository.findByStatusInAndCreatedAtLessThan(listOf(TransferEmailTaskStatus.ACTIVE), Instant.now())
+    fun fetchLatestForProcessing(): TransferEmailTask? =
+        repository
+            .findByStatusInAndCreatedAtLessThan(listOf(TransferEmailTaskStatus.ACTIVE), Instant.now())
+            .firstOrNull()
 }

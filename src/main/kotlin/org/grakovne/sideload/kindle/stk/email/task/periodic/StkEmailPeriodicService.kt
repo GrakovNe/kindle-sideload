@@ -4,7 +4,6 @@ import arrow.core.Either
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.mail.MailSendingService
-import org.grakovne.sideload.kindle.common.parallelMap
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.StkFinishedEvent
@@ -28,14 +27,14 @@ class StkEmailPeriodicService(
     private val eventSender: EventSender
 ) {
 
-    @Scheduled(fixedDelay = 100)
+    @Scheduled(fixedDelay = 5000)
     fun stkEmail() {
         logger.trace { "Running periodically task ${this.javaClass.simpleName}" }
 
         runBlocking {
             taskService
-                .fetchTasksForProcessing()
-                .parallelMap { task ->
+                .fetchLatestForProcessing()
+                ?.let { task ->
                     processTask(task)
                         .also { notifyUser(task, it) }
                         .fold(
