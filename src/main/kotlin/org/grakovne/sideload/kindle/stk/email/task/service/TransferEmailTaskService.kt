@@ -20,12 +20,12 @@ class TransferEmailTaskService(
         .let { Either.Right(Unit) }
 
     fun submitTask(
-        user: User,
+        userId: String,
         environmentId: String
     ): Either<ConvertationError, Unit> {
         val entity = TransferEmailTask(
             id = UUID.randomUUID(),
-            userId = user.id,
+            userId = userId,
             environmentId = environmentId,
             createdAt = Instant.now(),
             status = TransferEmailTaskStatus.ACTIVE,

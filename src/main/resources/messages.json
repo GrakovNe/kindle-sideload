@@ -35,6 +35,11 @@
     "template": "Conversion was successful, but the finished book was removed during the process\n\nIf your advanced configuration includes automatic file sending to E-Mail, the books have already been sent"
   },
   {
+    "name": "FileConvertarionSuccessAutomaticStkMessage",
+    "type": "HTML",
+    "template": "Conversion was successful; the file will be automatically sent via email in a few seconds."
+  },
+  {
     "name": "FileConvertarionErrorMessage",
     "type": "HTML",
     "template": "Something went wrong during the conversion. Here are the details:\n\n<pre>${details}</pre>\n\nIf you're unsure what to do, contact @maxgrakov"
@@ -106,6 +111,16 @@
     "template": "Detailed reports are enabled."
   },
   {
+    "name": "DisableAutoStkSettingsMessage",
+    "type": "HTML",
+    "template": "Automatic sending of converted books via email has been disabled. You may still send files manually."
+  },
+  {
+    "name": "EnableAutoStkSettingsMessage",
+    "type": "HTML",
+    "template": "Automatic sending of converted books via email has been enabled."
+  },
+  {
     "name": "OutputTypeSettingsMessage",
     "type": "HTML",
     "template": "Here you can choose the format you want to receive the file in after conversion."
@@ -119,6 +134,11 @@
     "name": "StkScreenMessage",
     "type": "HTML",
     "template": "Here you can configure the sending of books to E-Mail after conversion."
+  },
+  {
+    "name": "AutoStkScreenMessage",
+    "type": "HTML",
+    "template": "Here you can configure the automatic sending of books to your email after conversion.\n\nPlease keep in mind that you must first configure your email address to use this feature."
   },
   {
     "name": "UpdateEmailUpdatedMessage",

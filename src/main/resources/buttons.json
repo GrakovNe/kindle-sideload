@@ -92,6 +92,18 @@
     "template": "Update Email"
   },
   {
+    "name": "AutoStkScreenButton",
+    "template": "Automatically Sideload"
+  },
+  {
+    "name": "EnableAutoStkButton",
+    "template": "Enable"
+  },
+  {
+    "name": "DisableAutoStkButton",
+    "template": "Disable"
+  },
+  {
     "name": "SendConvertedToEmailButton",
     "template": "Sideload via E-Mail"
   },

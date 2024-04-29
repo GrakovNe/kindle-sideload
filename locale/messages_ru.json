@@ -35,6 +35,11 @@
     "template": "Конвертация прошла успешно, но готовая книга была удалена в процессе\n\nЕсли ваша расширенная конфигурация предполагает автоматическую отправку файлов на E-Mail, книги уже отправлены"
   },
   {
+    "name": "FileConvertarionSuccessAutomaticStkMessage",
+    "type": "HTML",
+    "template": "Конвертация прошла успешно\n\nЧерез несколько секунд отправим файл на указанный в настройках E-Mail"
+  },
+  {
     "name": "FileConvertarionErrorMessage",
     "type": "HTML",
     "template": "Что-то пошло не так во время конвертации. Вот подробности:\n\n<pre>${details}</pre>\n\nЕсли не знаешь, что с этим делать, обратись к @maxgrakov"
@@ -106,6 +111,16 @@
     "template": "Подробные отчёты включены"
   },
   {
+    "name": "DisableAutoStkSettingsMessage",
+    "type": "HTML",
+    "template": "Автоматическая отправка книг на E-Mail отключена.\nТы все еще можешь отправлять их вручную после конвертации"
+  },
+  {
+    "name": "EnableAutoStkSettingsMessage",
+    "type": "HTML",
+    "template": "Сконвертированные книги будут отправляться на указанный E-Mail автоматически"
+  },
+  {
     "name": "OutputTypeSettingsMessage",
     "type": "HTML",
     "template": "Здесь ты можешь выбрать, в каком формате хочешь получить файл после конвертации"
@@ -119,6 +134,11 @@
     "name": "StkScreenMessage",
     "type": "HTML",
     "template": "Здесь можно настроить отправку книг на E-Mail после конвертации"
+  },
+  {
+    "name": "AutoStkScreenMessage",
+    "type": "HTML",
+    "template": "Здесь вы можете настроить автоматическую отправку книг на E-Mail после конвертации.\n\nОбратите внимание, что для использования этой опции, вам нужно указать E-Mail"
   },
   {
     "name": "UpdateEmailUpdatedMessage",

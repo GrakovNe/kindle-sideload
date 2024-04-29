@@ -32,7 +32,7 @@ spring:
 telegram:
   token: 6774391168:AAHvA34GxLg6g5x4joR85fax_rZdnuUM8dY
   level: WARN
-  deduplicateMessages: false
+  deduplicateMessages: true
 
 ads:
   blockDelimiter: "\n\n_____\n\n"

@@ -35,7 +35,7 @@ class BookEmailSideloadRequestHandler(
         val environmentId = Button.fetchButtonPayload(event.update.callbackQuery().data())
 
         return transferEmailTaskService
-            .submitTask(event.user, environmentId = environmentId)
+            .submitTask(event.user.id, environmentId = environmentId)
             .mapLeft { InternalError }
     }
 

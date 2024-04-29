@@ -41,6 +41,10 @@ class UserPreferencesService(
         .copy(debugMode = debugMode)
         .let { repository.save(it) }
 
+    fun updateAutomaticStk(userId: String, automaticStk: Boolean) = fetchOrCreate(userId)
+        .copy(automaticStk = automaticStk)
+        .let { repository.save(it) }
+
     private fun fetchOrCreate(userId: String) = repository.findByUserId(userId) ?: createNew(userId)
 
     private fun createNew(userId: String) =
@@ -50,5 +54,6 @@ class UserPreferencesService(
             outputFormat = OutputFormat.EPUB,
             debugMode = false,
             email = null,
+            automaticStk = false
         ).let { repository.save(it) }
 }
