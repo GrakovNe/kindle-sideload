@@ -106,6 +106,16 @@
     "template": "Подробные отчёты включены"
   },
   {
+    "name": "DisableAutoStkSettingsMessage",
+    "type": "HTML",
+    "template": "Автоматическая отправка книг на E-Mail отключена.\nТы все еще можешь отправлять их вручную после конвертации"
+  },
+  {
+    "name": "EnableAutoStkSettingsMessage",
+    "type": "HTML",
+    "template": "Сконвертированные книги будут отправляться на указанный E-Mail автоматически"
+  },
+  {
     "name": "OutputTypeSettingsMessage",
     "type": "HTML",
     "template": "Здесь ты можешь выбрать, в каком формате хочешь получить файл после конвертации"
@@ -119,6 +129,11 @@
     "name": "StkScreenMessage",
     "type": "HTML",
     "template": "Здесь можно настроить отправку книг на E-Mail после конвертации"
+  },
+  {
+    "name": "AutoStkScreenMessage",
+    "type": "HTML",
+    "template": "Здесь вы можете настроить автоматическую отправку книг на E-Mail после конвертации.\n\nОбратите внимание, что для использования этой опции, вам нужно указать E-Mail"
   },
   {
     "name": "UpdateEmailUpdatedMessage",

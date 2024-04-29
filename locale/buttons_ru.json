@@ -80,6 +80,18 @@
     "template": "Обновить E-Mail"
   },
   {
+    "name": "AutoStkScreenButton",
+    "template": "Автоматический экспорт"
+  },
+  {
+    "name": "EnableAutoStkButton",
+    "template": "Включить"
+  },
+  {
+    "name": "DisableAutoStkButton",
+    "template": "Выключить"
+  },
+  {
     "name": "SendConvertedToEmailButton",
     "template": "Отправить на почту"
   },
