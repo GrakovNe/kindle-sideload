@@ -1,0 +1,1 @@
+ALTER TABLE user_preferences ADD COLUMN automatic_stk BOOLEAN NOT NULL default false;

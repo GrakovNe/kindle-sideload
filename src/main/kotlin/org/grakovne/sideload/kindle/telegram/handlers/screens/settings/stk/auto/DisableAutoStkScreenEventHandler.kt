@@ -35,8 +35,9 @@ class DisableAutoStkScreenEventHandler(
             )
     }
 
-    override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> {
-        // change me: enable autoSTK here
-        return Either.Right(Unit)
-    }
+    override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> =
+        userPreferencesService
+            .updateAutomaticStk(event.user.id, false).let {
+                Either.Right(Unit)
+            }
 }
