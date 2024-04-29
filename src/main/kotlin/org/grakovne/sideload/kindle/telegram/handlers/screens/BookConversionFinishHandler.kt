@@ -20,9 +20,11 @@ import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendC
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.MainScreenButton
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionErrorMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionFailedUnsupportedMessage
+import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessAutomaticStkMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessEmptyOutputMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
+import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
@@ -31,7 +33,8 @@ import org.springframework.stereotype.Service
 class BookConversionFinishHandler(
     private val bot: TelegramBot,
     private val messageSender: MessageWithNavigationSender,
-    private val userService: UserService
+    private val userService: UserService,
+    private val userPreferencesService: UserPreferencesService
 ) : ReplyingEventHandler<ConvertationFinishedEvent, EventProcessingError>() {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)
@@ -49,30 +52,42 @@ class BookConversionFinishHandler(
     }
 
     private fun sendSuccessMessage(event: ConvertationFinishedEvent, user: User) {
-        when (event.output.isEmpty()) {
-            true -> messageSender
-                .sendResponse(
-                    chatId = user.id,
-                    user = user,
-                    message = FileConvertarionSuccessEmptyOutputMessage(event.log),
-                    navigation = listOf(
-                        listOf(MainScreenButton),
+        when {
+            userPreferencesService.fetchPreferences(user.id).automaticStk -> {
+                messageSender
+                    .sendResponse(
+                        chatId = user.id,
+                        user = user,
+                        message = FileConvertarionSuccessAutomaticStkMessage(event.log),
+                        navigation = emptyList()
                     )
-                )
+            }
 
-            false -> messageSender
-                .sendResponse(
-                    chatId = user.id,
-                    user = user,
-                    message = FileConvertarionSuccessMessage(event.log),
-                    navigation = listOf(
-                        listOf(SendConvertedToEmailButton(event.environmentId)),
-                        listOf(MainScreenButton),
+            event.output.isEmpty() -> {
+                messageSender
+                    .sendResponse(
+                        chatId = user.id,
+                        user = user,
+                        message = FileConvertarionSuccessEmptyOutputMessage(event.log),
+                        navigation = listOf(
+                            listOf(MainScreenButton),
+                        )
                     )
-                )
+            }
+
+            else -> {
+                messageSender
+                    .sendResponse(
+                        chatId = user.id,
+                        user = user,
+                        message = FileConvertarionSuccessMessage(event.log),
+                        navigation = listOf(
+                            listOf(SendConvertedToEmailButton(event.environmentId)),
+                            listOf(MainScreenButton),
+                        )
+                    )
+            }
         }
-
-
     }
 
     override fun sendFailureResponse(event: ConvertationFinishedEvent, code: EventProcessingError) {

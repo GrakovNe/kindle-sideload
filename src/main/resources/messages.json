@@ -35,6 +35,11 @@
     "template": "Conversion was successful, but the finished book was removed during the process\n\nIf your advanced configuration includes automatic file sending to E-Mail, the books have already been sent"
   },
   {
+    "name": "FileConvertarionSuccessAutomaticStkMessage",
+    "type": "HTML",
+    "template": "Conversion was successful; the file will be automatically sent via email in a few seconds."
+  },
+  {
     "name": "FileConvertarionErrorMessage",
     "type": "HTML",
     "template": "Something went wrong during the conversion. Here are the details:\n\n<pre>${details}</pre>\n\nIf you're unsure what to do, contact @maxgrakov"
