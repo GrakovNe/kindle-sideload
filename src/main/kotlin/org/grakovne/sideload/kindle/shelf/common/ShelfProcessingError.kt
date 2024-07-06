@@ -5,3 +5,4 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 sealed interface ShelfProcessingError : EventProcessingError
 
 data object UnableAttachItemError : ShelfProcessingError
+data object UnableTerminateItemError : ShelfProcessingError

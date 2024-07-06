@@ -14,6 +14,16 @@ class ShelfItemService(
     private val repository: ShelfItemRepository
 ) {
 
+    fun terminateItem(
+        environmentId: String
+    ) = repository
+        .findByEnvironmentId(environmentId)
+        ?.copy(status = ShelfItemStatus.TERMINATED)
+        ?.let { repository.save(it) }
+        ?.let { Either.Right(Unit) }
+        ?: Either.Left(ShelfItemError.ITEM_NOT_EXISTS)
+
+
     fun attachToShelf(
         shelfId: UUID,
         environmentId: String,
