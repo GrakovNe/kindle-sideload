@@ -21,17 +21,20 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.pengrad:java-telegram-bot-api:6.9.1")
+    implementation("com.github.pengrad:java-telegram-bot-api:7.2.1")
 
     implementation("io.arrow-kt:arrow-core:1.1.2")
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("net.lingala.zip4j:zip4j:2.11.5")
+    implementation ("com.ibm.icu:icu4j:71.1")
     implementation("org.apache.commons:commons-lang3:3.0")
 
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
     implementation("org.flywaydb:flyway-core")
 
     implementation("org.springframework.boot:spring-boot-starter-web")

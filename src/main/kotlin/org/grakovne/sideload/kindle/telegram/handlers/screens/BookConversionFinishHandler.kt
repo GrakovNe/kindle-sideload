@@ -14,6 +14,7 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
+import org.grakovne.sideload.kindle.shelf.service.ShelfService
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
 import org.grakovne.sideload.kindle.telegram.handlers.common.ReplyingEventHandler
 import org.grakovne.sideload.kindle.telegram.handlers.screens.convertation.SendConvertedToEmailButton
@@ -34,7 +35,8 @@ class BookConversionFinishHandler(
     private val bot: TelegramBot,
     private val messageSender: MessageWithNavigationSender,
     private val userService: UserService,
-    private val userPreferencesService: UserPreferencesService
+    private val userPreferencesService: UserPreferencesService,
+    private val shelfService: ShelfService
 ) : ReplyingEventHandler<ConvertationFinishedEvent, EventProcessingError>() {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)
@@ -80,7 +82,7 @@ class BookConversionFinishHandler(
                     .sendResponse(
                         chatId = user.id,
                         user = user,
-                        message = FileConvertarionSuccessMessage(event.log),
+                        message = FileConvertarionSuccessMessage(shelfService.fetchShelfLink(event.userId)),
                         navigation = listOf(
                             listOf(SendConvertedToEmailButton(event.environmentId)),
                             listOf(MainScreenButton),

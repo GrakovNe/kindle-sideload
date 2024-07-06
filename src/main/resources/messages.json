@@ -27,7 +27,7 @@
   {
     "name": "FileConvertarionSuccessMessage",
     "type": "HTML",
-    "template": "Conversion was successful\n\nFiles can be downloaded anytime or sent to the configured E-Mail within 24 hours"
+    "template": "Conversion was successful\n\nFiles can be sent to the configured E-Mail within 24 hours\n\nTo download files directly, go to the following address in the Kindle browser: <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>"
   },
   {
     "name": "FileConvertarionSuccessEmptyOutputMessage",
