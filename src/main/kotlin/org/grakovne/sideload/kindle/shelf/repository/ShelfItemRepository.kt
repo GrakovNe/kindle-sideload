@@ -8,4 +8,5 @@ import java.util.UUID
 interface ShelfItemRepository : JpaRepository<ShelfItem, UUID> {
 
     fun findByShelfIdAndStatus(userId: UUID, status: ShelfItemStatus): List<ShelfItem>
+    fun findByEnvironmentId(environmentId: String): ShelfItem?
 }

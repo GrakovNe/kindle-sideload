@@ -12,7 +12,7 @@ import java.util.UUID
 @Table(name = "shelf_item")
 data class ShelfItem(
     @Id
-    val id: String,
+    val id: UUID,
     val shelfId: UUID,
     val environmentId: String,
     val createdAt: Instant,

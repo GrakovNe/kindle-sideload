@@ -5,7 +5,6 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventHandler
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
-import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.core.EventType
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
@@ -17,8 +16,7 @@ import org.springframework.stereotype.Service
 @Service
 class ConvertationFinishedAutoStkEventHandler(
     private val userPreferencesService: UserPreferencesService,
-    private val transferEmailTaskService: TransferEmailTaskService,
-    private val eventSender: EventSender
+    private val transferEmailTaskService: TransferEmailTaskService
 ) : EventHandler<ConvertationFinishedEvent, EventProcessingError>() {
 
     override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)

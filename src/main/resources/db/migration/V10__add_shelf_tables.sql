@@ -5,7 +5,7 @@ CREATE TABLE shelf_reference (
 );
 
 CREATE TABLE shelf_item (
-    id VARCHAR PRIMARY KEY,
+    id UUID PRIMARY KEY,
     shelf_id UUID NOT NULL,
     environment_id VARCHAR NOT NULL,
     created_at TIMESTAMP NOT NULL,
