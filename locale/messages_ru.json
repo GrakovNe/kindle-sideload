@@ -27,7 +27,7 @@
   {
     "name": "FileConvertarionSuccessMessage",
     "type": "HTML",
-    "template": "Конвертация прошла успешно\n\nФайлы можно скачать в любое время или отправить их на настроенный E-Mail в течении 24 часов"
+    "template": "Конвертация прошла успешно\n\nФайлы можно отправить их на настроенный E-Mail в течении 24 часов\n\nЧтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>"
   },
   {
     "name": "FileConvertarionSuccessEmptyOutputMessage",
