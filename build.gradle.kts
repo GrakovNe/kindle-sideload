@@ -28,6 +28,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("net.lingala.zip4j:zip4j:2.11.5")
+    implementation ("com.ibm.icu:icu4j:71.1")
     implementation("org.apache.commons:commons-lang3:3.0")
 
     implementation("org.springframework.boot:spring-boot-starter-mail")
