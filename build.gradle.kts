@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.pengrad:java-telegram-bot-api:6.9.1")
+    implementation("com.github.pengrad:java-telegram-bot-api:7.2.1")
 
     implementation("io.arrow-kt:arrow-core:1.1.2")
     implementation("org.apache.commons:commons-text:1.10.0")
@@ -32,6 +32,8 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
     implementation("org.flywaydb:flyway-core")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
