@@ -14,7 +14,6 @@ data class ShelfItem(
     @Id
     val id: String,
     val shelfId: UUID,
-    val name: String,
     val environmentId: String,
     val createdAt: Instant,
 

@@ -57,7 +57,7 @@
 <div class="file-list">
     <div th:each="item : ${files}" class="file-item">
         <span th:text="${item.name}">Book Title</span>
-        <a th:href="@{'download/' + ${item.environmentId} + '/' + ${item.fileName} }" download>
+        <a th:href="@{'download/' + ${item.environmentId} + '/' + ${item.name} }" download>
             <button>Download</button>
         </a>
     </div>

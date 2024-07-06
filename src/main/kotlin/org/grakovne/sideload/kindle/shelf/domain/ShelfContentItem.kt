@@ -6,6 +6,5 @@ import java.time.Instant
 data class ShelfContentItem (
     val environmentId: String,
     val file: File,
-    val name: String,
     val createdAt: Instant
 )

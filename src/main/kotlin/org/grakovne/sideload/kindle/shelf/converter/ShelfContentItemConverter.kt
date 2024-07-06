@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class ShelfContentItemConverter {
-    
-    fun apply(item: ShelfContentItem) : ShelfContentItemView = ShelfContentItemView(
-        name = item.name,
-        fileName = item.file.name,
+
+    fun apply(item: ShelfContentItem): ShelfContentItemView = ShelfContentItemView(
+        name = item.file.name,
         environmentId = item.environmentId
     )
 }

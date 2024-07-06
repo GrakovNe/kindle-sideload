@@ -27,7 +27,6 @@ class ShelfService(
                     .map {
                         ShelfContentItem(
                             file = it,
-                            name = item.name,
                             createdAt = item.createdAt,
                             environmentId = item.environmentId
                         )
