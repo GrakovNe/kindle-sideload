@@ -5,8 +5,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.util.UUID
 
-//@Entity
-//@Table(name = "shelf_reference")
+@Entity
+@Table(name = "shelf_reference")
 data class ShelfReference(
     @Id
     val id: UUID,

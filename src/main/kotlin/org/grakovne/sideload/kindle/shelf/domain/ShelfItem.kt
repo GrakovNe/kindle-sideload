@@ -1,18 +1,24 @@
 package org.grakovne.sideload.kindle.shelf.domain
 
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.Instant
+import java.util.UUID
 
-//@Entity
-//@Table(name = "shelf_item")
+@Entity
+@Table(name = "shelf_item")
 data class ShelfItem(
     @Id
     val id: String,
-    val shelfId: String,
+    val shelfId: UUID,
+    val name: String,
     val environmentId: String,
     val createdAt: Instant,
+
+    @Enumerated(EnumType.STRING)
     val status: ShelfItemStatus
 )
 
