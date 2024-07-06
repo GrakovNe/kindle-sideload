@@ -49,6 +49,7 @@ class ShelfEndpoint(
     ): String {
         val files = shelfService
             .fetchShelfContent(shortUserId)
+            .sortedByDescending { it.createdAt }
             .map { shelfContentItemConverter.apply(it) }
 
         model.addAttribute("files", files)
