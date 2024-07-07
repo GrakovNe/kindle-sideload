@@ -4,6 +4,8 @@ import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.shelf.converter.ShelfContentItemConverter
 import org.grakovne.sideload.kindle.shelf.converter.toFileName
 import org.grakovne.sideload.kindle.shelf.service.ShelfService
+import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
+import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.core.io.FileSystemResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -20,7 +22,8 @@ import java.time.format.DateTimeFormatter.ofPattern
 class ShelfEndpoint(
     private val shelfService: ShelfService,
     private val shelfContentItemConverter: ShelfContentItemConverter,
-    private val environmentService: UserEnvironmentService
+    private val environmentService: UserEnvironmentService,
+    private val userService: UserService
 ) {
 
     @RequestMapping("/download/{environmentId}/{fileUrl}")
@@ -52,10 +55,15 @@ class ShelfEndpoint(
             .sortedByDescending { it.createdAt }
             .map { shelfContentItemConverter.apply(it) }
 
+        val userLanguage = shelfService
+            .fetchUserId(shortUserId)
+            ?.let { userService.fetchUser(it) }
+            ?.language ?: "en"
+
         model.addAttribute("files", files)
         model.addAttribute("currentDate", LocalDate.now().format(ofPattern("dd.MM.yyyy")))
         model.addAttribute("currentTime", LocalTime.now().format(ofPattern("HH:mm")))
 
-        return "shelf"
+        return "shelf_${userLanguage}"
     }
 }

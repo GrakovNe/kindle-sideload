@@ -25,6 +25,8 @@ class ShelfService(
             .toUriString()
     }
 
+    fun fetchUserId(shortId: String) = repository.findByShortId(shortId)?.userId
+
     fun fetchShelfContent(shortId: String): List<ShelfContentItem> {
         val shelf = repository.findByShortId(shortId) ?: return emptyList()
 

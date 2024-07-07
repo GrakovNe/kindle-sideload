@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kindle Sideload Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: black;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        .file-list {
+            padding: 1.5em;
+            flex: 1;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid black;
+            padding: 1em 0;
+            font-size: 1.2em;
+        }
+        .file-item button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 0.7em 1.5em;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .no-files {
+            text-align: center;
+            font-size: 1.2em;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            border-top: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<header>
+    Kindle Sideload Web
+</header>
+<div class="file-list" th:if="${files.size()} > 0">
+    <div th:each="item : ${files}" class="file-item">
+        <span th:text="${item.name}">Book Title</span>
+        <a th:href="@{'download/' + ${item.environmentId} + '/' + ${item.fileUrl} }" download>
+            <button>Download</button>
+        </a>
+    </div>
+</div>
+<div class="no-files" th:if="${files.size()} == 0">
+    No files available<br/><br/>
+    Files are either deleted after 24 hours or haven't been converted yet<br/>
+    Please use the Telegram bot to convert files and try again.
+</div>
+<footer>
+    <span th:text="${currentDate}">06.07.2024</span>
+    <span th:text="${currentTime}">15:45</span>
+</footer>
+</body>
+</html>

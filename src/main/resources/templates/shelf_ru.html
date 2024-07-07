@@ -11,6 +11,9 @@
             color: black;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
         header {
             background-color: black;
@@ -20,6 +23,7 @@
         }
         .file-list {
             padding: 1.5em;
+            flex: 1;
         }
         .file-item {
             display: flex;
@@ -37,14 +41,19 @@
             cursor: pointer;
             font-size: 1em;
         }
+        .no-files {
+            text-align: center;
+            font-size: 1.2em;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
         footer {
             background-color: black;
             color: white;
             text-align: center;
-            padding: 1em 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
             padding: 1em 0;
             border-top: 1px solid black;
         }
@@ -54,13 +63,18 @@
 <header>
     Kindle Sideload Web
 </header>
-<div class="file-list">
+<div class="file-list" th:if="${files.size()} > 0">
     <div th:each="item : ${files}" class="file-item">
         <span th:text="${item.name}">Book Title</span>
         <a th:href="@{'download/' + ${item.environmentId} + '/' + ${item.fileUrl} }" download>
-            <button>Download</button>
+            <button>Загрузить</button>
         </a>
     </div>
+</div>
+<div class="no-files" th:if="${files.size()} == 0">
+    Нет доступных файлов<br/><br/>
+    Сконвертированные книги либо удалены спустя 24 часа, либо еще не созданы<br/>
+    Пожалуйста, воспользуйтесь Telegram ботом для конвертирования книг
 </div>
 <footer>
     <span th:text="${currentDate}">06.07.2024</span>
