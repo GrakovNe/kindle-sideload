@@ -4,7 +4,7 @@ import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.shelf.converter.ShelfContentItemConverter
 import org.grakovne.sideload.kindle.shelf.converter.toFileName
 import org.grakovne.sideload.kindle.shelf.service.ShelfService
-import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
+import org.grakovne.sideload.kindle.shelf.web.localization.LocalizedTemplateProvider
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.core.io.FileSystemResource
 import org.springframework.http.HttpHeaders
@@ -18,12 +18,14 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter.ofPattern
 
+
 @Controller
 class ShelfEndpoint(
     private val shelfService: ShelfService,
     private val shelfContentItemConverter: ShelfContentItemConverter,
     private val environmentService: UserEnvironmentService,
-    private val userService: UserService
+    private val userService: UserService,
+    private val localizedTemplateProvider: LocalizedTemplateProvider
 ) {
 
     @RequestMapping("/download/{environmentId}/{fileUrl}")
@@ -64,6 +66,6 @@ class ShelfEndpoint(
         model.addAttribute("currentDate", LocalDate.now().format(ofPattern("dd.MM.yyyy")))
         model.addAttribute("currentTime", LocalTime.now().format(ofPattern("HH:mm")))
 
-        return "shelf_${userLanguage}"
+        return localizedTemplateProvider.provideLocalized("shelf", userLanguage)
     }
 }

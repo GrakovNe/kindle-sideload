@@ -63,7 +63,7 @@ class MessageListenersConfiguration(
 
         val user = userService.fetchOrCreateUser(
             userId = update.fetchUserId(),
-            language = update.fetchLanguage()
+            language = "uk"
         )
 
         logger.debug { "Processing incoming message ${update.updateId()} for user ${user.id}" }
