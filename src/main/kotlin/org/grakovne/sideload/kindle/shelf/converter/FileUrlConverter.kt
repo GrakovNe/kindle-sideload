@@ -6,4 +6,4 @@ private val transliterator = getInstance("Any-Latin; NFD; [:Nonspacing Mark:] Re
 
 fun String.toFileName() = transliterator
     .transliterate(this)
-    .replace(Regex("[^a-zA-Z0-9]"), "_")
+    .replace(Regex("[^a-zA-Z0-9.]"), "_")
