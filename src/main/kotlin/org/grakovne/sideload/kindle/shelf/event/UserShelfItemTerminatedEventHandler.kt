@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.shelf.event
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.events.core.EnvironmentUnnecessary
 import org.grakovne.sideload.kindle.events.core.EventHandler
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service
 class UserShelfItemTerminatedEventHandler(
     private val shelfItemService: ShelfItemService
 ) : EventHandler<UserEnvironmentUnnecessaryEvent, EventProcessingError>() {
-    override fun acceptableEvents() = listOf(EventType.ENVIRONMENT_UNNECESSARY)
+    override fun acceptableEvents() = listOf(EnvironmentUnnecessary)
 
     override fun onEvent(event: UserEnvironmentUnnecessaryEvent): Either<ShelfProcessingError, EventProcessingResult> {
         logger.info { "Processing $event with ${this.javaClass.simpleName}" }

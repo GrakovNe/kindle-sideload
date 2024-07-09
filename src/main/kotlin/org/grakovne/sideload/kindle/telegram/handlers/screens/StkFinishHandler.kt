@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
+import org.grakovne.sideload.kindle.events.core.StkFinished
 import org.grakovne.sideload.kindle.events.internal.StkFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.StkFinishedStatus
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError
@@ -26,7 +27,7 @@ class StkFinishHandler(
     private val userPreferencesService: UserPreferencesService
 ) : ReplyingEventHandler<StkFinishedEvent, EventProcessingError>() {
 
-    override fun acceptableEvents(): List<EventType> = listOf(EventType.STK_FINISHED)
+    override fun acceptableEvents(): List<EventType> = listOf(StkFinished)
 
     override fun sendSuccessfulResponse(event: StkFinishedEvent) {
         val user = userService.fetchUser(event.userId)

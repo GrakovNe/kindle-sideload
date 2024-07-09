@@ -2,12 +2,10 @@ package org.grakovne.sideload.kindle.events.core
 
 abstract class Event(val eventType: EventType)
 
-enum class EventType {
-    STK_FINISHED,
-    CONVERTATION_FINISHED,
-    LOG_SENT,
-    INCOMING_MESSAGE,
-    ENVIRONMENT_UNNECESSARY
-}
+interface EventType
 
+data object StkFinished : EventType
+data object ConvertationFinished : EventType
+data object IncomingMessage : EventType
+data object EnvironmentUnnecessary : EventType
 

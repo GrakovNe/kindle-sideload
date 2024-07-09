@@ -8,6 +8,7 @@ import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
+import org.grakovne.sideload.kindle.events.core.IncomingMessage
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.state.service.UserActivityStateService
 
@@ -18,7 +19,7 @@ abstract class ButtonPressedEventHandler<T : EventProcessingError>(
 
     open fun getOperatingButtons(): List<Class<*>> = emptyList()
 
-    override fun acceptableEvents(): List<EventType> = listOf(EventType.INCOMING_MESSAGE)
+    override fun acceptableEvents(): List<EventType> = listOf(IncomingMessage)
 
     override fun onEvent(event: ButtonPressedEvent) =
         when (getOperatingButtons().any { event.acceptForListener(it) }) {

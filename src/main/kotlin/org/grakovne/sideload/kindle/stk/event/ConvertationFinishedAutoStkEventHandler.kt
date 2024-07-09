@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.stk.event
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.events.core.ConvertationFinished
 import org.grakovne.sideload.kindle.events.core.EventHandler
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -19,7 +20,7 @@ class ConvertationFinishedAutoStkEventHandler(
     private val transferEmailTaskService: TransferEmailTaskService
 ) : EventHandler<ConvertationFinishedEvent, EventProcessingError>() {
 
-    override fun acceptableEvents(): List<EventType> = listOf(EventType.CONVERTATION_FINISHED)
+    override fun acceptableEvents(): List<EventType> = listOf(ConvertationFinished)
 
     override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> {
         if (event.status == ConvertationFinishedStatus.FAILED) {
