@@ -2,10 +2,10 @@ package org.grakovne.sideload.kindle.telegram.handlers.screens
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.converter.StkFinished
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
-import org.grakovne.sideload.kindle.events.core.StkFinished
 import org.grakovne.sideload.kindle.events.internal.StkFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.StkFinishedStatus
 import org.grakovne.sideload.kindle.telegram.domain.error.UnknownError

@@ -2,7 +2,7 @@ package org.grakovne.sideload.kindle.shelf.event
 
 import arrow.core.Either
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.events.core.ConvertationFinished
+import org.grakovne.sideload.kindle.converter.ConvertationFinished
 import org.grakovne.sideload.kindle.events.core.EventHandler
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult

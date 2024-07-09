@@ -8,8 +8,8 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.common.parallelMap
 import org.grakovne.sideload.kindle.converter.ConvertationError
+import org.grakovne.sideload.kindle.converter.ConvertationFinished
 import org.grakovne.sideload.kindle.converter.FileNotSupported
-import org.grakovne.sideload.kindle.events.core.ConvertationFinished
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.core.EventType
