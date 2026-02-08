@@ -38,29 +38,7 @@ class UserConfigurationUploadSubmitHandler(
 
     override fun getRequiredButton(): List<Button> = listOf(UploadConfigurationButton)
 
-    override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
-        messageSender.sendResponse(
-            origin = event.update,
-            user = event.user,
-            message = UserConfigurationSubmittedMessage,
-            listOf(
-                listOf(BackToSettingsButton),
-                listOf(MainScreenButton)
-            )
-        )
-    }
-
-    override fun sendFailureResponse(event: ButtonPressedEvent, code: UserConverterConfigurationError) {
-        when (code) {
-            is ValidationError -> messageSender.sendResponse(
-                origin = event.update,
-                user = event.user,
-                message = UserConfigurationValidationFailedMessage(code.code)
-            )
-        }
-    }
-
-    override fun processEvent(event: ButtonPressedEvent): Either<UserConverterConfigurationError, Unit> {
+    override suspend fun processEvent(event: ButtonPressedEvent): Either<UserConverterConfigurationError, Unit> {
         val file = event
             .update
             .message()
@@ -81,6 +59,28 @@ class UserConfigurationUploadSubmitHandler(
         return userConverterConfigurationService
             .updateConverterConfiguration(event.user, configurationFile)
             .map { }
+    }
+
+    override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
+        messageSender.sendResponse(
+            origin = event.update,
+            user = event.user,
+            message = UserConfigurationSubmittedMessage,
+            listOf(
+                listOf(BackToSettingsButton),
+                listOf(MainScreenButton)
+            )
+        )
+    }
+
+    override fun sendFailureResponse(event: ButtonPressedEvent, code: UserConverterConfigurationError) {
+        when (code) {
+            is ValidationError -> messageSender.sendResponse(
+                origin = event.update,
+                user = event.user,
+                message = UserConfigurationValidationFailedMessage(code.code)
+            )
+        }
     }
 
     companion object {

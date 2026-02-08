@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.Update
 import jakarta.annotation.PostConstruct
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.ifTrue
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -36,11 +37,11 @@ class MessageListenersConfiguration(
     @PostConstruct
     fun onCreate() = bot
         .setUpdatesListener { updates ->
-            onMessageBatch(updates)
+            runBlocking { onMessageBatch(updates) }
             UpdatesListener.CONFIRMED_UPDATES_ALL
         }
 
-    private fun onMessageBatch(batch: List<Update>) {
+    private suspend fun onMessageBatch(batch: List<Update>) {
         batch
             .forEach { update ->
                 update
@@ -49,7 +50,7 @@ class MessageListenersConfiguration(
             }
     }
 
-    private fun onMessage(update: Update) = try {
+    private suspend fun onMessage(update: Update) = try {
         if (configurationProperties.deduplicateMessages) {
             messageReferenceService
                 .fetchMessage(update.fetchUniqueIdentifier())
@@ -77,8 +78,7 @@ class MessageListenersConfiguration(
                 it
                     .processedByNothing()
                     .ifTrue {
-                        unprocessedIncomingEventService
-                            .handle(incomingMessageEvent)
+                        runBlocking { unprocessedIncomingEventService.handle(incomingMessageEvent) }
                             .also {
                                 logger.info {
                                     val text = incomingMessageEvent.update.message()?.text()

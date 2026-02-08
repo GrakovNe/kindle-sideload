@@ -22,7 +22,7 @@ class ConvertationFinishedAutoStkEventHandler(
 
     override fun acceptableEvents(): List<EventType> = listOf(ConvertationFinished)
 
-    override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> {
+    override suspend fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> {
         if (event.status == ConvertationFinishedStatus.FAILED) {
             logger.trace { "Got ConvertationFinishedEvent with failed status, nothing to STK" }
             return Either.Right(EventProcessingResult.SKIPPED)

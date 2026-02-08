@@ -23,7 +23,7 @@ class ConvertationFinishedShelfEventHandler(
 
     override fun acceptableEvents(): List<EventType> = listOf(ConvertationFinished)
 
-    override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> {
+    override suspend fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> {
         if (event.status != ConvertationFinishedStatus.SUCCESS) {
             return Either.Right(EventProcessingResult.SKIPPED)
         }

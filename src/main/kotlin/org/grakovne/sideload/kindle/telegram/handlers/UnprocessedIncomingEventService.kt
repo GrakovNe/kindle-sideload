@@ -12,7 +12,7 @@ class UnprocessedIncomingEventService(
     private val bookConversionRequestHandler: BookConversionRequestHandler
 ) {
 
-    fun handle(event: ButtonPressedEvent) {
+    suspend fun handle(event: ButtonPressedEvent) {
         event
             .update
             .message()

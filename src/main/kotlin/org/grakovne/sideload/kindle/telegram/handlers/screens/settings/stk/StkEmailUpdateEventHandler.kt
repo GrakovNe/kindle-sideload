@@ -50,7 +50,7 @@ class StkEmailUpdateEventHandler(
             )
     }
 
-    override fun onEvent(event: ButtonPressedEvent) = event
+    override suspend fun onEvent(event: ButtonPressedEvent) = event
         .update
         .message()
         ?.text()
@@ -59,7 +59,7 @@ class StkEmailUpdateEventHandler(
 
     override fun getRequiredButton(): List<Button> = listOf(UpdateStkEmailPromptButton)
 
-    override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> {
+    override suspend fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> {
         val email = event.update.message()?.text() ?: return Either.Right(Unit)
 
         return userPreferencesService

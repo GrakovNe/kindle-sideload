@@ -51,14 +51,14 @@ class BookConversionRequestHandler(
             )
     }
 
-    override fun onEvent(event: ButtonPressedEvent) = event
+    override  suspend fun onEvent(event: ButtonPressedEvent) = event
         .update
         .message()
         ?.document()
         ?.let { super.onEvent(event) }
         ?: Either.Right(EventProcessingResult.SKIPPED)
 
-    public override fun processEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, Unit> {
+    public override suspend fun processEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, Unit> {
         val file = event
             .update
             .message()

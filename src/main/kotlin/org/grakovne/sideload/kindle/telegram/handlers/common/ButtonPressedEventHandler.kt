@@ -21,7 +21,7 @@ abstract class ButtonPressedEventHandler<T : EventProcessingError>(
 
     override fun acceptableEvents(): List<EventType> = listOf(IncomingMessage)
 
-    override fun onEvent(event: ButtonPressedEvent) =
+    override suspend fun onEvent(event: ButtonPressedEvent) =
         when (getOperatingButtons().any { event.acceptForListener(it) }) {
             true -> logger
                 .info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }

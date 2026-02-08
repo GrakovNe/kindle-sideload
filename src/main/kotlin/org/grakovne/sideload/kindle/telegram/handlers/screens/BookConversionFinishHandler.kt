@@ -105,7 +105,7 @@ class BookConversionFinishHandler(
             )
     }
 
-    override fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> =
+    override suspend fun onEvent(event: ConvertationFinishedEvent): Either<EventProcessingError, EventProcessingResult> =
         when (event.status) {
             ConvertationFinishedStatus.SUCCESS -> Either.Right(EventProcessingResult.PROCESSED)
             ConvertationFinishedStatus.FAILED -> Either.Left(UnknownError)

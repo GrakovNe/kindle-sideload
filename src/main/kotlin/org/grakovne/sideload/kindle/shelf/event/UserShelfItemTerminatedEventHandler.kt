@@ -18,7 +18,7 @@ class UserShelfItemTerminatedEventHandler(
 ) : EventHandler<UserEnvironmentUnnecessaryEvent, EventProcessingError>() {
     override fun acceptableEvents() = listOf(EnvironmentUnnecessary)
 
-    override fun onEvent(event: UserEnvironmentUnnecessaryEvent): Either<ShelfProcessingError, EventProcessingResult> {
+    override suspend fun onEvent(event: UserEnvironmentUnnecessaryEvent): Either<ShelfProcessingError, EventProcessingResult> {
         logger.info { "Processing $event with ${this.javaClass.simpleName}" }
 
         return event

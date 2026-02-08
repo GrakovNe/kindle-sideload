@@ -20,7 +20,7 @@ abstract class InputRequiredEventHandler<T : EventProcessingError>(
 
     open fun getRequiredButton(): List<Button> = emptyList()
 
-    override fun onEvent(event: ButtonPressedEvent): Either<T, EventProcessingResult> {
+    override suspend fun onEvent(event: ButtonPressedEvent): Either<T, EventProcessingResult> {
         val requestedButton = userActivityStateService
             .fetchCurrentState(event.user.id)
             ?.let { buttonService.instance(it) }
@@ -43,7 +43,7 @@ abstract class InputRequiredEventHandler<T : EventProcessingError>(
         }
     }
 
-    protected abstract fun processEvent(event: ButtonPressedEvent): Either<T, Unit>
+    protected abstract suspend fun processEvent(event: ButtonPressedEvent): Either<T, Unit>
 
     companion object {
         private val logger = KotlinLogging.logger { }

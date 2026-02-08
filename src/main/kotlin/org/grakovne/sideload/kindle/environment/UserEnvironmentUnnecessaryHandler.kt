@@ -13,7 +13,7 @@ class UserEnvironmentUnnecessaryHandler(
 ) : EventHandler<UserEnvironmentUnnecessaryEvent, EnvironmentError>() {
     override fun acceptableEvents() = listOf(EnvironmentUnnecessary)
 
-    override fun onEvent(event: UserEnvironmentUnnecessaryEvent): Either<EnvironmentError, EventProcessingResult> {
+    override suspend fun onEvent(event: UserEnvironmentUnnecessaryEvent): Either<EnvironmentError, EventProcessingResult> {
         logger.info { "Processing $event with ${this.javaClass.simpleName}" }
 
         return environmentService

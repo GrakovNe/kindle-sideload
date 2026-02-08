@@ -70,7 +70,7 @@ class StkFinishHandler(
             )
     }
 
-    override fun onEvent(event: StkFinishedEvent): Either<EventProcessingError, EventProcessingResult> =
+    override suspend fun onEvent(event: StkFinishedEvent): Either<EventProcessingError, EventProcessingResult> =
         when (event.status) {
             StkFinishedStatus.SUCCESS -> Either.Right(EventProcessingResult.PROCESSED)
             StkFinishedStatus.FAILED -> Either.Left(UnknownError)

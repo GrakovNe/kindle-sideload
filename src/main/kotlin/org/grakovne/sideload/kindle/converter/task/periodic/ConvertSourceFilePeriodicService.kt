@@ -84,7 +84,7 @@ class ConvertSourceFilePeriodicService(
         eventSender.sendEvent(event)
     }
 
-    private fun processTask(task: ConvertationTask): Either<ConvertationError, ConversionResult> = try {
+    private suspend fun processTask(task: ConvertationTask): Either<ConvertationError, ConversionResult> = try {
         downloadService
             .download(task.sourceFileUrl)
             ?.let { converterService.convertAndCollect(task.userId, it) }
