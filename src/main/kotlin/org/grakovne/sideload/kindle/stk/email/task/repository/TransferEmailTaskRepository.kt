@@ -12,4 +12,10 @@ interface TransferEmailTaskRepository : JpaRepository<TransferEmailTask, UUID> {
         status: List<TransferEmailTaskStatus>,
         lastModifiedAt: Instant
     ): List<TransferEmailTask>
+
+    fun findByUserIdAndCreatedAtBetween(
+        userId: String,
+        start: Instant,
+        end: Instant
+    ): List<TransferEmailTask>
 }

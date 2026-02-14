@@ -13,4 +13,5 @@ class ConfigurationProperties {
     var level: Level by Delegates.notNull()
     var loggingTimeout: Duration = Duration.ofSeconds(15)
     var deduplicateMessages: Boolean = true
+    var userStkDailyLimit: Int = 50
 }

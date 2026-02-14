@@ -4,6 +4,7 @@ sealed class ConvertationError(open val details: String?, open val environmentId
 
 data object UnableFetchFile : ConvertationError(null, null)
 data object FileNotSupported : ConvertationError(null, null)
+data object StkLimitExhausted : ConvertationError(null, null)
 
 data object UnableDeployEnvironment : ConvertationError(null, null)
 
