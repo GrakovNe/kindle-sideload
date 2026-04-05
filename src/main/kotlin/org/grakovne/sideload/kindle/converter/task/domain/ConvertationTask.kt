@@ -16,7 +16,8 @@ data class ConvertationTask(
     val createdAt: Instant,
     val failReason: String?,
     @Enumerated(EnumType.STRING)
-    val status: ConvertationTaskStatus
+    val status: ConvertationTaskStatus,
+    val fileName: String?
 )
 
 enum class ConvertationTaskStatus {

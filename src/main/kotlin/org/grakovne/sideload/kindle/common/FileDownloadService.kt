@@ -15,15 +15,20 @@ class FileDownloadService(
     private val restTemplate: RestTemplate
 ) {
 
-    suspend fun download(link: String): File? = withRetry(link) { tryDownload(link) }
+    suspend fun download(link: String, fileName: String? = null): File? = withRetry { tryDownload(link, fileName) }
 
-    private fun tryDownload(link: String): File? = restTemplate.execute(
+    private fun tryDownload(link: String, fileName: String?): File? = restTemplate.execute(
         link,
         HttpMethod.GET,
         null,
         {
-            val fileName = link.substringAfterLast("/")
-            val file = File.createTempFile(RandomStringUtils.randomAlphabetic(3), "_$fileName")
+            val name = link.substringAfterLast("/")
+
+            val file = when(fileName) {
+                null -> File.createTempFile(RandomStringUtils.randomAlphabetic(3), "_$name")
+                else -> File(System.getProperty("java.io.tmpdir") + File.separator + fileName)
+            }
+
             logger.debug { "Created empty temporary file: ${file.absoluteFile}" }
 
             StreamUtils.copy(it.body, FileOutputStream(file))
@@ -33,16 +38,16 @@ class FileDownloadService(
         }
     )
 
-    private suspend fun <T> withRetry(link: String, operation: () -> T?): T? {
+    private suspend fun <T> withRetry(operation: () -> T?): T? {
         var lastException: Exception? = null
 
         repeat(MAX_RETRY_ATTEMPTS) { attempt ->
             try {
-                logger.debug { "Attempt ${attempt + 1} of $MAX_RETRY_ATTEMPTS to download from $link" }
+                logger.debug { "Attempt ${attempt + 1} of $MAX_RETRY_ATTEMPTS to download file" }
                 return operation()
             } catch (ex: Exception) {
                 lastException = ex
-                logger.warn { "Attempt ${attempt + 1} of $MAX_RETRY_ATTEMPTS failed for $link: ${ex.message}" }
+                logger.warn { "Attempt ${attempt + 1} of $MAX_RETRY_ATTEMPTS failed due to: ${ex.message}" }
 
                 if (attempt < MAX_RETRY_ATTEMPTS - 1) {
                     delay(RETRY_DELAY_MS)
@@ -50,7 +55,7 @@ class FileDownloadService(
             }
         }
 
-        logger.warn { "All $MAX_RETRY_ATTEMPTS attempts failed to download from $link. Last exception: ${lastException?.message}" }
+        logger.warn { "All $MAX_RETRY_ATTEMPTS attempts failed to download from remote. Last exception: ${lastException?.message}" }
         return null
     }
 

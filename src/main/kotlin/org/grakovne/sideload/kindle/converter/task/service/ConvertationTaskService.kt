@@ -25,7 +25,8 @@ class ConvertationTaskService(
 
     fun submitTask(
         user: User,
-        sourceFileUrl: String
+        sourceFileUrl: String,
+        fileName: String
     ): Either<ConvertationError, Unit> {
         val entity = ConvertationTask(
             id = UUID.randomUUID(),
@@ -33,7 +34,8 @@ class ConvertationTaskService(
             sourceFileUrl = sourceFileUrl,
             createdAt = Instant.now(),
             status = ConvertationTaskStatus.ACTIVE,
-            failReason = null
+            failReason = null,
+            fileName = fileName
         )
 
         return repository

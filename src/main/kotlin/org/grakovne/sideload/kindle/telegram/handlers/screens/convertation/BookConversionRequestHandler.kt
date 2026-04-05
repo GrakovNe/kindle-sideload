@@ -75,7 +75,7 @@ class BookConversionRequestHandler(
             .let { bot.getFullFilePath(it) }
 
         return convertationTaskService
-            .submitTask(event.user, sourceFileUrl = sourceUrl)
+            .submitTask(user = event.user, sourceFileUrl = sourceUrl, fileName = file.fileName())
             .mapLeft { TaskQueueingError }
     }
 

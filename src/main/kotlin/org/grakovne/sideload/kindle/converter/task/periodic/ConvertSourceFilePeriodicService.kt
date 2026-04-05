@@ -85,7 +85,7 @@ class ConvertSourceFilePeriodicService(
 
     private suspend fun processTask(task: ConvertationTask): Either<ConvertationError, ConversionResult> = try {
         downloadService
-            .download(task.sourceFileUrl)
+            .download(task.sourceFileUrl, fileName = task.fileName)
             ?.let { converterService.convertAndCollect(task.userId, it) }
             ?: Either.Left(UnableFetchFile)
     } catch (ex: Exception) {
