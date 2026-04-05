@@ -49,7 +49,7 @@ class BookConversionFinishHandler(
             event
                 .output
                 .map { SendDocument(event.userId, it) }
-                .parallelMap { bot.execute(it) }
+                .map { bot.execute(it) }
         }
             .also { sendSuccessMessage(event, user) }
     }
