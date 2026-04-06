@@ -31,6 +31,8 @@ dependencies {
     implementation ("com.ibm.icu:icu4j:71.1")
     implementation("org.apache.commons:commons-lang3:3.0")
 
+    implementation("com.ibm.icu:icu4j:78.1")
+
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
