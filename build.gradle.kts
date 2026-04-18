@@ -21,15 +21,15 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.pengrad:java-telegram-bot-api:7.2.1")
+    implementation("com.github.pengrad:java-telegram-bot-api:9.6.0")
 
     implementation("io.arrow-kt:arrow-core:1.1.2")
-    implementation("org.apache.commons:commons-text:1.10.0")
+    implementation("org.apache.commons:commons-text:1.15.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("net.lingala.zip4j:zip4j:2.11.5")
     implementation ("com.ibm.icu:icu4j:71.1")
-    implementation("org.apache.commons:commons-lang3:3.0")
+    implementation("org.apache.commons:commons-lang3:3.20.0")
 
     implementation("com.ibm.icu:icu4j:78.1")
 

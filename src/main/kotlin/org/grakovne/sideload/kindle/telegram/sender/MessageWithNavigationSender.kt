@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.telegram.sender
 
 import arrow.core.Either
 import arrow.core.sequence
+import com.pengrad.telegrambot.model.LinkPreviewOptions
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup
@@ -79,7 +80,7 @@ class MessageWithNavigationSender(
         return SendMessage(chatId, message.text)
             .replyMarkup(navigation.toReplyKeyboard())
             .setParseMode(type)
-            .disableWebPagePreview(message.enablePreview.not())
+            .linkPreviewOptions(LinkPreviewOptions().isDisabled(message.enablePreview.not()))
             .entities()
     }
 

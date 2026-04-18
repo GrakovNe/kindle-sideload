@@ -28,8 +28,8 @@ class FetchDefaultConfigurationEventHandler(
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
         defaultConfigurationAssetService
             .fetchDefaultConfiguration()
-            .let { SendDocument(event.user.id, it).fileName("configuration.zip") }
-            .let { bot.execute(it) }
+            ?.let { SendDocument(event.user.id, it).fileName("configuration.zip") }
+            ?.let { bot.execute(it) }
             .also {
                 messageSender
                     .sendResponse(
