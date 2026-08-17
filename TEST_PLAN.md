@@ -42,8 +42,9 @@ Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially o
 | Block C — `converter.binary` | 37.0 % | committed |
 | Block D — `converter.task` | 41.1 % | committed |
 | Block E — `environment` | 43.6 % | committed |
-| Block F — `events` core | — | in progress |
-| Blocks G–N + AC-1…AC-6 | — | pending |
+| Block F — `events` core | 44.3 % | committed |
+| Block G — `user` domain & config | 48.7 % | committed |
+| Blocks H–N + AC-1…AC-6 | — | pending |
 
 ## Logical blocks
 
