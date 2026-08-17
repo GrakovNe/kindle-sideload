@@ -32,6 +32,19 @@ integration tests → a few acceptance tests), no network, no real services, no 
 Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially only what the
 `contextLoads` test exercises by instantiating every bean.
 
+## Progress
+
+| Step | Coverage | Status |
+| --- | --- | --- |
+| Baseline (contextLoads only) | 22.6 % | done |
+| Block A — `common` | 29.1 % | committed |
+| Block B — `converter` core | 34.4 % | committed |
+| Block C — `converter.binary` | 37.0 % | committed |
+| Block D — `converter.task` | 41.1 % | committed |
+| Block E — `environment` | 43.6 % | committed |
+| Block F — `events` core | — | in progress |
+| Blocks G–N + AC-1…AC-6 | — | pending |
+
 ## Logical blocks
 
 The uncovered surface is grouped into these blocks (per-package coverage at baseline in
