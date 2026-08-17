@@ -46,7 +46,8 @@ Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially o
 | Block G — `user` domain & config | 48.7 % | committed |
 | Block H — `stk` (Send-to-Kindle) | 52.6 % | committed |
 | Block I — `shelf` | 58.3 % | committed |
-| Blocks J–N + AC-1…AC-6 | — | pending |
+| Block J — `telegram` messaging & localisation | 66.6 % | committed |
+| Blocks K–N + AC-1…AC-6 | — | pending |
 
 ## Bugs found and fixed
 
