@@ -1,0 +1,66 @@
+spring:
+  mail:
+    from: "sideload@test.local"
+    subject: "Your Subject Here"
+    text: "Your Text Here"
+    host: "smtp.test.local"
+    port: "587"
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+  datasource:
+    url: "jdbc:h2:mem:kindle_sideload;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1"
+    username: sa
+    password: ""
+    driverClassName: org.h2.Driver
+
+  flyway:
+    enabled: true
+
+telegram:
+  token: "123456789:AAHvA34GxLg6g5x4joR85fax_rZdnuUM8dY"
+  level: ERROR
+  deduplicateMessages: true
+
+ads:
+  blockDelimiter: "\n\n_____\n\n"
+  creatives:
+
+user:
+  converter:
+    configuration:
+      path: "user_configurations"
+      file-name: "configuration.zip"
+
+file:
+  upload:
+    max-size: 20000000
+
+converter:
+  source:
+    releasesUrl: "https://api.github.com/repos/rupor-github/fb2converter/releases/latest"
+  binary:
+    binaryPersistencePath: "fb2_converter"
+    converterFileName: "fb2c"
+    shell: "/bin/bash"
+    shellArgs: "-c"
+    configurationExtensions: [ "toml", "yaml", "json" ]
+    converterParameters: "--stk"
+  sourceFileExtensions: [ "fb2", "fb2.zip" ]
+
+environment:
+  temporaryFolder: "temporary_user_environments"
+  outputFileExtensions: ["epub", "azw3"]
+  ttlInSeconds: 86400
+
+logging:
+  level:
+    root: WARN
+    org.grakovne: INFO
+
+shelf:
+  web:
+    host-name: "http://localhost:8080/"

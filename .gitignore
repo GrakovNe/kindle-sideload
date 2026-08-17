@@ -38,3 +38,6 @@ out/
 /fb2_converter/
 /temporary_user_environments/
 /user_configurations/
+
+### macOS ###
+.DS_Store
