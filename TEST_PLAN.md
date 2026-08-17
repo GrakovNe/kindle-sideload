@@ -44,7 +44,8 @@ Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially o
 | Block E — `environment` | 43.6 % | committed |
 | Block F — `events` core | 44.3 % | committed |
 | Block G — `user` domain & config | 48.7 % | committed |
-| Blocks H–N + AC-1…AC-6 | — | pending |
+| Block H — `stk` (Send-to-Kindle) | 52.6 % | committed |
+| Blocks I–N + AC-1…AC-6 | — | pending |
 
 ## Logical blocks
 
