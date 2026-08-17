@@ -11,21 +11,18 @@ class LocalizedTemplateProvider {
     fun provideLocalized(
         template: String,
         language: Language?
-    ): String = when (templateExists(template, language)) {
-        true -> "${template}_${language}"
-        false -> template
+    ): String = when {
+        null == language -> template
+        templateExists(template, language) -> "${template}_${language}"
+        else -> template
     }
 
     private fun templateExists(
         resourceName: String,
-        language: Language?
+        language: Language
     ): Boolean {
-        val localizedResourceName = language
-            ?.let { "${resourceName}_${language}" }
-            ?: resourceName
-
         return Path(TEMPLATES)
-            .resolve(Path("$localizedResourceName.$TEMPLATE_EXTENSION"))
+            .resolve(Path("${resourceName}_${language}.$TEMPLATE_EXTENSION"))
             .let { ClassPathResource(it.toString()) }
             .exists()
     }

@@ -45,9 +45,20 @@ Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially o
 | Block F — `events` core | 44.3 % | committed |
 | Block G — `user` domain & config | 48.7 % | committed |
 | Block H — `stk` (Send-to-Kindle) | 52.6 % | committed |
-| Blocks I–N + AC-1…AC-6 | — | pending |
+| Block I — `shelf` | 58.3 % | committed |
+| Blocks J–N + AC-1…AC-6 | — | pending |
 
-## Logical blocks
+## Bugs found and fixed
+
+1. **`LocalizedTemplateProvider` returned `"shelf_null"` for a null language**
+   (Block I). `provideLocalized` checked only whether the base template exists
+   and then unconditionally appended `"_$language"`, so a null language produced
+   the template name `shelf_null`, which can never exist → the web view would
+   fail to render. Fixed by short-circuiting to the base template when the
+   language is null (the only caller, `ShelfEndpoint`, already defaults a
+   missing user language to `"en"`; the fix makes the null branch correct for
+   any future caller). Covered by
+   `LocalizedTemplateProviderTest.uses the base template when the language is unknown`.
 
 The uncovered surface is grouped into these blocks (per-package coverage at baseline in
 parentheses). Each block gets its own pyramid.
