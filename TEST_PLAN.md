@@ -12,9 +12,14 @@ integration tests → a few acceptance tests), no network, no real services, no 
 3. **Localisation files.** `LocalizationService`/`EnumLocalizationService` read `locale/*.json`
    through `Path("locale")` (working dir = project root in the Gradle test JVM), falling back to the
    classpath `*.json`. Tests may therefore use the **real** en/ru resource files — no fixtures needed.
-4. **Coverage.** JaCoCo (`./gradlew test jacocoTestReport`). Every new unit/integration test must
-   raise the covered-line count; acceptance tests exercise business scenarios and may not add much
-   mechanical coverage.
+4. **Coverage.** JaCoCo (`./gradlew test jacocoTestReport`), read from the **report-level**
+   `LINE` counter in `build/reports/jacoco/test/jacocoTestReport.xml` (the canonical instrumentable
+   line total for the project, currently 2 254). Every new unit/integration test must raise the
+   covered-line count; acceptance tests exercise business scenarios and may not add much mechanical
+   coverage. (Do not sum `LINE` counters across the XML's nested levels — package/sourcefile/class/
+   method counters repeat the same lines; summing them double-counts. An earlier draft of this plan
+   did exactly that and reported inflated totals; the numbers below were re-measured per commit and
+   corrected.)
 5. **Isolation.** Tests use temp directories (`@TempDir`), unique user ids, and are order-independent.
 
 ## Pyramid levels used
@@ -29,28 +34,33 @@ integration tests → a few acceptance tests), no network, no real services, no 
 
 ## Baseline
 
-Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially only what the
+Before new tests, line coverage was **23.4 %** (528 / 2 256) — essentially only what the
 `contextLoads` test exercises by instantiating every bean.
 
 ## Progress
 
-| Step | Coverage | Status |
-| --- | --- | --- |
-| Baseline (contextLoads only) | 22.6 % | done |
-| Block A — `common` | 29.1 % | committed |
-| Block B — `converter` core | 34.4 % | committed |
-| Block C — `converter.binary` | 37.0 % | committed |
-| Block D — `converter.task` | 41.1 % | committed |
-| Block E — `environment` | 43.6 % | committed |
-| Block F — `events` core | 44.3 % | committed |
-| Block G — `user` domain & config | 48.7 % | committed |
-| Block H — `stk` (Send-to-Kindle) | 52.6 % | committed |
-| Block I — `shelf` | 58.3 % | committed |
-| Block J — `telegram` messaging & localisation | 66.6 % | committed |
-| Block K — `telegram` state & message references | 67.8 % | committed |
-| Block L — `telegram` event handlers | 82.3 % | committed |
-| Blocks M + N — `metrics`, `telegram.logging` | 84.3 % | committed |
-| AC-1…AC-6 — acceptance scenarios | 84.9 % | committed |
+Coverage is the JaCoCo **report-level** `LINE` counter (covered / instrumentable lines) re-measured
+by checking out each block's commit and running the suite at that point — not a running aggregate.
+Every unit/integration block strictly raises the covered-line count (the denominator drops by two
+lines at Block I, because that block's null-language fix removes a dead branch).
+
+| Step | Coverage | Covered / Total | Status |
+| --- | --- | --- | --- |
+| Baseline (contextLoads only) | 23.4 % | 528 / 2 256 | done |
+| Block A — `common` | 28.9 % | 651 / 2 256 | committed |
+| Block B — `converter` core | 34.3 % | 773 / 2 256 | committed |
+| Block C — `converter.binary` | 37.4 % | 844 / 2 256 | committed |
+| Block D — `converter.task` | 41.5 % | 937 / 2 256 | committed |
+| Block E — `environment` | 44.0 % | 993 / 2 256 | committed |
+| Block F — `events` core | 44.6 % | 1 007 / 2 256 | committed |
+| Block G — `user` domain & config | 49.2 % | 1 109 / 2 256 | committed |
+| Block H — `stk` (Send-to-Kindle) | 53.1 % | 1 199 / 2 256 | committed |
+| Block I — `shelf` | 59.0 % | 1 330 / 2 254 | committed |
+| Block J — `telegram` messaging & localisation | 67.0 % | 1 511 / 2 254 | committed |
+| Block K — `telegram` state & message references | 68.4 % | 1 542 / 2 254 | committed |
+| Block L — `telegram` event handlers | 82.3 % | 1 854 / 2 254 | committed |
+| Blocks M + N — `metrics`, `telegram.logging` | 84.3 % | 1 901 / 2 254 | committed |
+| AC-1…AC-6 — acceptance scenarios | 86.0 % | 1 939 / 2 254 | committed |
 
 ## Bugs found and fixed
 
@@ -67,7 +77,7 @@ Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially o
 The uncovered surface is grouped into these blocks (per-package coverage at baseline in
 parentheses). Each block gets its own pyramid.
 
-### Block A — `common` utilities  (11.7% … 45%)
+### Block A — `common` utilities  (12.8% … 100.0%)
 Real, testable logic:
 - `CliRunner.runCli` — runs a real `/bin/bash` on the host (no network). Success → `Right`,
   failure → `Left`.
@@ -85,7 +95,7 @@ Real, testable logic:
   `Left(DELIVERY_ERROR)`.
 - `IterableExtension.parallelMap`, `Boolean.ifTrue` — small but real.
 
-### Block B — `converter` core  (13.1%)
+### Block B — `converter` core  (14.0%)
 - `ConverterService.convertAndCollect` — routes `.epub` → bypass, everything else → fb2 (mock both).
 - `EpubBypassConverterService.convertAndCollect` — real temp environment; deploys the file, reports
   output; `UnableDeployEnvironment` when deploy fails.
@@ -94,7 +104,7 @@ Real, testable logic:
   unable-to-deploy, conversion failure → `UnableConvertFile`.
 - `ConvertationFileValidationService` + `ConvertationFileValidationRules` — fb2/zip pass, other fail.
 
-### Block C — `converter.binary` lifecycle  (16% … 43%)
+### Block C — `converter.binary` lifecycle  (0.0% … 100.0%)
 - `ConverterBinaryProvider.provideBinaryFolder/Converter` — path building (temp dir).
 - `ConverterBinaryReferenceService` — H2 integration: `updateLatestPublishedAt` (insert vs reuse
   latest), `fetchLatestPublishedAt`.
@@ -107,14 +117,14 @@ Real, testable logic:
 - `ConverterBinaryPeriodicUpdateTask` — delegates to update service.
 - `GitHubRelease`/`Asset` — Jackson snake_case deserialization.
 
-### Block D — `converter.task` queue  (13.5%)
+### Block D — `converter.task` queue  (14.0% … 21.4%)
 - `ConvertationTaskService` — H2: `submitTask` persists ACTIVE, `fetchTasksForProcessing` returns
   active, `updateTask`.
 - `ConvertSourceFilePeriodicService.convertSourceFiles` — with mocked download/converter/event
   sender: success → SUCCESS + success event; download miss → `UnableFetchFile` → FAILED; converter
   error → FAILED event with reason; thrown exception → `FatalError`.
 
-### Block E — `environment`  (18.2%)
+### Block E — `environment`  (19.6% … 100.0%)
 - `UserEnvironmentService` — real temp folders: `deployEnvironment` (user config present → unpack;
   absent → empty env; other error → `UnableDeployError`), `terminateEnvironment`,
   `provideEnvironmentFiles` (extension filter), `provideTemporaryEnvironmentsFolder`.
@@ -122,11 +132,11 @@ Real, testable logic:
   `UserEnvironmentUnnecessaryEvent`, fresh ones don't.
 - `UserEnvironmentUnnecessaryHandler.onEvent` — terminates; null env id → `SKIPPED`.
 
-### Block F — `events` core  (21.9%)
+### Block F — `events` core  (0.0% … 25.0%)
 - `EventSender.sendEvent` — dispatches only to matching handlers, in parallel, collecting results.
 - `EventHandler.handleEvent` / `ReplyingEventHandler` — success/failure reply hooks fire correctly.
 
-### Block G — `user` domain & config  (23% … 56%)
+### Block G — `user` domain & config  (0.0% … 100.0%)
 - `UserService` — H2: `fetchOrCreateUser` (create / re-create with language), `fetchUser`,
   `fetchActiveUsers`, `fetchSuperUsers`.
 - `UserPreferencesService` — H2: fetch-or-create defaults, `updateEmail` (valid/invalid),
@@ -138,7 +148,7 @@ Real, testable logic:
 - `DefaultConfigurationAssetService.fetchDefaultConfiguration` — reads the real classpath asset zip,
   caches the temp file.
 
-### Block H — `stk` (Send-to-Kindle)  (15.5% … 21.7%)
+### Block H — `stk` (Send-to-Kindle)  (15.4% … 23.8%)
 - `TransferEmailTaskService` — H2: `submitTask` (normal, and **daily-limit** → `StkLimitExhausted`
   when today's count ≥ limit), `fetchLatestForProcessing`, `updateTask`.
 - `StkEmailPeriodicService.stkEmail` — mocked env/prefs/mail/task: no task → no-op; success →
@@ -146,7 +156,7 @@ Real, testable logic:
 - `ConvertationFinishedAutoStkEventHandler.onEvent` — failed event → SKIPPED; auto on + env id →
   submit; auto on + null env → SKIPPED; auto off → SKIPPED.
 
-### Block I — `shelf`  (8.7% … 24%)
+### Block I — `shelf`  (0.0% … 100.0%)
 - `ShelfService` — H2: `fetchOrCreateShelf` (create once), `fetchUserId`, `fetchShelfContent`
   (joins items → env files), `fetchShelfLink`.
 - `ShelfItemService` — H2: `attachToShelf` (new / already-exists), `terminateItem` (present /
@@ -161,7 +171,7 @@ Real, testable logic:
 - `ShelfEndpoint` — `@WebMvcTest`-style: `index` renders (model attributes, template name),
   `downloadBinary` returns the file with the right headers.
 
-### Block J — `telegram` messaging & localisation  (15% … 36%)
+### Block J — `telegram` messaging & localisation  (0.0% … 34.8%)
 - `MessageDataExtractor` — `fetchUniqueIdentifier` (message / callback / random), `fetchUserId`
   (chat / from / callback / throw), `fetchLanguage` (message / callback / default).
 - `ResponseSender.sendMessage` — mocked bot: ok → `Right`, not ok → `Left(UnableSendResponse)`.
@@ -176,12 +186,12 @@ Real, testable logic:
   block; any mismatch → `""`.
 - `InstantFormatter.toMessage` — fixed UTC format.
 
-### Block K — `telegram` state & references  (19.5%)
+### Block K — `telegram` state & references  (0.0% … 50.0%)
 - `UserActivityStateService` — H2: `setCurrentState` (stores, null → ""), `fetchCurrentState`
   (latest / none).
 - `MessageReferenceService` — H2: `markAsProcessed`, `fetchMessage` (present / absent).
 
-### Block L — `telegram` handlers  (14.5% … 36.8%)
+### Block L — `telegram` handlers  (14.3% … 42.9%)
 Focus on handlers with real branching (delegating "screen" handlers are covered via their
 `processEvent`/`onEvent` + a representative `send*Response`):
 - `ButtonPressedEventHandler.onEvent` (abstract base via a concrete subclass): matching button →
@@ -204,7 +214,7 @@ Focus on handlers with real branching (delegating "screen" handlers are covered 
   `*OutputTypeSettingsScreenEventHandler`, `*DebugModeSettingsScreenEventHandler`) — processEvent
   updates the right preference.
 
-### Block M — `metrics`  (12.9%)
+### Block M — `metrics`  (0.0% … 12.9%)
 - `ActivityMetricService.aggregateMetrics` — mocked user/task services: correct counts are wired into
   `ActivityMetrics` for today/week/year.
 
