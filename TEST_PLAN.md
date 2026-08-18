@@ -48,7 +48,9 @@ Before new tests, line coverage ≈ **22.6%** (2 670 / 11 817) — essentially o
 | Block I — `shelf` | 58.3 % | committed |
 | Block J — `telegram` messaging & localisation | 66.6 % | committed |
 | Block K — `telegram` state & message references | 67.8 % | committed |
-| Blocks L–N + AC-1…AC-6 | — | pending |
+| Block L — `telegram` event handlers | 82.3 % | committed |
+| Blocks M + N — `metrics`, `telegram.logging` | 84.3 % | committed |
+| AC-1…AC-6 — acceptance scenarios | 84.9 % | committed |
 
 ## Bugs found and fixed
 
