@@ -19,6 +19,7 @@ import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.mail.MailSendingService
 import org.grakovne.sideload.kindle.converter.ConversionResult
 import org.grakovne.sideload.kindle.converter.ConverterService
+import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.StkLimitExhausted
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
 import org.grakovne.sideload.kindle.converter.task.periodic.ConvertSourceFilePeriodicService
@@ -27,18 +28,27 @@ import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskServi
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
+import org.grakovne.sideload.kindle.metrics.api.domain.DailyMetrics
+import org.grakovne.sideload.kindle.metrics.api.domain.UserDailyMetrics
+import org.grakovne.sideload.kindle.metrics.web.MetricsEndpoint
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItemStatus
 import org.grakovne.sideload.kindle.shelf.repository.ShelfItemRepository
 import org.grakovne.sideload.kindle.shelf.service.ShelfService
+import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTask
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
 import org.grakovne.sideload.kindle.stk.email.task.periodic.StkEmailPeriodicService
 import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskRepository
 import org.grakovne.sideload.kindle.stk.email.task.service.TransferEmailTaskService
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
+import org.grakovne.sideload.kindle.user.message.report.domain.UserMessageReport
+import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportRepository
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
+import org.grakovne.sideload.kindle.user.reference.domain.Type
+import org.grakovne.sideload.kindle.user.reference.domain.User
+import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -52,11 +62,14 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.Trigger
 import java.io.File
 import java.time.Duration
 import java.time.Instant
+import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -135,6 +148,15 @@ class AcceptanceScenarioTest {
     @Autowired
     private lateinit var configurationProperties: ConfigurationProperties
 
+    @Autowired
+    private lateinit var metricsEndpoint: MetricsEndpoint
+
+    @Autowired
+    private lateinit var userMessageReportRepository: UserMessageReportRepository
+
+    @Autowired
+    private lateinit var userRepository: UserRepository
+
     private val replies = mutableListOf<SendMessage>()
     private val documents = mutableListOf<SendDocument>()
 
@@ -145,6 +167,8 @@ class AcceptanceScenarioTest {
         convertationTaskRepository.deleteAll()
         transferEmailTaskRepository.deleteAll()
         shelfItemRepository.deleteAll()
+        userMessageReportRepository.deleteAll()
+        userRepository.deleteAll()
 
         replies.clear()
         documents.clear()
@@ -330,7 +354,104 @@ class AcceptanceScenarioTest {
         )
     }
 
+    // AC-7 — Daily metrics endpoint.
+    @Test
+    fun `AC-7 the daily metrics endpoint is protected by the admin bearer token and reports the day activity`() {
+        // the scenarios share the in-memory database, so clear the whole history before counting the day
+        convertationTaskRepository.deleteAll()
+        userMessageReportRepository.deleteAll()
+        userRepository.deleteAll()
+        transferEmailTaskRepository.deleteAll()
+
+        assertEquals(HttpStatus.UNAUTHORIZED, metricsEndpoint.dailyMetrics(metricsRequest(null)).statusCode)
+        assertEquals(HttpStatus.UNAUTHORIZED, metricsEndpoint.dailyMetrics(metricsRequest("Bearer wrong-token")).statusCode)
+
+        val userId = "900007"
+        prepareUserAndShelf(userId)
+
+        // one email delivered, one failed with a reason
+        val emailOne = transferEmailTask(TransferEmailTaskStatus.SUCCESS, null)
+        val emailTwo = transferEmailTask(TransferEmailTaskStatus.FAILED, "smtp down")
+        transferEmailTaskRepository.saveAll(listOf(emailOne, emailTwo))
+
+        // three raw messages from this user plus one from another user
+        val msgOne = userMessage(userId)
+        val msgTwo = userMessage(userId)
+        val msgThree = userMessage(userId)
+        val msgFour = userMessage("900008")
+        userMessageReportRepository.saveAll(listOf(msgOne, msgTwo, msgThree, msgFour))
+
+        // the conversion pipeline submitted and completed two tasks today: one success, one failure
+        backdatedConvertationTask(ConvertationTaskStatus.SUCCESS, "ac7-ok.fb2", Duration.ofMinutes(45))
+        backdatedConvertationTask(ConvertationTaskStatus.FAILED, "ac7-fail.fb2", Duration.ofMinutes(30))
+
+        val response = metricsEndpoint.dailyMetrics(metricsRequest("Bearer test-admin-token"))
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        val metrics: DailyMetrics = response.body!!
+        assertEquals(1, metrics.convertedBooks, "actual: $metrics")
+        assertEquals(1, metrics.failedBooks, "actual: $metrics")
+        assertEquals(1, metrics.sentEmails, "actual: $metrics")
+        assertEquals(1, metrics.failedEmails, "actual: $metrics")
+        assertEquals(
+            listOf(
+                UserDailyMetrics(userId, 3),
+                UserDailyMetrics("900008", 1)
+            ),
+            metrics.users,
+            "actual: $metrics"
+        )
+
+        // the endpoint refreshes the user activity, so the bot metrics see the user as active today
+        val activeUser = userRepository.findById(userId).get()
+        assertTrue(activeUser.lastActivityTimestamp != null)
+        assertTrue(userService.fetchActiveUsers(Instant.now().minus(Duration.ofHours(1)), Instant.now()).map { it.id }.contains(userId))
+    }
+
     // --------------------------------------------------------------------- helpers
+
+    private fun metricsRequest(authorization: String?): MockHttpServletRequest {
+        val request = MockHttpServletRequest()
+        if (authorization != null) {
+            request.addHeader("Authorization", authorization)
+        }
+        return request
+    }
+
+    private fun backdatedConvertationTask(status: ConvertationTaskStatus, fileName: String, ago: Duration) =
+        convertationTaskRepository.save(
+            ConvertationTask(
+                id = UUID.randomUUID(),
+                userId = "900007",
+                sourceFileUrl = "https://example.com/$fileName",
+                createdAt = Instant.now().minus(ago),
+                failReason = if (status == ConvertationTaskStatus.FAILED) "converter exploded" else null,
+                status = status,
+                fileName = fileName
+            )
+        )
+
+    private fun transferEmailTask(status: TransferEmailTaskStatus, failReason: String?) =
+        transferEmailTaskRepository.save(
+            TransferEmailTask(
+                id = UUID.randomUUID(),
+                userId = "900007",
+                environmentId = "ac7-env",
+                createdAt = Instant.now().minus(Duration.ofMinutes(45)),
+                failReason = failReason,
+                status = status
+            )
+        )
+
+    private fun userMessage(userId: String) =
+        userMessageReportRepository.save(
+            UserMessageReport(
+                id = UUID.randomUUID(),
+                userId = userId,
+                createdAt = Instant.now().minus(Duration.ofMinutes(20)),
+                text = "text"
+            )
+        )
 
     private fun replyTexts(): List<String> = replies.mapNotNull { it.text }
 

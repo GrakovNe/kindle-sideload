@@ -64,3 +64,6 @@ logging:
 shelf:
   web:
     host-name: "http://localhost:8080/"
+
+admin:
+  token: "test-admin-token"

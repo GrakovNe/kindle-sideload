@@ -18,4 +18,20 @@ interface TransferEmailTaskRepository : JpaRepository<TransferEmailTask, UUID> {
         start: Instant,
         end: Instant
     ): List<TransferEmailTask>
+
+    fun findByStatusAndCreatedAtGreaterThanAndCreatedAtLessThan(
+        status: TransferEmailTaskStatus,
+        from: Instant,
+        to: Instant
+    ): List<TransferEmailTask>
+
+    fun findByCreatedAtGreaterThanAndCreatedAtLessThan(
+        from: Instant,
+        to: Instant
+    ): List<TransferEmailTask>
+
+    fun findByFailReasonIsNotNullAndCreatedAtGreaterThanAndCreatedAtLessThan(
+        from: Instant,
+        to: Instant
+    ): List<TransferEmailTask>
 }

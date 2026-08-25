@@ -57,6 +57,7 @@ class StkFinishHandler(
     }
 
     override fun sendFailureResponse(event: StkFinishedEvent, code: EventProcessingError) {
+
         val user = userService.fetchUser(event.userId)
 
         messageSender

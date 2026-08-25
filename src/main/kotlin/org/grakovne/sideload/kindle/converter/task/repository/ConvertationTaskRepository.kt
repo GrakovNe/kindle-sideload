@@ -20,4 +20,10 @@ interface ConvertationTaskRepository : JpaRepository<ConvertationTask, UUID> {
         lastModifiedAt: Instant
     ): List<ConvertationTask>
 
+    fun findByStatusAndCreatedAtGreaterThanAndCreatedAtLessThan(
+        status: ConvertationTaskStatus,
+        from: Instant,
+        to: Instant
+    ): List<ConvertationTask>
+
 }
