@@ -6,8 +6,8 @@ import org.grakovne.sideload.kindle.generated.tables.records.ConverterBinaryRefe
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import java.time.Instant
-import java.time.ZoneOffset
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.UUID
 
 @Repository

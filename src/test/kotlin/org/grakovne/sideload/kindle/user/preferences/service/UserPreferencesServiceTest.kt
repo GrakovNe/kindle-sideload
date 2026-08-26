@@ -2,16 +2,18 @@ package org.grakovne.sideload.kindle.user.preferences.service
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.TestDatabase
+import org.grakovne.sideload.kindle.common.validation.ValidationError
 import org.grakovne.sideload.kindle.user.common.OutputFormat
 import org.grakovne.sideload.kindle.user.configuration.domain.EmailNotValidError
 import org.grakovne.sideload.kindle.user.preferences.repository.UserPreferencesDao
+import org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationError
 import org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.springframework.beans.factory.annotation.Autowired
 import kotlin.test.assertEquals
 
 class UserPreferencesServiceTest : TestDatabase() {
@@ -59,11 +61,13 @@ class UserPreferencesServiceTest : TestDatabase() {
 
     @Test
     fun `reports an invalid email and keeps the previous value`() {
-        whenever(validationService.validate(any())).thenReturn(Either.Left(
-            org.grakovne.sideload.kindle.common.validation.ValidationError(
-                org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationError.NOT_VALID_EMAIL
+        whenever(validationService.validate(any())).thenReturn(
+            Either.Left(
+                ValidationError(
+                    UpdateEmailValidationError.NOT_VALID_EMAIL
+                )
             )
-        ))
+        )
 
         val result = sut.updateEmail("user-1", "not-an-email")
 
@@ -91,5 +95,4 @@ class UserPreferencesServiceTest : TestDatabase() {
 
         assertEquals(true, sut.fetchPreferences("user-1").automaticStk)
     }
-
 }

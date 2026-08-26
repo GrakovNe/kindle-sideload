@@ -65,9 +65,12 @@ class ConvertationTaskServiceTest {
 
     @Test
     fun `fetches only active tasks for processing`() {
-        whenever(repository.findByStatusInAndCreatedAtLessThan(
-            eq(listOf(ConvertationTaskStatus.ACTIVE)), any()
-        )).thenReturn(listOf(task(status = ConvertationTaskStatus.ACTIVE)))
+        whenever(
+            repository.findByStatusInAndCreatedAtLessThan(
+                eq(listOf(ConvertationTaskStatus.ACTIVE)),
+                any()
+            )
+        ).thenReturn(listOf(task(status = ConvertationTaskStatus.ACTIVE)))
 
         val result = sut.fetchTasksForProcessing()
 

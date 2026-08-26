@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "2.3.21"
     kotlin("plugin.spring") version "2.3.21"
     id("org.jooq.jooq-codegen-gradle") version "3.19.35"
+    id("org.jmailen.kotlinter") version "5.7.0"
     jacoco
 }
 
@@ -96,12 +97,28 @@ jooq {
     }
 }
 
-tasks.named("compileKotlin") {
+// compile the jOOQ-generated sources; adding them to the task (not the source set)
+// keeps them out of kotlinter, which lints the Kotlin source set
+tasks.named("compileKotlin", org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java) {
     dependsOn("jooqCodegen")
+    source(layout.buildDirectory.dir("generated/jooq"))
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    source("build/generated/jooq")
+// The jOOQ codegen plugin auto-wires target.directory into the Java source set,
+// which the Kotlin plugin merges into the Kotlin source set that kotlinter lints.
+// Drop the generated dir from the source sets so kotlinter only sees hand-written code.
+val jooqGenDir = layout.buildDirectory.dir("generated/jooq").get().asFile
+afterEvaluate {
+    val sourceSets = extensions.getByType(org.gradle.api.tasks.SourceSetContainer::class.java)
+    for (name in listOf("main", "test")) {
+        val ss = sourceSets.getByName(name)
+        val javaSrc: org.gradle.api.file.SourceDirectorySet = ss.java
+        javaSrc.setSrcDirs(javaSrc.srcDirs.filter { it.absolutePath != jooqGenDir.absolutePath })
+    }
+    val kotlinExt = extensions.getByType(org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension::class.java)
+    val kotlinMain: org.gradle.api.file.SourceDirectorySet =
+        kotlinExt.sourceSets.getByName("main").kotlin
+    kotlinMain.setSrcDirs(kotlinMain.srcDirs.filter { it.absolutePath != jooqGenDir.absolutePath })
 }
 
 tasks.withType<Test> {

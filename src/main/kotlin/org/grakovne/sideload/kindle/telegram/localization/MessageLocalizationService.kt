@@ -10,7 +10,6 @@ import org.grakovne.sideload.kindle.telegram.localization.adverisement.Advertisi
 import org.grakovne.sideload.kindle.telegram.localization.template.MessageTemplate
 import org.springframework.stereotype.Service
 
-
 @Service
 class MessageLocalizationService(
     private val objectMapper: ObjectMapper,

@@ -75,5 +75,4 @@ class EventSenderTest {
 
         assertEquals(emptyList(), sender.sendEvent(TestEvent()))
     }
-
 }

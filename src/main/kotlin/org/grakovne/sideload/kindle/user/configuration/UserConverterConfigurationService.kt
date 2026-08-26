@@ -45,13 +45,15 @@ class UserConverterConfigurationService(
             .deleteRecursively()
             .let {
                 when (it) {
-                    true -> Either
-                        .Right(Unit)
-                        .also { logger.debug { "Removed user configuration asset" } }
+                    true ->
+                        Either
+                            .Right(Unit)
+                            .also { logger.debug { "Removed user configuration asset" } }
 
-                    false -> Either
-                        .Left(UnableUpdateConfigurationError)
-                        .also { logger.warn { "User configuration asset was not removed and still using" } }
+                    false ->
+                        Either
+                            .Left(UnableUpdateConfigurationError)
+                            .also { logger.warn { "User configuration asset was not removed and still using" } }
                 }
             }
     }

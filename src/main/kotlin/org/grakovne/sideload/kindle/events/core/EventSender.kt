@@ -23,7 +23,6 @@ class EventSender(@Lazy private val listeners: List<EventHandler<out Event, *>>)
         }
     }
 
-
     companion object {
         private val logger = KotlinLogging.logger { }
     }

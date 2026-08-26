@@ -15,7 +15,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.time.Instant
 
-
 @Service
 class GithubConverterBinaryFetchService(
     private val restTemplate: RestTemplate,

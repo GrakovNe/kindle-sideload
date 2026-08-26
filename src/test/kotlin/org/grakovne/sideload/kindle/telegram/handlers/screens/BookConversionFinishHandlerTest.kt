@@ -6,8 +6,8 @@ import com.pengrad.telegrambot.request.SendDocument
 import com.pengrad.telegrambot.response.SendResponse
 import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.common.navigation.domain.Message
-import org.grakovne.sideload.kindle.converter.FileNotSupported
 import org.grakovne.sideload.kindle.converter.FatalError
+import org.grakovne.sideload.kindle.converter.FileNotSupported
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus

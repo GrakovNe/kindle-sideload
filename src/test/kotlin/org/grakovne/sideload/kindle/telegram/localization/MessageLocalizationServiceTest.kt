@@ -3,11 +3,11 @@ package org.grakovne.sideload.kindle.telegram.localization
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.grakovne.sideload.kindle.common.navigation.domain.Message
-import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingService
-import org.grakovne.sideload.kindle.telegram.navigation.FileUploadFailedMessage
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.MainScreenRequestedMessage
+import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingService
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
+import org.grakovne.sideload.kindle.telegram.navigation.FileUploadFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRequestedMessage
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

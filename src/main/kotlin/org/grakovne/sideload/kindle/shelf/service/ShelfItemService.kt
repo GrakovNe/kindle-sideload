@@ -23,7 +23,6 @@ class ShelfItemService(
         ?.let { Either.Right(Unit) }
         ?: Either.Left(ShelfItemError.ITEM_NOT_EXISTS)
 
-
     fun attachToShelf(
         shelfId: UUID,
         environmentId: String,

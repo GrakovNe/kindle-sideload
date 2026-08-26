@@ -24,5 +24,4 @@ class ConfigurationValidationTest {
         assertTrue(result.isLeft())
         assertEquals(ConfigurationValidationError.FILE_IS_NOT_ZIP_FILE, result.swap().orNull()!!.code)
     }
-
 }

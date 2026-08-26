@@ -11,7 +11,6 @@ import java.nio.file.Files
 import java.nio.file.attribute.BasicFileAttributes
 import java.time.Instant
 
-
 @Service
 class EnvironmentTerminationPeriodicTask(
     private val eventSender: EventSender,

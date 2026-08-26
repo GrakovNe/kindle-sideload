@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.user.reference.service
 
 import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.user.reference.domain.Type
+import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.grakovne.sideload.kindle.user.reference.repository.UserDao
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,7 +36,7 @@ class UserServiceTest : TestDatabase() {
     @Test
     fun `reuses an existing user and keeps the stored language`() {
         dao.save(
-            org.grakovne.sideload.kindle.user.reference.domain.User(
+            User(
                 id = "user-1",
                 language = "en",
                 type = Type.SUPER_USER,
@@ -53,7 +54,7 @@ class UserServiceTest : TestDatabase() {
     @Test
     fun `falls back to the requested language when the stored one is missing`() {
         dao.save(
-            org.grakovne.sideload.kindle.user.reference.domain.User(
+            User(
                 id = "user-1",
                 language = null,
                 type = Type.SUPER_USER,
@@ -115,7 +116,7 @@ class UserServiceTest : TestDatabase() {
         id: String,
         lastActivity: Instant,
         type: Type = Type.FREE_USER
-    ) = org.grakovne.sideload.kindle.user.reference.domain.User(
+    ) = User(
         id = id,
         language = "en",
         type = type,

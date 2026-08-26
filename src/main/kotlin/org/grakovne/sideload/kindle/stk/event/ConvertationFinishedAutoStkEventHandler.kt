@@ -38,7 +38,6 @@ class ConvertationFinishedAutoStkEventHandler(
                     .submitTask(event.userId, environmentId = environmentId)
                     .mapLeft { InternalError }
                     .map { EventProcessingResult.PROCESSED }
-
             }
 
             false -> {

@@ -48,5 +48,4 @@ abstract class InputRequiredEventHandler<T : EventProcessingError>(
     companion object {
         private val logger = KotlinLogging.logger { }
     }
-
 }

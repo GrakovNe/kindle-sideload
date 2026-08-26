@@ -20,8 +20,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.time.Duration
 import kotlin.test.assertEquals
-import kotlin.test.fail
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class AsyncLoggerAppenderTest {
 

@@ -5,7 +5,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
-
 suspend fun <T, R> List<T>.parallelMap(
     scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     transform: suspend (T) -> R

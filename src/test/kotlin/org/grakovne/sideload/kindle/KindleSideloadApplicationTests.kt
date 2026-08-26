@@ -9,5 +9,4 @@ class KindleSideloadApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }

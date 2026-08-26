@@ -41,5 +41,4 @@ class UserConfigurationUploadRequestHandler(
     companion object {
         private val logger = KotlinLogging.logger { }
     }
-
 }

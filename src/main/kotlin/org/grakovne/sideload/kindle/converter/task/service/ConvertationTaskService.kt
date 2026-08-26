@@ -42,7 +42,6 @@ class ConvertationTaskService(
             .also { logger.debug { "Submitting to queue a new one convertation task: $entity" } }
             .save(entity)
             .let { Either.Right(Unit) }
-
     }
 
     fun fetchTasksForProcessing() =

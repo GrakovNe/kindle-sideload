@@ -30,7 +30,6 @@ class ConverterBinaryReferenceService(
         ?.also { logger.debug { "Found that latest update date of converter Binary is ${it.publishedAt}" } }
         ?.publishedAt
 
-
     private fun createEntity(publishedAt: Instant) = ConverterBinaryReference(
         id = UUID.randomUUID(),
         publishedAt = publishedAt

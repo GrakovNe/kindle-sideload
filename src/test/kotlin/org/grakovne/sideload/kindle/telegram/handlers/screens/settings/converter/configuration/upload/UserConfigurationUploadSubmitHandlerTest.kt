@@ -3,7 +3,6 @@ package org.grakovne.sideload.kindle.telegram.handlers.screens.settings.converte
 import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.Document
-import com.pengrad.telegrambot.model.File as TelegramFile
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetFile
@@ -12,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
-import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.converter.configuration.UploadConfigurationButton
@@ -48,6 +46,8 @@ import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import com.pengrad.telegrambot.model.File as TelegramFile
+import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 
 class UserConfigurationUploadSubmitHandlerTest {
 

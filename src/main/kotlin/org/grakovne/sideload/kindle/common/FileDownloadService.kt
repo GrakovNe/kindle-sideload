@@ -26,7 +26,7 @@ class FileDownloadService(
         {
             val name = link.substringAfterLast("/")
 
-            val file = when(fileName) {
+            val file = when (fileName) {
                 null -> File.createTempFile(RandomStringUtils.randomAlphabetic(3), "_$name")
                 else -> createSafeTempFile(fileName)
             }

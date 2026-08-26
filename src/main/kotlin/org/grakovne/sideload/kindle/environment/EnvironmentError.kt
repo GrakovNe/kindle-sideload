@@ -4,5 +4,5 @@ import org.grakovne.sideload.kindle.events.core.EventProcessingError
 
 interface EnvironmentError : EventProcessingError
 
-data object UnableDeployError  : EnvironmentError
+data object UnableDeployError : EnvironmentError
 data object UnableTerminateError : EnvironmentError

@@ -109,7 +109,6 @@ class MessageWithNavigationSender(
             .callbackData(button.buildQualifiedName())
     }
 
-
     companion object {
 
         private val logger = KotlinLogging.logger { }

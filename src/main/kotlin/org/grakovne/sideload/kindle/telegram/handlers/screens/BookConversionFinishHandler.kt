@@ -121,5 +121,4 @@ class BookConversionFinishHandler(
 
         private val logger = KotlinLogging.logger { }
     }
-
 }

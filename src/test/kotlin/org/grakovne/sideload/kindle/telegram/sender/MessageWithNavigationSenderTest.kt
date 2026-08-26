@@ -11,7 +11,6 @@ import org.grakovne.sideload.kindle.telegram.domain.PreparedButton
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.RequestProjectInfoButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.RequestSettingButton
-import org.grakovne.sideload.kindle.telegram.domain.error.LocalizationError as SendError
 import org.grakovne.sideload.kindle.telegram.localization.LocalizationError
 import org.grakovne.sideload.kindle.telegram.localization.MessageLocalizationService
 import org.grakovne.sideload.kindle.telegram.localization.NavigationLocalizationService
@@ -28,6 +27,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import org.grakovne.sideload.kindle.telegram.domain.error.LocalizationError as SendError
 
 class MessageWithNavigationSenderTest {
 

@@ -7,7 +7,6 @@ import com.pengrad.telegrambot.model.Chat
 import com.pengrad.telegrambot.model.Document
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
-import com.pengrad.telegrambot.model.File as TgFile
 import com.pengrad.telegrambot.request.GetFile
 import com.pengrad.telegrambot.request.SendDocument
 import com.pengrad.telegrambot.request.SendMessage
@@ -19,8 +18,8 @@ import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.mail.MailSendingService
 import org.grakovne.sideload.kindle.converter.ConversionResult
 import org.grakovne.sideload.kindle.converter.ConverterService
-import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.StkLimitExhausted
+import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
 import org.grakovne.sideload.kindle.converter.task.periodic.ConvertSourceFilePeriodicService
 import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
@@ -28,11 +27,11 @@ import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskServi
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
+import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
+import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.metrics.api.domain.DailyMetrics
 import org.grakovne.sideload.kindle.metrics.api.domain.UserDailyMetrics
 import org.grakovne.sideload.kindle.metrics.web.MetricsEndpoint
-import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
-import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItemStatus
 import org.grakovne.sideload.kindle.shelf.repository.ShelfItemDao
 import org.grakovne.sideload.kindle.shelf.service.ShelfService
@@ -76,6 +75,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import com.pengrad.telegrambot.model.File as TgFile
 
 /**
  * Acceptance scenarios AC-1 … AC-6 from TEST_PLAN.md.
@@ -469,7 +469,10 @@ class AcceptanceScenarioTest {
     }
 
     private fun tempBook(name: String): File =
-        File.createTempFile("acceptance-book-", ".$name").apply { deleteOnExit(); writeText("book bytes") }
+        File.createTempFile("acceptance-book-", ".$name").apply {
+            deleteOnExit()
+            writeText("book bytes")
+        }
 
     private fun tempOutput(name: String): File =
         File.createTempFile("acceptance-output-", ".$name").apply { writeText("output bytes") }

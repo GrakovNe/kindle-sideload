@@ -1,9 +1,9 @@
 package org.grakovne.sideload.kindle.metrics.api
 
-import org.grakovne.sideload.kindle.metrics.api.domain.DailyMetrics
-import org.grakovne.sideload.kindle.metrics.api.domain.UserDailyMetrics
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
 import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
+import org.grakovne.sideload.kindle.metrics.api.domain.DailyMetrics
+import org.grakovne.sideload.kindle.metrics.api.domain.UserDailyMetrics
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
 import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskDao
 import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportDao

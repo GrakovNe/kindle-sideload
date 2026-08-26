@@ -68,5 +68,4 @@ class BookEmailSideloadRequestHandler(
     companion object {
         private val logger = KotlinLogging.logger { }
     }
-
 }

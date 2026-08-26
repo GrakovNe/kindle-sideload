@@ -44,5 +44,4 @@ class UserConfigurationRemoveHandler(
     companion object {
         private val logger = KotlinLogging.logger { }
     }
-
 }

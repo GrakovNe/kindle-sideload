@@ -48,7 +48,9 @@ class MetricsApiServiceTest {
         whenever(transferEmailTaskRepository.findByFailReasonIsNotNullAndCreatedAtGreaterThanAndCreatedAtLessThan(any(), any())).thenReturn((1..2).map { transferEmailTask("smtp down") })
         whenever(userMessageReportRepository.findByCreatedAtGreaterThanAndCreatedAtLessThan(any(), any())).thenReturn(
             listOf(
-                message("user-1"), message("user-1"), message("user-1"),
+                message("user-1"),
+                message("user-1"),
+                message("user-1"),
                 message("user-2")
             )
         )

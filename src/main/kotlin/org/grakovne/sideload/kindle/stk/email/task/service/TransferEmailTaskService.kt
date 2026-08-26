@@ -45,7 +45,6 @@ class TransferEmailTaskService(
         return repository
             .save(entity)
             .let { Either.Right(Unit) }
-
     }
 
     fun fetchLatestForProcessing(): TransferEmailTask? =

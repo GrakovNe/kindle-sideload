@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converter.task.periodic
 
 import arrow.core.Either
+import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.converter.ConversionResult
 import org.grakovne.sideload.kindle.converter.ConvertationError
@@ -14,7 +15,6 @@ import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskServi
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir

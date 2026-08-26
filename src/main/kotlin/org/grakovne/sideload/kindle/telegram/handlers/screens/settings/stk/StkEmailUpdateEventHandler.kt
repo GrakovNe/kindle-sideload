@@ -46,7 +46,7 @@ class StkEmailUpdateEventHandler(
                 listOf(
                     listOf(BackToSettingsButton),
                     listOf(MainScreenButton),
-                    )
+                )
             )
     }
 

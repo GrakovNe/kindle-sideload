@@ -1,7 +1,7 @@
 package org.grakovne.sideload.kindle.telegram.localization.converter
 
-import java.time.Instant
 import org.junit.jupiter.api.Test
+import java.time.Instant
 import kotlin.test.assertEquals
 
 class InstantFormatterTest {

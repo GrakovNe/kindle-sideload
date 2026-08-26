@@ -50,13 +50,13 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
 
     private fun getLocalizationResource(language: Language?): InputStream {
         val resourceFile = language
-            ?.let { "${resourceName}_${language}.json" }
-            ?: "${resourceName}.json"
+            ?.let { "${resourceName}_$language.json" }
+            ?: "$resourceName.json"
 
         return Path("locale").resolve(Path(resourceFile)).toFile().let {
             when (it.exists()) {
                 true -> it.inputStream()
-                false -> ClassPathResource("${resourceName}.json").inputStream
+                false -> ClassPathResource("$resourceName.json").inputStream
             }
         }
     }

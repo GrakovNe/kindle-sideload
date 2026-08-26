@@ -12,5 +12,5 @@ data class User(
 
 enum class Type {
     FREE_USER,
-    SUPER_USER;
+    SUPER_USER
 }
