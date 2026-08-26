@@ -5,7 +5,7 @@ import org.grakovne.sideload.kindle.user.common.OutputFormat
 import org.grakovne.sideload.kindle.user.configuration.domain.EmailNotValidError
 import org.grakovne.sideload.kindle.user.configuration.domain.UserConverterConfigurationError
 import org.grakovne.sideload.kindle.user.preferences.domain.UserPreferences
-import org.grakovne.sideload.kindle.user.preferences.repository.UserPreferencesRepository
+import org.grakovne.sideload.kindle.user.preferences.repository.UserPreferencesDao
 import org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationService
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -13,7 +13,7 @@ import java.util.UUID
 @Service
 class UserPreferencesService(
     private val updateEmailValidationService: UpdateEmailValidationService,
-    private val repository: UserPreferencesRepository
+    private val repository: UserPreferencesDao
 ) {
 
     fun fetchPreferences(userId: String) = fetchOrCreate(userId)

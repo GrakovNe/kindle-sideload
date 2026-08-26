@@ -2,14 +2,14 @@ package org.grakovne.sideload.kindle.converter.binary.reference.service
 
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.ConverterBinaryReference
-import org.grakovne.sideload.kindle.converter.binary.reference.repository.ConverterBinaryReferenceRepository
+import org.grakovne.sideload.kindle.converter.binary.reference.repository.ConverterBinaryReferenceDao
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.UUID
 
 @Service
 class ConverterBinaryReferenceService(
-    private val repository: ConverterBinaryReferenceRepository
+    private val repository: ConverterBinaryReferenceDao
 ) {
 
     fun updateLatestPublishedAt(publishedAt: Instant) {

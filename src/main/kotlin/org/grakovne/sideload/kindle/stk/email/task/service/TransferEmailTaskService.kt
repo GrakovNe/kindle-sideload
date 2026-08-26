@@ -5,7 +5,7 @@ import org.grakovne.sideload.kindle.converter.ConvertationError
 import org.grakovne.sideload.kindle.converter.StkLimitExhausted
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTask
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
-import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskRepository
+import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskDao
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -15,7 +15,7 @@ import java.util.UUID
 
 @Service
 class TransferEmailTaskService(
-    private val repository: TransferEmailTaskRepository,
+    private val repository: TransferEmailTaskDao,
     private val configurationProperties: ConfigurationProperties
 ) {
 

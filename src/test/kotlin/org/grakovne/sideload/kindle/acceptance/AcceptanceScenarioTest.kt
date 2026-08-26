@@ -23,7 +23,7 @@ import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.StkLimitExhausted
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
 import org.grakovne.sideload.kindle.converter.task.periodic.ConvertSourceFilePeriodicService
-import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskRepository
+import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.events.core.EventSender
@@ -34,21 +34,21 @@ import org.grakovne.sideload.kindle.metrics.web.MetricsEndpoint
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
 import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItemStatus
-import org.grakovne.sideload.kindle.shelf.repository.ShelfItemRepository
+import org.grakovne.sideload.kindle.shelf.repository.ShelfItemDao
 import org.grakovne.sideload.kindle.shelf.service.ShelfService
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTask
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
 import org.grakovne.sideload.kindle.stk.email.task.periodic.StkEmailPeriodicService
-import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskRepository
+import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskDao
 import org.grakovne.sideload.kindle.stk.email.task.service.TransferEmailTaskService
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.user.message.report.domain.UserMessageReport
-import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportRepository
+import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportDao
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.grakovne.sideload.kindle.user.reference.domain.Type
 import org.grakovne.sideload.kindle.user.reference.domain.User
-import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
+import org.grakovne.sideload.kindle.user.reference.repository.UserDao
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -113,7 +113,7 @@ class AcceptanceScenarioTest {
     private lateinit var taskService: ConvertationTaskService
 
     @Autowired
-    private lateinit var convertationTaskRepository: ConvertationTaskRepository
+    private lateinit var convertationTaskRepository: ConvertationTaskDao
 
     @Autowired
     private lateinit var convertSourceFilePeriodicService: ConvertSourceFilePeriodicService
@@ -125,7 +125,7 @@ class AcceptanceScenarioTest {
     private lateinit var stkEmailPeriodicService: StkEmailPeriodicService
 
     @Autowired
-    private lateinit var transferEmailTaskRepository: TransferEmailTaskRepository
+    private lateinit var transferEmailTaskRepository: TransferEmailTaskDao
 
     @Autowired
     private lateinit var userEnvironmentService: UserEnvironmentService
@@ -143,7 +143,7 @@ class AcceptanceScenarioTest {
     private lateinit var shelfService: ShelfService
 
     @Autowired
-    private lateinit var shelfItemRepository: ShelfItemRepository
+    private lateinit var shelfItemRepository: ShelfItemDao
 
     @Autowired
     private lateinit var configurationProperties: ConfigurationProperties
@@ -152,10 +152,10 @@ class AcceptanceScenarioTest {
     private lateinit var metricsEndpoint: MetricsEndpoint
 
     @Autowired
-    private lateinit var userMessageReportRepository: UserMessageReportRepository
+    private lateinit var userMessageReportRepository: UserMessageReportDao
 
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepository: UserDao
 
     private val replies = mutableListOf<SendMessage>()
     private val documents = mutableListOf<SendDocument>()
@@ -403,7 +403,7 @@ class AcceptanceScenarioTest {
         )
 
         // the endpoint refreshes the user activity, so the bot metrics see the user as active today
-        val activeUser = userRepository.findById(userId).get()
+        val activeUser = userRepository.findById(userId)!!
         assertTrue(activeUser.lastActivityTimestamp != null)
         assertTrue(userService.fetchActiveUsers(Instant.now().minus(Duration.ofHours(1)), Instant.now()).map { it.id }.contains(userId))
     }

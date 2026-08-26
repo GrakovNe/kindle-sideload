@@ -1,7 +1,7 @@
 package org.grakovne.sideload.kindle.converter.binary.reference.service
 
 import org.grakovne.sideload.kindle.converter.binary.reference.domain.ConverterBinaryReference
-import org.grakovne.sideload.kindle.converter.binary.reference.repository.ConverterBinaryReferenceRepository
+import org.grakovne.sideload.kindle.converter.binary.reference.repository.ConverterBinaryReferenceDao
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -16,7 +16,7 @@ import kotlin.test.assertNull
 
 class ConverterBinaryReferenceServiceTest {
 
-    private val repository: ConverterBinaryReferenceRepository = mock()
+    private val repository: ConverterBinaryReferenceDao = mock()
     private val sut = ConverterBinaryReferenceService(repository)
 
     @Test

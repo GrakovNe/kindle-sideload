@@ -3,7 +3,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version "2.3.21"
     kotlin("plugin.spring") version "2.3.21"
-    kotlin("plugin.jpa") version "2.3.21"
+    id("org.jooq.jooq-codegen-gradle") version "3.19.35"
     jacoco
 }
 
@@ -19,11 +19,16 @@ repositories {
 }
 
 dependencies {
+    jooqCodegen("com.h2database:h2")
+
     implementation("com.github.pengrad:java-telegram-bot-api:10.1.0")
 
     implementation("io.arrow-kt:arrow-core:1.2.4")
     implementation("org.apache.commons:commons-text:1.15.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    implementation("org.jooq:jooq")
+    implementation("org.jooq:jooq-kotlin")
 
     implementation("net.lingala.zip4j:zip4j:2.11.6")
     implementation("org.apache.commons:commons-lang3:3.20.0")
@@ -31,7 +36,7 @@ dependencies {
     implementation("com.ibm.icu:icu4j:78.3")
 
     implementation("org.springframework.boot:spring-boot-starter-mail")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     implementation("org.flywaydb:flyway-core")
@@ -56,6 +61,47 @@ dependencies {
 
 jacoco {
     toolVersion = "0.8.15"
+}
+
+jooq {
+    configuration {
+        generator {
+            name = "org.jooq.codegen.KotlinGenerator"
+            strategy {
+                name = "org.jooq.codegen.DefaultGeneratorStrategy"
+            }
+            database {
+                name = "org.jooq.meta.h2.H2Database"
+                inputSchema = "public"
+                includes = ".*"
+                excludes = "flyway_schema_history"
+            }
+            generate {
+                javaTimeTypes = true
+                pojos = true
+                daos = false
+                records = true
+            }
+            target {
+                packageName = "org.grakovne.sideload.kindle.generated"
+                directory = "build/generated/jooq"
+            }
+        }
+        jdbc {
+            driver = "org.h2.Driver"
+            url = "jdbc:h2:mem:jooq_gen;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'src/main/resources/db/schema.sql'"
+            user = "sa"
+            password = ""
+        }
+    }
+}
+
+tasks.named("compileKotlin") {
+    dependsOn("jooqCodegen")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    source("build/generated/jooq")
 }
 
 tasks.withType<Test> {

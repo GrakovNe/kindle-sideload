@@ -5,7 +5,7 @@ import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.shelf.configuration.ShelfWebProperties
 import org.grakovne.sideload.kindle.shelf.domain.ShelfContentItem
 import org.grakovne.sideload.kindle.shelf.domain.ShelfReference
-import org.grakovne.sideload.kindle.shelf.repository.ShelfReferenceRepository
+import org.grakovne.sideload.kindle.shelf.repository.ShelfReferenceDao
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
 import java.util.UUID
@@ -14,7 +14,7 @@ import java.util.UUID
 class ShelfService(
     private val shelfItemService: ShelfItemService,
     private val environmentService: UserEnvironmentService,
-    private val repository: ShelfReferenceRepository,
+    private val repository: ShelfReferenceDao,
     private val shelfWebProperties: ShelfWebProperties
 ) {
 

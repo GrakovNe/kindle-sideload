@@ -1,18 +1,18 @@
 package org.grakovne.sideload.kindle.shelf.service
 
+import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.shelf.configuration.ShelfWebProperties
 import org.grakovne.sideload.kindle.shelf.domain.ShelfContentItem
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItem
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItemStatus
-import org.grakovne.sideload.kindle.shelf.repository.ShelfReferenceRepository
+import org.grakovne.sideload.kindle.shelf.repository.ShelfReferenceDao
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.io.File
 import java.time.Instant
 import java.util.UUID
@@ -20,11 +20,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@DataJpaTest
-class ShelfServiceTest {
+class ShelfServiceTest : TestDatabase() {
 
     @Autowired
-    lateinit var shelfReferenceRepository: ShelfReferenceRepository
+    lateinit var shelfReferenceDao: ShelfReferenceDao
 
     private val shelfItemService = mock<ShelfItemService>()
     private val environmentService = mock<UserEnvironmentService>()
@@ -35,7 +34,7 @@ class ShelfServiceTest {
     fun setUp() {
         val properties = ShelfWebProperties()
         properties.hostName = "http://shelf.example.com"
-        sut = ShelfService(shelfItemService, environmentService, shelfReferenceRepository, properties)
+        sut = ShelfService(shelfItemService, environmentService, shelfReferenceDao, properties)
     }
 
     @Test
@@ -46,7 +45,7 @@ class ShelfServiceTest {
         assertEquals(first.id, second.id)
         assertEquals("user-1", first.userId)
         assertTrue(first.shortId.matches(Regex("[a-zA-Z]{5}")))
-        assertEquals(1, shelfReferenceRepository.count())
+        assertEquals(1, shelfReferenceDao.count())
     }
 
     @Test
@@ -55,7 +54,7 @@ class ShelfServiceTest {
         val second = sut.fetchOrCreateShelf("user-2")
 
         assertTrue(first.id != second.id)
-        assertEquals(2, shelfReferenceRepository.count())
+        assertEquals(2, shelfReferenceDao.count())
     }
 
     @Test

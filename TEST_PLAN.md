@@ -7,7 +7,7 @@ integration tests → a few acceptance tests), no network, no real services, no 
 
 1. **No network.** Telegram, GitHub, SMTP and the `fb2c` binary are all mocked / stubbed. The bot
    never polls in tests (the library only polls once you call `getUpdates()`, which we never do).
-2. **H2 in PostgreSQL mode.** JPA + Flyway run against an in-memory H2
+2. **H2 in PostgreSQL mode.** jOOQ + Flyway run against an in-memory H2
    (`MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE`). No PostgreSQL needed.
 3. **Localisation files.** `LocalizationService`/`EnumLocalizationService` read `locale/*.json`
    through `Path("locale")` (working dir = project root in the Gradle test JVM), falling back to the
@@ -26,9 +26,10 @@ integration tests → a few acceptance tests), no network, no real services, no 
 
 - **Unit** — plain JUnit 5 + Mockito (or hand-rolled fakes). No Spring context. Targets stateless
   services, domain objects, converters, and pure functions.
-- **Integration** — `@SpringBootTest` with H2, for services that genuinely need a JPA repository, or a
-  single service wired with its collaborators. Verifies real behaviour (queries, mapping, `Either`
-  flow) without a real DB.
+- **Integration** — `@SpringBootTest` with H2 (shared base `TestDatabase`, which truncates all
+  non-Flyway tables between tests), for services that genuinely need the jOOQ DAOs, or a single
+  service wired with its collaborators. Verifies real behaviour (queries, mapping, `Either` flow)
+  without a real DB.
 - **Acceptance** — `@SpringBootTest`, full context, driving a real business scenario through the
   in-process event bus (`EventSender`) and the services, asserting the end-to-end outcome.
 

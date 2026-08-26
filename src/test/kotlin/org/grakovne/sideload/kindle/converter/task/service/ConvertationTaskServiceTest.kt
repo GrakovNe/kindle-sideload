@@ -3,7 +3,7 @@ package org.grakovne.sideload.kindle.converter.task.service
 import arrow.core.Either
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
-import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskRepository
+import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
 import org.grakovne.sideload.kindle.user.reference.domain.Type
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ import kotlin.test.assertEquals
 
 class ConvertationTaskServiceTest {
 
-    private val repository: ConvertationTaskRepository = mock()
+    private val repository: ConvertationTaskDao = mock()
     private val sut = ConvertationTaskService(repository)
 
     @Test

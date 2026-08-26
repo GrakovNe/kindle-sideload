@@ -1,25 +1,25 @@
 package org.grakovne.sideload.kindle.user.reference.service
 
+import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.user.reference.domain.Type
-import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
+import org.grakovne.sideload.kindle.user.reference.repository.UserDao
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.time.Instant
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@DataJpaTest
-class UserServiceTest {
+class UserServiceTest : TestDatabase() {
 
     @Autowired
-    lateinit var repository: UserRepository
+    lateinit var dao: UserDao
 
     private lateinit var sut: UserService
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     fun setUp() {
-        sut = UserService(repository)
+        sut = UserService(dao)
     }
 
     @Test
@@ -33,8 +33,8 @@ class UserServiceTest {
     }
 
     @Test
-    fun `reuses an existing user but refreshes the language`() {
-        repository.save(
+    fun `reuses an existing user and keeps the stored language`() {
+        dao.save(
             org.grakovne.sideload.kindle.user.reference.domain.User(
                 id = "user-1",
                 language = "en",
@@ -46,13 +46,30 @@ class UserServiceTest {
         val user = sut.fetchOrCreateUser("user-1", "ru")
 
         assertEquals(Type.SUPER_USER, user.type)
+        assertEquals("en", user.language)
+        assertEquals(1, dao.count())
+    }
+
+    @Test
+    fun `falls back to the requested language when the stored one is missing`() {
+        dao.save(
+            org.grakovne.sideload.kindle.user.reference.domain.User(
+                id = "user-1",
+                language = null,
+                type = Type.SUPER_USER,
+                lastActivityTimestamp = Instant.parse("2026-08-01T00:00:00Z")
+            )
+        )
+
+        val user = sut.fetchOrCreateUser("user-1", "ru")
+
+        assertEquals(Type.SUPER_USER, user.type)
         assertEquals("ru", user.language)
-        assertEquals(1, repository.count())
     }
 
     @Test
     fun `fetches the user by id`() {
-        repository.save(user("user-1", Type.FREE_USER))
+        dao.save(user("user-1", Type.FREE_USER))
 
         val fetched = sut.fetchUser("user-1")
 
@@ -61,7 +78,7 @@ class UserServiceTest {
 
     @Test
     fun `fetches active users inside the activity window`() {
-        repository.saveAll(
+        dao.saveAll(
             listOf(
                 userWithActivity("user-1", Instant.parse("2026-08-01T00:00:00Z")),
                 userWithActivity("user-2", Instant.parse("2026-08-03T00:00:00Z")),
@@ -79,7 +96,7 @@ class UserServiceTest {
 
     @Test
     fun `fetches only the super users`() {
-        repository.saveAll(
+        dao.saveAll(
             listOf(
                 user("user-1", Type.FREE_USER),
                 user("user-2", Type.SUPER_USER),

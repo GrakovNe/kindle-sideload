@@ -3,14 +3,14 @@ package org.grakovne.sideload.kindle.telegram.state.service
 import arrow.core.Either
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.telegram.state.domain.UserActivityState
-import org.grakovne.sideload.kindle.telegram.state.repository.UserActivityStateRepository
+import org.grakovne.sideload.kindle.telegram.state.repository.UserActivityStateDao
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.UUID
 
 @Service
 class UserActivityStateService(
-    private val repository: UserActivityStateRepository
+    private val repository: UserActivityStateDao
 ) {
 
     fun fetchCurrentState(userId: String): String? = repository

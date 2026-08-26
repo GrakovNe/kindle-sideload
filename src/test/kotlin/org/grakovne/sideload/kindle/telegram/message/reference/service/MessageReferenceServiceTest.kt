@@ -1,27 +1,26 @@
 package org.grakovne.sideload.kindle.telegram.message.reference.service
 
+import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageReference
 import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
-import org.grakovne.sideload.kindle.telegram.message.reference.repository.MessageReferenceRepository
+import org.grakovne.sideload.kindle.telegram.message.reference.repository.MessageReferenceDao
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertSame
 
-@DataJpaTest
-class MessageReferenceServiceTest {
+class MessageReferenceServiceTest : TestDatabase() {
 
     @Autowired
-    lateinit var repository: MessageReferenceRepository
+    lateinit var dao: MessageReferenceDao
 
     private lateinit var sut: MessageReferenceService
 
     @BeforeEach
     fun setUp() {
-        sut = MessageReferenceService(repository)
+        sut = MessageReferenceService(dao)
     }
 
     @Test
@@ -31,7 +30,7 @@ class MessageReferenceServiceTest {
 
     @Test
     fun `returns the stored reference when the message exists`() {
-        repository.save(MessageReference("msg-1", MessageStatus.UNKNOWN))
+        dao.save(MessageReference("msg-1", MessageStatus.UNKNOWN))
 
         val reference = sut.fetchMessage("msg-1")
 
@@ -48,6 +47,6 @@ class MessageReferenceServiceTest {
 
         val stored = sut.fetchMessage("msg-1")
         assertSame(MessageStatus.PROCESSED, stored?.status)
-        assertEquals(1, repository.count())
+        assertEquals(1, dao.count())
     }
 }

@@ -6,11 +6,6 @@ spring:
     host: "smtp.test.local"
     port: "587"
 
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: validate
-
   datasource:
     url: "jdbc:h2:mem:kindle_sideload;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1"
     username: sa
@@ -19,6 +14,9 @@ spring:
 
   flyway:
     enabled: true
+
+  jooq:
+    sql-dialect: H2
 
 telegram:
   token: "123456789:AAHvA34GxLg6g5x4joR85fax_rZdnuUM8dY"

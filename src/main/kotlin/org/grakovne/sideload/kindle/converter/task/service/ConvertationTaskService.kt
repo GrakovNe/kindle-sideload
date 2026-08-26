@@ -5,7 +5,7 @@ import mu.KotlinLogging
 import org.grakovne.sideload.kindle.converter.ConvertationError
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
-import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskRepository
+import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
 import org.grakovne.sideload.kindle.user.reference.domain.User
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -13,7 +13,7 @@ import java.util.UUID
 
 @Service
 class ConvertationTaskService(
-    private val repository: ConvertationTaskRepository
+    private val repository: ConvertationTaskDao
 ) {
 
     fun fetchTasks(from: Instant, to: Instant) = repository.findByCreatedAtGreaterThanAndCreatedAtLessThan(from, to)
