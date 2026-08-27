@@ -20,7 +20,9 @@ repositories {
 }
 
 dependencies {
-    jooqCodegen("com.h2database:h2")
+    // DDLDatabase: jOOQ generates the classes by parsing the Flyway migration
+    // scripts directly, so db/migration is the single source of truth.
+    jooqCodegen("org.jooq:jooq-meta-extensions:3.19.35")
 
     implementation("com.github.pengrad:java-telegram-bot-api:10.1.0")
 
@@ -72,10 +74,35 @@ jooq {
                 name = "org.jooq.codegen.DefaultGeneratorStrategy"
             }
             database {
-                name = "org.jooq.meta.h2.H2Database"
-                inputSchema = "public"
+                name = "org.jooq.meta.extensions.ddl.DDLDatabase"
                 includes = ".*"
                 excludes = "flyway_schema_history"
+                // the DDL interpreter puts unqualified objects into H2's PUBLIC schema;
+                // map it back to postgres' lower-case public
+                schemata {
+                    schema {
+                        inputSchema = "PUBLIC"
+                        outputSchema = "public"
+                    }
+                }
+                properties {
+                    property {
+                        key = "scripts"
+                        value = "src/main/resources/db/migration/*.sql"
+                    }
+                    property {
+                        key = "sort"
+                        value = "flyway"
+                    }
+                    property {
+                        key = "defaultNameCase"
+                        value = "lower"
+                    }
+                    property {
+                        key = "unqualifiedSchema"
+                        value = "public"
+                    }
+                }
             }
             generate {
                 javaTimeTypes = true
@@ -88,13 +115,16 @@ jooq {
                 directory = "build/generated/jooq"
             }
         }
-        jdbc {
-            driver = "org.h2.Driver"
-            url = "jdbc:h2:mem:jooq_gen;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'src/main/resources/db/schema.sql'"
-            user = "sa"
-            password = ""
-        }
     }
+}
+
+// the codegen plugin does not know that the Flyway scripts are the codegen input,
+// so declare them explicitly to keep up-to-date checks honest
+tasks.named("jooqCodegen") {
+    inputs
+        .files(fileTree("src/main/resources/db/migration"))
+        .withPropertyName("flywayMigrations")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
 // compile the jOOQ-generated sources; adding them to the task (not the source set)
