@@ -65,19 +65,12 @@ class ShelfItemDao(
     private fun fromDb(localDateTime: LocalDateTime): Instant =
         localDateTime.toInstant(ZoneOffset.UTC)
 
-    private fun ShelfItemRecord.toDomain(): ShelfItem {
-        val id = requireNotNull(this.id) { "ShelfItem.id must be set by the database" }
-        val shelfId = requireNotNull(this.shelfId) { "ShelfItem.shelf_id must be set by the database" }
-        val environmentId = requireNotNull(this.environmentId) { "ShelfItem.environment_id must be set by the database" }
-        val createdAt = requireNotNull(this.createdAt) { "ShelfItem.created_at must be set by the database" }
-        val status = requireNotNull(this.status) { "ShelfItem.status must be set by the database" }
-
-        return ShelfItem(
-            id = id,
-            shelfId = shelfId,
-            environmentId = environmentId,
-            createdAt = fromDb(createdAt),
-            status = ShelfItemStatus.valueOf(status)
+    private fun ShelfItemRecord.toDomain(): ShelfItem =
+        ShelfItem(
+            id = id!!,
+            shelfId = shelfId!!,
+            environmentId = environmentId!!,
+            createdAt = fromDb(createdAt!!),
+            status = ShelfItemStatus.valueOf(status!!)
         )
-    }
 }

@@ -34,7 +34,7 @@ class ConverterBinaryReferenceDao(
 
     fun findLatest(): ConverterBinaryReference? =
         dsl.selectFrom(CONVERTER_BINARY_REFERENCE)
-            .orderBy(CONVERTER_BINARY_REFERENCE.PUBLISHED_AT.desc().nullsLast())
+            .orderBy(CONVERTER_BINARY_REFERENCE.PUBLISHED_AT.desc())
             .limit(1)
             .fetchOne()
             ?.let { it.toDomain() }
@@ -48,18 +48,15 @@ class ConverterBinaryReferenceDao(
 
     fun deleteAll() = dsl.deleteFrom(CONVERTER_BINARY_REFERENCE).execute()
 
-    private fun toDb(instant: Instant?): LocalDateTime? =
-        instant?.let { LocalDateTime.ofInstant(it, ZoneOffset.UTC) }
+    private fun toDb(instant: Instant): LocalDateTime =
+        LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
 
-    private fun fromDb(localDateTime: LocalDateTime?): Instant? =
-        localDateTime?.let { it.toInstant(ZoneOffset.UTC) }
+    private fun fromDb(localDateTime: LocalDateTime): Instant =
+        localDateTime.toInstant(ZoneOffset.UTC)
 
-    private fun ConverterBinaryReferenceRecord.toDomain(): ConverterBinaryReference {
-        val id = requireNotNull(this.id) { "ConverterBinaryReference.id must be set by the database" }
-
-        return ConverterBinaryReference(
-            id = id,
-            publishedAt = fromDb(publishedAt)
+    private fun ConverterBinaryReferenceRecord.toDomain(): ConverterBinaryReference =
+        ConverterBinaryReference(
+            id = id!!,
+            publishedAt = fromDb(publishedAt!!)
         )
-    }
 }

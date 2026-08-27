@@ -52,18 +52,13 @@ class UserPreferencesDao(
 
     fun deleteAll() = dsl.deleteFrom(USER_PREFERENCES).execute()
 
-    private fun UserPreferencesRecord.toDomain(): UserPreferences {
-        val id = requireNotNull(this.id) { "UserPreferences.id must be set by the database" }
-        val userId = requireNotNull(this.userId) { "UserPreferences.user_id must be set by the database" }
-        val outputFormat = requireNotNull(this.outputFormat) { "UserPreferences.output_format must be set by the database" }
-
-        return UserPreferences(
-            id = id,
-            userId = userId,
-            outputFormat = OutputFormat.valueOf(outputFormat),
+    private fun UserPreferencesRecord.toDomain(): UserPreferences =
+        UserPreferences(
+            id = id!!,
+            userId = userId!!,
+            outputFormat = OutputFormat.valueOf(outputFormat!!),
             email = email,
             debugMode = debugMode ?: false,
             automaticStk = automaticStk ?: false
         )
-    }
 }

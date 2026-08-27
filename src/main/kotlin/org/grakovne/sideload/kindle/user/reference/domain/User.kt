@@ -1,7 +1,6 @@
 package org.grakovne.sideload.kindle.user.reference.domain
 
 import java.time.Instant
-import java.util.*
 
 data class User(
     val id: String,

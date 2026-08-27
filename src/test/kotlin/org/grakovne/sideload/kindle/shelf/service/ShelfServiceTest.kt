@@ -2,7 +2,6 @@ package org.grakovne.sideload.kindle.shelf.service
 
 import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
-import org.grakovne.sideload.kindle.generated.tables.ShelfReference.Companion.SHELF_REFERENCE
 import org.grakovne.sideload.kindle.shelf.configuration.ShelfWebProperties
 import org.grakovne.sideload.kindle.shelf.domain.ShelfContentItem
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItem
@@ -18,7 +17,6 @@ import java.io.File
 import java.time.Instant
 import java.util.UUID
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -41,18 +39,25 @@ class ShelfServiceTest : TestDatabase() {
 
     @Test
     fun `creates the shelf once and reuses it on subsequent calls`() {
-        sut.fetchOrCreateShelf("user-1")
-        sut.fetchOrCreateShelf("user-1")
+        val first = sut.fetchOrCreateShelf("user-1")
+        val second = sut.fetchOrCreateShelf("user-1")
 
-        val stored = dsl
-            .select(SHELF_REFERENCE.ID, SHELF_REFERENCE.USER_ID, SHELF_REFERENCE.SHORT_ID)
-            .from(SHELF_REFERENCE)
-            .fetchSingle()
-
-        assertEquals("user-1", stored.value2())
-        val shortId = assertNotNull(stored.value3())
-        assertTrue(shortId.matches(Regex("[a-zA-Z]{5}")))
+        assertEquals(first.id, second.id)
+        assertEquals("user-1", first.userId)
+        assertTrue(first.shortId.matches(Regex("[a-zA-Z]{5}")))
         assertEquals(1, shelfReferenceDao.count())
+    }
+
+    @Test
+    fun `creates a new shelf when the random short id collides with an existing one`() {
+        val taken = sut.fetchOrCreateShelf("user-taken")
+
+        val first = sut.fetchOrCreateShelf("user-1")
+        val second = sut.fetchOrCreateShelf("user-2")
+
+        assertTrue(first.id != second.id)
+        assertTrue(setOf(taken.shortId, first.shortId, second.shortId).size == 3)
+        assertEquals(3, shelfReferenceDao.count())
     }
 
     @Test

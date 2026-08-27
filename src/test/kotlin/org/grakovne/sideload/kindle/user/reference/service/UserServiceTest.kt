@@ -34,7 +34,7 @@ class UserServiceTest : TestDatabase() {
     }
 
     @Test
-    fun `reuses an existing user and refreshes the language`() {
+    fun `reuses an existing user and refreshes the language without touching the other fields`() {
         dao.save(
             User(
                 id = "user-1",
@@ -46,8 +46,10 @@ class UserServiceTest : TestDatabase() {
 
         val user = sut.fetchOrCreateUser("user-1", "ru")
 
+        assertEquals("user-1", user.id)
         assertEquals(Type.SUPER_USER, user.type)
         assertEquals("ru", user.language)
+        assertEquals(Instant.parse("2026-08-01T00:00:00Z"), user.lastActivityTimestamp)
         assertEquals(1, dao.count())
     }
 

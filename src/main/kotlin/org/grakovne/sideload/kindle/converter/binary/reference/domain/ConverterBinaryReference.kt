@@ -5,5 +5,5 @@ import java.util.UUID
 
 data class ConverterBinaryReference(
     val id: UUID,
-    val publishedAt: Instant?
+    val publishedAt: Instant
 )

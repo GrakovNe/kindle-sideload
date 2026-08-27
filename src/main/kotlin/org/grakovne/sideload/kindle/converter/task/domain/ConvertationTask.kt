@@ -1,7 +1,7 @@
 package org.grakovne.sideload.kindle.converter.task.domain
 
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 data class ConvertationTask(
     val id: UUID,

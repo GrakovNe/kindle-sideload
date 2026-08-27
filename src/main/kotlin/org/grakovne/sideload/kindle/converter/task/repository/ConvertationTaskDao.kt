@@ -89,21 +89,14 @@ class ConvertationTaskDao(
     private fun fromDb(localDateTime: LocalDateTime): Instant =
         localDateTime.toInstant(ZoneOffset.UTC)
 
-    private fun ConvertationTaskRecord.toDomain(): ConvertationTask {
-        val id = requireNotNull(this.id) { "ConvertationTask.id must be set by the database" }
-        val userId = requireNotNull(this.userId) { "ConvertationTask.user_id must be set by the database" }
-        val sourceFileUrl = requireNotNull(this.sourceFileUrl) { "ConvertationTask.source_file_url must be set by the database" }
-        val createdAt = requireNotNull(this.createdAt) { "ConvertationTask.created_at must be set by the database" }
-        val status = requireNotNull(this.status) { "ConvertationTask.status must be set by the database" }
-
-        return ConvertationTask(
-            id = id,
-            userId = userId,
-            sourceFileUrl = sourceFileUrl,
-            createdAt = fromDb(createdAt),
+    private fun ConvertationTaskRecord.toDomain(): ConvertationTask =
+        ConvertationTask(
+            id = id!!,
+            userId = userId!!,
+            sourceFileUrl = sourceFileUrl!!,
+            createdAt = fromDb(createdAt!!),
             failReason = failReason,
-            status = ConvertationTaskStatus.valueOf(status),
+            status = ConvertationTaskStatus.valueOf(status!!),
             fileName = fileName
         )
-    }
 }

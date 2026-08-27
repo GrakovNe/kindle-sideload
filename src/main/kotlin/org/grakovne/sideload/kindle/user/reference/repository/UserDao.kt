@@ -87,15 +87,11 @@ class UserDao(
     private fun fromDb(localDateTime: LocalDateTime?): Instant? =
         localDateTime?.let { it.toInstant(ZoneOffset.UTC) }
 
-    private fun UserRecord.toDomain(): User {
-        val id = requireNotNull(this.id) { "User.id must be set by the database" }
-        val type = requireNotNull(this.type) { "User.type must be set by the database" }
-
-        return User(
-            id = id,
-            language = language,
-            type = Type.valueOf(type),
+    private fun UserRecord.toDomain(): User =
+        User(
+            id = id!!,
+            language = language!!,
+            type = Type.valueOf(type!!),
             lastActivityTimestamp = fromDb(lastActivityTimestamp)
         )
-    }
 }

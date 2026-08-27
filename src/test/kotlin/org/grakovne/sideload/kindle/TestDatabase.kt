@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle
 
 import org.jooq.DSLContext
+import org.jooq.impl.DSL
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,10 +22,12 @@ open class TestDatabase {
     @BeforeEach
     fun resetSharedTestDatabase() {
         checkTestDatabaseIsNotShared()
-        val tables = dsl.fetch(
-            """select table_name from information_schema.tables
-               where table_schema = 'public' and table_name <> 'flyway_schema_history'"""
-        ).map { record -> record.get("table_name", String::class.java) }
+        val tables = dsl.select(DSL.field("table_name", String::class.java))
+            .from(DSL.table("information_schema.tables"))
+            .where(DSL.field("table_schema", String::class.java).eq("public"))
+            .and(DSL.field("table_name", String::class.java).ne("flyway_schema_history"))
+            .fetch()
+            .map { it.value1() }
         tables.forEach { dsl.execute("truncate table \"$it\" restart identity") }
     }
 

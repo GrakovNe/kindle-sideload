@@ -38,13 +38,9 @@ class MessageReferenceDao(
 
     fun deleteAll() = dsl.deleteFrom(MESSAGE_REFERENCE).execute()
 
-    private fun MessageReferenceRecord.toDomain(): MessageReference {
-        val id = requireNotNull(this.id) { "MessageReference.id must be set by the database" }
-        val status = requireNotNull(this.status) { "MessageReference.status must be set by the database" }
-
-        return MessageReference(
-            id = id,
-            status = MessageStatus.valueOf(status)
+    private fun MessageReferenceRecord.toDomain(): MessageReference =
+        MessageReference(
+            id = id!!,
+            status = MessageStatus.valueOf(status!!)
         )
-    }
 }

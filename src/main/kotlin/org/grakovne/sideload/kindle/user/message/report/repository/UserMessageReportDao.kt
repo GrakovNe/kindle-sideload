@@ -60,16 +60,11 @@ class UserMessageReportDao(
     private fun fromDb(localDateTime: LocalDateTime): Instant =
         localDateTime.toInstant(ZoneOffset.UTC)
 
-    private fun UserMessageReportRecord.toDomain(): UserMessageReport {
-        val id = requireNotNull(this.id) { "UserMessageReport.id must be set by the database" }
-        val userId = requireNotNull(this.userId) { "UserMessageReport.user_id must be set by the database" }
-        val createdAt = requireNotNull(this.createdAt) { "UserMessageReport.created_at must be set by the database" }
-
-        return UserMessageReport(
-            id = id,
-            userId = userId,
-            createdAt = fromDb(createdAt),
+    private fun UserMessageReportRecord.toDomain(): UserMessageReport =
+        UserMessageReport(
+            id = id!!,
+            userId = userId!!,
+            createdAt = fromDb(createdAt!!),
             text = text
         )
-    }
 }

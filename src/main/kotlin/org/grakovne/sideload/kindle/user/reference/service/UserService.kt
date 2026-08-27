@@ -21,18 +21,19 @@ class UserService(private val userRepository: UserDao) {
     fun fetchOrCreateUser(userId: String, language: String): User =
         userRepository
             .findById(userId)
-            ?.let { persistUser(it.id, language, it.type) }
-            ?: persistUser(userId, language, Type.FREE_USER)
+            ?.let { persistUser(it.id, language, it.type, it.lastActivityTimestamp) }
+            ?: persistUser(userId, language, Type.FREE_USER, Instant.now())
 
     private fun persistUser(
         id: String,
         language: String,
-        type: Type
+        type: Type,
+        lastActivityTimestamp: Instant?
     ): User = User(
         id = id,
         language = language,
         type = type,
-        lastActivityTimestamp = Instant.now()
+        lastActivityTimestamp = lastActivityTimestamp
     ).let { userRepository.save(it) }
 
     companion object {

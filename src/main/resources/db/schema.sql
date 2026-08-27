@@ -1,3 +1,6 @@
+-- Snapshot of the database schema (state of the Flyway migrations in db/migration)
+-- used only by the jOOQ codegen task. The source of truth is db/migration;
+-- keep this file in sync when a new migration is added.
 create table "user"
 (
     id                           varchar not null primary key,

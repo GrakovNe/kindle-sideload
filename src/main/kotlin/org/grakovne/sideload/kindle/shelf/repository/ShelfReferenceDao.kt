@@ -20,6 +20,7 @@ class ShelfReferenceDao(
             .onConflict(SHELF_REFERENCE.USER_ID)
             .doUpdate()
             .set(SHELF_REFERENCE.SHORT_ID, reference.shortId)
+            .set(SHELF_REFERENCE.USER_ID, reference.userId)
             .execute()
         return reference
     }
@@ -51,15 +52,10 @@ class ShelfReferenceDao(
 
     fun deleteAll() = dsl.deleteFrom(SHELF_REFERENCE).execute()
 
-    private fun ShelfReferenceRecord.toDomain(): ShelfReference {
-        val id = requireNotNull(this.id) { "ShelfReference.id must be set by the database" }
-        val shortId = requireNotNull(this.shortId) { "ShelfReference.short_id must be set by the database" }
-        val userId = requireNotNull(this.userId) { "ShelfReference.user_id must be set by the database" }
-
-        return ShelfReference(
-            id = id,
-            shortId = shortId,
-            userId = userId
+    private fun ShelfReferenceRecord.toDomain(): ShelfReference =
+        ShelfReference(
+            id = id!!,
+            shortId = shortId!!,
+            userId = userId!!
         )
-    }
 }
