@@ -5,12 +5,53 @@ import org.jooq.impl.DSL
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.core.env.MapPropertySource
+import org.springframework.test.context.ContextConfigurationAttributes
+import org.springframework.test.context.ContextCustomizer
+import org.springframework.test.context.ContextCustomizerFactory
+import org.springframework.test.context.MergedContextConfiguration
+import org.springframework.test.context.TestContext
 
 /**
- * Base class for tests that exercise the services/DAOs against the real H2 test database.
- * The database and the [DSLContext] come from the shared application test context
- * (application.yml: in-memory H2 + Flyway migrations), so all tests in the JVM share the
- * same database. The [resetSharedTestDatabase] hook wipes every table before each test,
+ * The single embedded PostgreSQL instance shared by every test context in the JVM. Every
+ * test context reads the url/credentials from this instance (via
+ * [TestDatabaseContextCustomizer]), so all Spring test contexts in the same JVM hit the
+ * same database.
+ */
+object TestPostgres {
+    val embeddedPostgres: io.zonky.test.db.postgres.embedded.EmbeddedPostgres =
+        io.zonky.test.db.postgres.embedded.EmbeddedPostgres.builder().start()
+}
+
+/**
+ * Wires the datasource properties of the shared [TestPostgres] instance into every Spring
+ * test context of this module (registered for the whole test source set, see
+ * META-INF/spring.factories), so the tests' application.yml does not hardcode a datasource.
+ */
+class TestDatabaseContextCustomizer : ContextCustomizer {
+    override fun customizeContext(context: org.springframework.context.ConfigurableApplicationContext, macc: MergedContextConfiguration) {
+        val properties = mapOf(
+            "spring.datasource.url" to TestPostgres.embeddedPostgres.getJdbcUrl("postgres", "postgres"),
+            "spring.datasource.username" to "postgres",
+            "spring.datasource.password" to "postgres",
+            "spring.datasource.driver-class-name" to "org.postgresql.Driver"
+        )
+        context.environment.propertySources.addFirst(MapPropertySource("embeddedTestPostgres", properties))
+    }
+}
+
+class TestDatabaseContextCustomizerFactory : ContextCustomizerFactory {
+    override fun createContextCustomizer(
+        testClass: Class<*>,
+        configAttributes: List<ContextConfigurationAttributes>
+    ): ContextCustomizer? = TestDatabaseContextCustomizer()
+}
+
+/**
+ * Base class for tests that exercise the services/DAOs against a real embedded PostgreSQL
+ * database. The database and the [DSLContext] come from the shared application test context
+ * (application.yml: embedded PostgreSQL + Flyway migrations), so all tests in the JVM share
+ * the same database. The [resetSharedTestDatabase] hook wipes every table before each test,
  * so subclasses can freely seed their fixtures.
  */
 @SpringBootTest
@@ -32,10 +73,10 @@ open class TestDatabase {
     }
 
     /**
-     * The in-memory H2 database is shared by every test class in the JVM (and, when the
-     * JDBC URL is switched to a file, by every Gradle worker fork as well), so the
-     * per-test truncate below is only safe while the tests run sequentially. Fail fast
-     * if that invariant is broken instead of corrupting the test run.
+     * The embedded PostgreSQL database is shared by every test class in the JVM (and, when
+     * multiple Gradle worker forks are used, each fork gets its own embedded instance on a
+     * distinct port), so the per-test truncate below is only safe while the tests run
+     * sequentially. Fail fast if that invariant is broken instead of corrupting the test run.
      */
     private fun checkTestDatabaseIsNotShared() {
         val parallelForks = System.getProperty("GRADLE_PARALLEL_WORKERS")

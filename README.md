@@ -158,7 +158,8 @@ part of `mainSourceSet` — they are not committed. Each table has a hand-writte
 
 See [TEST_PLAN.md](TEST_PLAN.md) for the coverage strategy and test pyramid.
 
-- Tests run against **H2 in PostgreSQL mode** (Flyway migrations still apply) — no real database.
+- Tests run against an **embedded PostgreSQL** (started via `io.zonky.test:embedded-postgres`,
+  Flyway migrations still apply) — no external database or Docker needed.
 - All external integrations above are **mocked**; no test performs a real network call.
 - Line coverage is reported by **JaCoCo** (`./gradlew test jacocoTestReport`),
   report at `build/reports/jacoco/test/index.html`.

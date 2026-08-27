@@ -80,7 +80,7 @@ import com.pengrad.telegrambot.model.File as TgFile
 /**
  * Acceptance scenarios AC-1 … AC-6 from TEST_PLAN.md.
  *
- * The full Spring context runs against the in-memory H2 database (Flyway migrations) with the real
+ * The full Spring context runs against the embedded PostgreSQL database (Flyway migrations) with the real
  * event bus, services, repositories and localisation. Everything "outside" the application is
  * mocked so that no network connection is ever attempted:
  *

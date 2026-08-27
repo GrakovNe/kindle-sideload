@@ -54,7 +54,7 @@ dependencies {
 
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("com.h2database:h2")
+    testImplementation("io.zonky.test:embedded-postgres:2.1.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation(kotlin("test"))
@@ -123,7 +123,7 @@ afterEvaluate {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-    // The tests share a single in-memory test database (see TestDatabase),
+    // The tests share a single embedded PostgreSQL instance (see TestDatabase/TestPostgres),
     // so they must not run in parallel forks.
     maxParallelForks = 1
     systemProperty("GRADLE_PARALLEL_WORKERS", 1)
