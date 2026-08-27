@@ -30,12 +30,11 @@ class ShelfItemDao(
         return item
     }
 
-    fun findById(id: UUID): ShelfItem? {
-        return dsl.selectFrom(SHELF_ITEM)
+    fun findById(id: UUID): ShelfItem? =
+        dsl.selectFrom(SHELF_ITEM)
             .where(SHELF_ITEM.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun findByShelfIdAndStatus(shelfId: UUID, status: ShelfItemStatus): List<ShelfItem> {
         return dsl.selectFrom(SHELF_ITEM)
@@ -45,12 +44,11 @@ class ShelfItemDao(
             .map { it.toDomain() }
     }
 
-    fun findByEnvironmentId(environmentId: String): ShelfItem? {
-        return dsl.selectFrom(SHELF_ITEM)
+    fun findByEnvironmentId(environmentId: String): ShelfItem? =
+        dsl.selectFrom(SHELF_ITEM)
             .where(SHELF_ITEM.ENVIRONMENT_ID.eq(environmentId))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun saveAll(items: List<ShelfItem>) = items.forEach { save(it) }
 
@@ -68,12 +66,18 @@ class ShelfItemDao(
         localDateTime.toInstant(ZoneOffset.UTC)
 
     private fun ShelfItemRecord.toDomain(): ShelfItem {
+        val id = requireNotNull(this.id) { "ShelfItem.id must be set by the database" }
+        val shelfId = requireNotNull(this.shelfId) { "ShelfItem.shelf_id must be set by the database" }
+        val environmentId = requireNotNull(this.environmentId) { "ShelfItem.environment_id must be set by the database" }
+        val createdAt = requireNotNull(this.createdAt) { "ShelfItem.created_at must be set by the database" }
+        val status = requireNotNull(this.status) { "ShelfItem.status must be set by the database" }
+
         return ShelfItem(
-            id = id!!,
-            shelfId = shelfId!!,
-            environmentId = environmentId!!,
-            createdAt = fromDb(createdAt!!),
-            status = ShelfItemStatus.valueOf(status!!)
+            id = id,
+            shelfId = shelfId,
+            environmentId = environmentId,
+            createdAt = fromDb(createdAt),
+            status = ShelfItemStatus.valueOf(status)
         )
     }
 }

@@ -34,7 +34,7 @@ class UserServiceTest : TestDatabase() {
     }
 
     @Test
-    fun `reuses an existing user and keeps the stored language`() {
+    fun `reuses an existing user and refreshes the language`() {
         dao.save(
             User(
                 id = "user-1",
@@ -47,25 +47,8 @@ class UserServiceTest : TestDatabase() {
         val user = sut.fetchOrCreateUser("user-1", "ru")
 
         assertEquals(Type.SUPER_USER, user.type)
-        assertEquals("en", user.language)
-        assertEquals(1, dao.count())
-    }
-
-    @Test
-    fun `falls back to the requested language when the stored one is missing`() {
-        dao.save(
-            User(
-                id = "user-1",
-                language = null,
-                type = Type.SUPER_USER,
-                lastActivityTimestamp = Instant.parse("2026-08-01T00:00:00Z")
-            )
-        )
-
-        val user = sut.fetchOrCreateUser("user-1", "ru")
-
-        assertEquals(Type.SUPER_USER, user.type)
         assertEquals("ru", user.language)
+        assertEquals(1, dao.count())
     }
 
     @Test

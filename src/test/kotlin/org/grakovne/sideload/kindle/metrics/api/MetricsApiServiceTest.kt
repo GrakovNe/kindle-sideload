@@ -18,6 +18,8 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.transaction.support.TransactionCallback
+import org.springframework.transaction.support.TransactionTemplate
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID
@@ -30,11 +32,20 @@ class MetricsApiServiceTest {
     private val transferEmailTaskRepository: TransferEmailTaskDao = mock()
     private val userMessageReportRepository: UserMessageReportDao = mock()
     private val userRepository: UserDao = mock()
+    private val transactionTemplate: TransactionTemplate = mock()
+
+    init {
+        whenever(transactionTemplate.execute<Any>(any<TransactionCallback<Any>>())).thenAnswer { inv ->
+            (inv.arguments[0] as TransactionCallback<Any>).doInTransaction(mock())
+        }
+    }
+
     private val sut = MetricsApiService(
         convertationTaskRepository,
         transferEmailTaskRepository,
         userMessageReportRepository,
-        userRepository
+        userRepository,
+        transactionTemplate
     )
 
     private val now = Instant.now()
@@ -69,8 +80,9 @@ class MetricsApiServiceTest {
             metrics.users
         )
 
-        verify(userRepository).touchLastActivity(eq("user-1"), any<Instant>())
-        verify(userRepository).touchLastActivity(eq("user-2"), any<Instant>())
+        val idsCaptor = argumentCaptor<Collection<String>>()
+        verify(userRepository).touchLastActivity(idsCaptor.capture(), any<Instant>())
+        assertEquals(setOf("user-1", "user-2"), idsCaptor.firstValue.toSet())
     }
 
     @Test

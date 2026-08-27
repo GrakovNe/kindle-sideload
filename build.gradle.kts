@@ -123,6 +123,10 @@ afterEvaluate {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    // The tests share a single in-memory test database (see TestDatabase),
+    // so they must not run in parallel forks.
+    maxParallelForks = 1
+    systemProperty("GRADLE_PARALLEL_WORKERS", 1)
     finalizedBy(tasks.named("jacocoTestReport"))
 }
 

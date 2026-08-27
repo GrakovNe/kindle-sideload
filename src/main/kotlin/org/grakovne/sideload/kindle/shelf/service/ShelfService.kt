@@ -46,17 +46,13 @@ class ShelfService(
             }
     }
 
-    fun fetchOrCreateShelf(userId: String) = repository
-        .findByUserId(userId)
-        ?: createShelf(userId)
-
-    private fun createShelf(userId: String): ShelfReference {
-        val entity = ShelfReference(
+    fun fetchOrCreateShelf(userId: String): ShelfReference {
+        val reference = ShelfReference(
             id = UUID.randomUUID(),
             shortId = RandomStringUtils.randomAlphabetic(5),
             userId = userId
         )
 
-        return repository.save(entity)
+        return repository.save(reference)
     }
 }

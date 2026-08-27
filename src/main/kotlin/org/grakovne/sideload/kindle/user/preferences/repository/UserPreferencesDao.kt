@@ -31,19 +31,17 @@ class UserPreferencesDao(
         return preferences
     }
 
-    fun findById(id: UUID): UserPreferences? {
-        return dsl.selectFrom(USER_PREFERENCES)
+    fun findById(id: UUID): UserPreferences? =
+        dsl.selectFrom(USER_PREFERENCES)
             .where(USER_PREFERENCES.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
-    fun findByUserId(userId: String): UserPreferences? {
-        return dsl.selectFrom(USER_PREFERENCES)
+    fun findByUserId(userId: String): UserPreferences? =
+        dsl.selectFrom(USER_PREFERENCES)
             .where(USER_PREFERENCES.USER_ID.eq(userId))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun saveAll(preferences: List<UserPreferences>) = preferences.forEach { save(it) }
 
@@ -55,10 +53,14 @@ class UserPreferencesDao(
     fun deleteAll() = dsl.deleteFrom(USER_PREFERENCES).execute()
 
     private fun UserPreferencesRecord.toDomain(): UserPreferences {
+        val id = requireNotNull(this.id) { "UserPreferences.id must be set by the database" }
+        val userId = requireNotNull(this.userId) { "UserPreferences.user_id must be set by the database" }
+        val outputFormat = requireNotNull(this.outputFormat) { "UserPreferences.output_format must be set by the database" }
+
         return UserPreferences(
-            id = id!!,
-            userId = userId!!,
-            outputFormat = OutputFormat.valueOf(outputFormat!!),
+            id = id,
+            userId = userId,
+            outputFormat = OutputFormat.valueOf(outputFormat),
             email = email,
             debugMode = debugMode ?: false,
             automaticStk = automaticStk ?: false

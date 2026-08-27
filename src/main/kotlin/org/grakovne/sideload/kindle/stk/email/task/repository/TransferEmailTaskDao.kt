@@ -32,12 +32,11 @@ class TransferEmailTaskDao(
         return task
     }
 
-    fun findById(id: UUID): TransferEmailTask? {
-        return dsl.selectFrom(TRANSFER_EMAIL_TASK)
+    fun findById(id: UUID): TransferEmailTask? =
+        dsl.selectFrom(TRANSFER_EMAIL_TASK)
             .where(TRANSFER_EMAIL_TASK.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun findByStatusInAndCreatedAtLessThan(
         status: List<TransferEmailTaskStatus>,
@@ -115,13 +114,19 @@ class TransferEmailTaskDao(
         localDateTime.toInstant(ZoneOffset.UTC)
 
     private fun TransferEmailTaskRecord.toDomain(): TransferEmailTask {
+        val id = requireNotNull(this.id) { "TransferEmailTask.id must be set by the database" }
+        val userId = requireNotNull(this.userId) { "TransferEmailTask.user_id must be set by the database" }
+        val environmentId = requireNotNull(this.environmentId) { "TransferEmailTask.environment_id must be set by the database" }
+        val createdAt = requireNotNull(this.createdAt) { "TransferEmailTask.created_at must be set by the database" }
+        val status = requireNotNull(this.status) { "TransferEmailTask.status must be set by the database" }
+
         return TransferEmailTask(
-            id = id!!,
-            userId = userId!!,
-            environmentId = environmentId!!,
-            createdAt = fromDb(createdAt!!),
+            id = id,
+            userId = userId,
+            environmentId = environmentId,
+            createdAt = fromDb(createdAt),
             failReason = failReason,
-            status = TransferEmailTaskStatus.valueOf(status!!)
+            status = TransferEmailTaskStatus.valueOf(status)
         )
     }
 }

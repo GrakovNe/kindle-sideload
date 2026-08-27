@@ -28,12 +28,11 @@ class UserMessageReportDao(
         return report
     }
 
-    fun findById(id: UUID): UserMessageReport? {
-        return dsl.selectFrom(USER_MESSAGE_REPORT)
+    fun findById(id: UUID): UserMessageReport? =
+        dsl.selectFrom(USER_MESSAGE_REPORT)
             .where(USER_MESSAGE_REPORT.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun findByCreatedAtGreaterThanAndCreatedAtLessThan(
         from: Instant,
@@ -62,10 +61,14 @@ class UserMessageReportDao(
         localDateTime.toInstant(ZoneOffset.UTC)
 
     private fun UserMessageReportRecord.toDomain(): UserMessageReport {
+        val id = requireNotNull(this.id) { "UserMessageReport.id must be set by the database" }
+        val userId = requireNotNull(this.userId) { "UserMessageReport.user_id must be set by the database" }
+        val createdAt = requireNotNull(this.createdAt) { "UserMessageReport.created_at must be set by the database" }
+
         return UserMessageReport(
-            id = id!!,
-            userId = userId!!,
-            createdAt = fromDb(createdAt!!),
+            id = id,
+            userId = userId,
+            createdAt = fromDb(createdAt),
             text = text
         )
     }

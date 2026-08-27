@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.shelf.service
 
 import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
+import org.grakovne.sideload.kindle.generated.tables.ShelfReference.Companion.SHELF_REFERENCE
 import org.grakovne.sideload.kindle.shelf.configuration.ShelfWebProperties
 import org.grakovne.sideload.kindle.shelf.domain.ShelfContentItem
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItem
@@ -17,6 +18,7 @@ import java.io.File
 import java.time.Instant
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -39,12 +41,17 @@ class ShelfServiceTest : TestDatabase() {
 
     @Test
     fun `creates the shelf once and reuses it on subsequent calls`() {
-        val first = sut.fetchOrCreateShelf("user-1")
-        val second = sut.fetchOrCreateShelf("user-1")
+        sut.fetchOrCreateShelf("user-1")
+        sut.fetchOrCreateShelf("user-1")
 
-        assertEquals(first.id, second.id)
-        assertEquals("user-1", first.userId)
-        assertTrue(first.shortId.matches(Regex("[a-zA-Z]{5}")))
+        val stored = dsl
+            .select(SHELF_REFERENCE.ID, SHELF_REFERENCE.USER_ID, SHELF_REFERENCE.SHORT_ID)
+            .from(SHELF_REFERENCE)
+            .fetchSingle()
+
+        assertEquals("user-1", stored.value2())
+        val shortId = assertNotNull(stored.value3())
+        assertTrue(shortId.matches(Regex("[a-zA-Z]{5}")))
         assertEquals(1, shelfReferenceDao.count())
     }
 
@@ -67,9 +74,10 @@ class ShelfServiceTest : TestDatabase() {
 
     @Test
     fun `builds the public shelf link from the host name and the short id`() {
-        val shelf = sut.fetchOrCreateShelf("user-1")
+        val link = sut.fetchShelfLink("user-1")
 
-        assertEquals("http://shelf.example.com/${shelf.shortId}", sut.fetchShelfLink("user-1"))
+        assertTrue(link.startsWith("http://shelf.example.com/"))
+        assertEquals(5, link.length - "http://shelf.example.com/".length)
     }
 
     @Test

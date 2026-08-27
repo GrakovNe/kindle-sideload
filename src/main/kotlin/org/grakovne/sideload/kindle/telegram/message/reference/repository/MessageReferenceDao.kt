@@ -23,12 +23,11 @@ class MessageReferenceDao(
         return reference
     }
 
-    fun findById(id: String): MessageReference? {
-        return dsl.selectFrom(MESSAGE_REFERENCE)
+    fun findById(id: String): MessageReference? =
+        dsl.selectFrom(MESSAGE_REFERENCE)
             .where(MESSAGE_REFERENCE.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun saveAll(references: List<MessageReference>) = references.forEach { save(it) }
 
@@ -40,9 +39,12 @@ class MessageReferenceDao(
     fun deleteAll() = dsl.deleteFrom(MESSAGE_REFERENCE).execute()
 
     private fun MessageReferenceRecord.toDomain(): MessageReference {
+        val id = requireNotNull(this.id) { "MessageReference.id must be set by the database" }
+        val status = requireNotNull(this.status) { "MessageReference.status must be set by the database" }
+
         return MessageReference(
-            id = id!!,
-            status = MessageStatus.valueOf(status!!)
+            id = id,
+            status = MessageStatus.valueOf(status)
         )
     }
 }

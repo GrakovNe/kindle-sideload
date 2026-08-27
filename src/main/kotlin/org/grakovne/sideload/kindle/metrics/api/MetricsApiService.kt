@@ -9,6 +9,7 @@ import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskD
 import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportDao
 import org.grakovne.sideload.kindle.user.reference.repository.UserDao
 import org.springframework.stereotype.Service
+import org.springframework.transaction.support.TransactionTemplate
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
@@ -19,6 +20,7 @@ class MetricsApiService(
     private val transferEmailTaskRepository: TransferEmailTaskDao,
     private val userMessageReportRepository: UserMessageReportDao,
     private val userRepository: UserDao,
+    private val transactionTemplate: TransactionTemplate,
 ) {
 
     fun fetchDailyMetrics(): DailyMetrics {
@@ -43,10 +45,9 @@ class MetricsApiService(
                 .map { (userId, messages) -> UserDailyMetrics(userId = userId, sentMessages = messages.count()) }
                 .sortedByDescending { it.sentMessages }
                 .also { users ->
-                    users
-                        .map { it.userId }
-                        .let { ids -> ids.distinct() }
-                        .forEach { id -> userRepository.touchLastActivity(id, Instant.now()) }
+                    transactionTemplate.execute {
+                        userRepository.touchLastActivity(users.map { it.userId }.distinct(), Instant.now())
+                    }
                 }
         )
     }

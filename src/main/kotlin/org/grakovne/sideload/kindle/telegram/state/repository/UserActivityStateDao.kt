@@ -28,12 +28,11 @@ class UserActivityStateDao(
         return state
     }
 
-    fun findById(id: UUID): UserActivityState? {
-        return dsl.selectFrom(USER_ACTIVITY_STATE)
+    fun findById(id: UUID): UserActivityState? =
+        dsl.selectFrom(USER_ACTIVITY_STATE)
             .where(USER_ACTIVITY_STATE.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun findByUserIdOrderByCreatedAtDesc(userId: String): List<UserActivityState> {
         return dsl.selectFrom(USER_ACTIVITY_STATE)
@@ -59,11 +58,16 @@ class UserActivityStateDao(
         localDateTime.toInstant(ZoneOffset.UTC)
 
     private fun UserActivityStateRecord.toDomain(): UserActivityState {
+        val id = requireNotNull(this.id) { "UserActivityState.id must be set by the database" }
+        val userId = requireNotNull(this.userId) { "UserActivityState.user_id must be set by the database" }
+        val activityState = requireNotNull(this.activityState) { "UserActivityState.activity_state must be set by the database" }
+        val createdAt = requireNotNull(this.createdAt) { "UserActivityState.created_at must be set by the database" }
+
         return UserActivityState(
-            id = id!!,
-            userId = userId!!,
-            activityState = activityState!!,
-            createdAt = fromDb(createdAt!!)
+            id = id,
+            userId = userId,
+            activityState = activityState,
+            createdAt = fromDb(createdAt)
         )
     }
 }

@@ -26,20 +26,18 @@ class ConverterBinaryReferenceDao(
         return reference
     }
 
-    fun findById(id: UUID): ConverterBinaryReference? {
-        return dsl.selectFrom(CONVERTER_BINARY_REFERENCE)
+    fun findById(id: UUID): ConverterBinaryReference? =
+        dsl.selectFrom(CONVERTER_BINARY_REFERENCE)
             .where(CONVERTER_BINARY_REFERENCE.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
-    fun findLatest(): ConverterBinaryReference? {
-        return dsl.selectFrom(CONVERTER_BINARY_REFERENCE)
+    fun findLatest(): ConverterBinaryReference? =
+        dsl.selectFrom(CONVERTER_BINARY_REFERENCE)
             .orderBy(CONVERTER_BINARY_REFERENCE.PUBLISHED_AT.desc().nullsLast())
             .limit(1)
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun saveAll(references: List<ConverterBinaryReference>) = references.forEach { save(it) }
 
@@ -57,8 +55,10 @@ class ConverterBinaryReferenceDao(
         localDateTime?.let { it.toInstant(ZoneOffset.UTC) }
 
     private fun ConverterBinaryReferenceRecord.toDomain(): ConverterBinaryReference {
+        val id = requireNotNull(this.id) { "ConverterBinaryReference.id must be set by the database" }
+
         return ConverterBinaryReference(
-            id = id!!,
+            id = id,
             publishedAt = fromDb(publishedAt)
         )
     }

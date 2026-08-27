@@ -21,7 +21,7 @@ class UserService(private val userRepository: UserDao) {
     fun fetchOrCreateUser(userId: String, language: String): User =
         userRepository
             .findById(userId)
-            ?.let { persistUser(it.id, it.language ?: language, it.type) }
+            ?.let { persistUser(it.id, language, it.type) }
             ?: persistUser(userId, language, Type.FREE_USER)
 
     private fun persistUser(

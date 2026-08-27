@@ -1,6 +1,5 @@
 package org.grakovne.sideload.kindle.user.reference.repository
 
-import org.grakovne.sideload.kindle.generated.Public.Companion.PUBLIC
 import org.grakovne.sideload.kindle.generated.tables.User.Companion.USER
 import org.grakovne.sideload.kindle.generated.tables.records.UserRecord
 import org.grakovne.sideload.kindle.user.reference.domain.Type
@@ -17,7 +16,7 @@ class UserDao(
 ) {
 
     fun save(user: User): User {
-        dsl.insertInto(PUBLIC.USER)
+        dsl.insertInto(USER)
             .set(USER.ID, user.id)
             .set(USER.LANGUAGE, user.language)
             .set(USER.TYPE, user.type.name)
@@ -31,12 +30,11 @@ class UserDao(
         return user
     }
 
-    fun findById(id: String): User? {
-        return dsl.selectFrom(USER)
+    fun findById(id: String): User? =
+        dsl.selectFrom(USER)
             .where(USER.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun findByLastActivityTimestampGreaterThanAndLastActivityTimestampLessThan(
         from: Instant,
@@ -63,6 +61,17 @@ class UserDao(
             .execute()
     }
 
+    fun touchLastActivity(ids: Collection<String>, timestamp: Instant): Int {
+        if (ids.isEmpty()) {
+            return 0
+        }
+
+        return dsl.update(USER)
+            .set(USER.LAST_ACTIVITY_TIMESTAMP, toDb(timestamp))
+            .where(USER.ID.`in`(ids))
+            .execute()
+    }
+
     fun saveAll(users: List<User>) = users.forEach { save(it) }
 
     fun findAll(): List<User> =
@@ -70,7 +79,7 @@ class UserDao(
 
     fun count(): Int = dsl.fetchCount(USER)
 
-    fun deleteAll() = dsl.deleteFrom(PUBLIC.USER).execute()
+    fun deleteAll() = dsl.deleteFrom(USER).execute()
 
     private fun toDb(instant: Instant?): LocalDateTime? =
         instant?.let { LocalDateTime.ofInstant(it, ZoneOffset.UTC) }
@@ -79,10 +88,13 @@ class UserDao(
         localDateTime?.let { it.toInstant(ZoneOffset.UTC) }
 
     private fun UserRecord.toDomain(): User {
+        val id = requireNotNull(this.id) { "User.id must be set by the database" }
+        val type = requireNotNull(this.type) { "User.type must be set by the database" }
+
         return User(
-            id = id!!,
+            id = id,
             language = language,
-            type = Type.valueOf(type!!),
+            type = Type.valueOf(type),
             lastActivityTimestamp = fromDb(lastActivityTimestamp)
         )
     }

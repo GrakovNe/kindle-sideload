@@ -17,32 +17,30 @@ class ShelfReferenceDao(
             .set(SHELF_REFERENCE.ID, reference.id)
             .set(SHELF_REFERENCE.SHORT_ID, reference.shortId)
             .set(SHELF_REFERENCE.USER_ID, reference.userId)
-            .onConflict(SHELF_REFERENCE.ID)
-            .doNothing()
+            .onConflict(SHELF_REFERENCE.USER_ID)
+            .doUpdate()
+            .set(SHELF_REFERENCE.SHORT_ID, reference.shortId)
             .execute()
         return reference
     }
 
-    fun findById(id: UUID): ShelfReference? {
-        return dsl.selectFrom(SHELF_REFERENCE)
+    fun findById(id: UUID): ShelfReference? =
+        dsl.selectFrom(SHELF_REFERENCE)
             .where(SHELF_REFERENCE.ID.eq(id))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
-    fun findByUserId(userId: String): ShelfReference? {
-        return dsl.selectFrom(SHELF_REFERENCE)
+    fun findByUserId(userId: String): ShelfReference? =
+        dsl.selectFrom(SHELF_REFERENCE)
             .where(SHELF_REFERENCE.USER_ID.eq(userId))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
-    fun findByShortId(shortId: String): ShelfReference? {
-        return dsl.selectFrom(SHELF_REFERENCE)
+    fun findByShortId(shortId: String): ShelfReference? =
+        dsl.selectFrom(SHELF_REFERENCE)
             .where(SHELF_REFERENCE.SHORT_ID.eq(shortId))
             .fetchOne()
             ?.let { it.toDomain() }
-    }
 
     fun saveAll(references: List<ShelfReference>) = references.forEach { save(it) }
 
@@ -54,10 +52,14 @@ class ShelfReferenceDao(
     fun deleteAll() = dsl.deleteFrom(SHELF_REFERENCE).execute()
 
     private fun ShelfReferenceRecord.toDomain(): ShelfReference {
+        val id = requireNotNull(this.id) { "ShelfReference.id must be set by the database" }
+        val shortId = requireNotNull(this.shortId) { "ShelfReference.short_id must be set by the database" }
+        val userId = requireNotNull(this.userId) { "ShelfReference.user_id must be set by the database" }
+
         return ShelfReference(
-            id = id!!,
-            shortId = shortId!!,
-            userId = userId!!
+            id = id,
+            shortId = shortId,
+            userId = userId
         )
     }
 }
