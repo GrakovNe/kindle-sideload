@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import java.io.File
 
-
 @Service
 class Fb2ConverterService(
     private val cliRunner: CliRunner,

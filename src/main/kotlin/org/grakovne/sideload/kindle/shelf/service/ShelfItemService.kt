@@ -4,14 +4,14 @@ import arrow.core.Either
 import org.grakovne.sideload.kindle.shelf.common.ShelfItemError
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItem
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItemStatus
-import org.grakovne.sideload.kindle.shelf.repository.ShelfItemRepository
+import org.grakovne.sideload.kindle.shelf.repository.ShelfItemDao
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.UUID
 
 @Service
 class ShelfItemService(
-    private val repository: ShelfItemRepository
+    private val repository: ShelfItemDao
 ) {
 
     fun terminateItem(
@@ -22,7 +22,6 @@ class ShelfItemService(
         ?.let { repository.save(it) }
         ?.let { Either.Right(Unit) }
         ?: Either.Left(ShelfItemError.ITEM_NOT_EXISTS)
-
 
     fun attachToShelf(
         shelfId: UUID,

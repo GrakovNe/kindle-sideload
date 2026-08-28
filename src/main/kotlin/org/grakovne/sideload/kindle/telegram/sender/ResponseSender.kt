@@ -15,6 +15,7 @@ class ResponseSender(val bot: TelegramBot) {
 
         return when (response.isOk) {
             true -> Either.Right(Unit)
+
             false -> Either.Left(UnableSendResponse)
                 .also { logger.error { "Unable to send the message due to: ${response.description()}" } }
         }

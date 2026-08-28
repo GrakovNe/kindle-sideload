@@ -34,30 +34,31 @@ class StkFinishHandler(
         val preferences = userPreferencesService.fetchPreferences(event.userId)
 
         when (preferences.outputFormat) {
-            OutputFormat.AZW3 -> messageSender
-                .sendResponse(
-                    chatId = user.id,
-                    user = user,
-                    message = StkSuccessAzwMessage,
-                    navigation = listOf(
-                        listOf(MainScreenButton),
+            OutputFormat.AZW3 ->
+                messageSender
+                    .sendResponse(
+                        chatId = user.id,
+                        user = user,
+                        message = StkSuccessAzwMessage,
+                        navigation = listOf(
+                            listOf(MainScreenButton),
+                        )
                     )
-                )
 
-            else -> messageSender
-                .sendResponse(
-                    chatId = user.id,
-                    user = user,
-                    message = StkSuccessMessage,
-                    navigation = listOf(
-                        listOf(MainScreenButton),
+            else ->
+                messageSender
+                    .sendResponse(
+                        chatId = user.id,
+                        user = user,
+                        message = StkSuccessMessage,
+                        navigation = listOf(
+                            listOf(MainScreenButton),
+                        )
                     )
-                )
         }
     }
 
     override fun sendFailureResponse(event: StkFinishedEvent, code: EventProcessingError) {
-
         val user = userService.fetchUser(event.userId)
 
         messageSender
@@ -80,5 +81,4 @@ class StkFinishHandler(
     companion object {
         private val logger = KotlinLogging.logger { }
     }
-
 }

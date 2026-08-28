@@ -3,12 +3,12 @@ package org.grakovne.sideload.kindle.user.reference.service
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.user.reference.domain.Type
 import org.grakovne.sideload.kindle.user.reference.domain.User
-import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
+import org.grakovne.sideload.kindle.user.reference.repository.UserDao
 import org.springframework.stereotype.Service
 import java.time.Instant
 
 @Service
-class UserService(private val userRepository: UserRepository) {
+class UserService(private val userRepository: UserDao) {
 
     fun fetchActiveUsers(from: Instant, to: Instant) = userRepository.findByLastActivityTimestampGreaterThanAndLastActivityTimestampLessThan(from, to)
 
@@ -16,14 +16,18 @@ class UserService(private val userRepository: UserRepository) {
 
     fun fetchUser(userId: String): User = userRepository
         .findById(userId)
-        .get()
+        ?: throw NoSuchElementException("User $userId not found")
 
+    /**
+     * Called on every incoming Telegram message, so it doubles as the activity tracker: the
+     * timestamp is refreshed on each call and feeds the active-user metrics
+     * ([fetchActiveUsers]). Only the type survives from the stored user.
+     */
     fun fetchOrCreateUser(userId: String, language: String): User =
         userRepository
             .findById(userId)
-            .orElseGet { persistUser(userId, language, Type.FREE_USER) }
-            .copy(language = language)
-            .let { persistUser(it.id, it.language ?: "en", it.type) }
+            ?.let { persistUser(it.id, language, it.type) }
+            ?: persistUser(userId, language, Type.FREE_USER)
 
     private fun persistUser(
         id: String,

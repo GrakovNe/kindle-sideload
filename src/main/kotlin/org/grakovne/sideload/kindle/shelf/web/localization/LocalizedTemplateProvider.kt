@@ -13,7 +13,7 @@ class LocalizedTemplateProvider {
         language: Language?
     ): String = when {
         null == language -> template
-        templateExists(template, language) -> "${template}_${language}"
+        templateExists(template, language) -> "${template}_$language"
         else -> template
     }
 
@@ -22,7 +22,7 @@ class LocalizedTemplateProvider {
         language: Language
     ): Boolean {
         return Path(TEMPLATES)
-            .resolve(Path("${resourceName}_${language}.$TEMPLATE_EXTENSION"))
+            .resolve(Path("${resourceName}_$language.$TEMPLATE_EXTENSION"))
             .let { ClassPathResource(it.toString()) }
             .exists()
     }

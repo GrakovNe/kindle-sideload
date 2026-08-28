@@ -1,15 +1,15 @@
 package org.grakovne.sideload.kindle.stk.email.task.service
 
 import ch.qos.logback.classic.Level
+import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.converter.StkLimitExhausted
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTask
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
-import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskRepository
+import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskDao
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -17,11 +17,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@DataJpaTest
-class TransferEmailTaskServiceTest {
+class TransferEmailTaskServiceTest : TestDatabase() {
 
     @Autowired
-    lateinit var repository: TransferEmailTaskRepository
+    lateinit var dao: TransferEmailTaskDao
 
     private lateinit var sut: TransferEmailTaskService
 
@@ -31,7 +30,7 @@ class TransferEmailTaskServiceTest {
         properties.token = "test-token"
         properties.level = Level.INFO
         properties.userStkDailyLimit = 2
-        sut = TransferEmailTaskService(repository, properties)
+        sut = TransferEmailTaskService(dao, properties)
     }
 
     @Test
@@ -39,7 +38,7 @@ class TransferEmailTaskServiceTest {
         val result = sut.submitTask("user-1", "env-1")
 
         assertTrue(result.isRight())
-        val task = repository.findAll().single()
+        val task = dao.findAll().single()
         assertEquals("user-1", task.userId)
         assertEquals("env-1", task.environmentId)
         assertEquals(TransferEmailTaskStatus.ACTIVE, task.status)
@@ -58,12 +57,12 @@ class TransferEmailTaskServiceTest {
 
         assertTrue(result.isLeft())
         assertEquals(StkLimitExhausted, result.swap().orNull())
-        assertEquals(3, repository.count())
+        assertEquals(3, dao.count())
     }
 
     @Test
     fun `does not count tasks from another day towards the limit`() {
-        repository.save(
+        dao.save(
             task(
                 userId = "user-1",
                 createdAt = Instant.now().minus(48, ChronoUnit.HOURS)
@@ -73,13 +72,13 @@ class TransferEmailTaskServiceTest {
         val result = sut.submitTask("user-1", "env-1")
 
         assertTrue(result.isRight())
-        assertEquals(2, repository.count())
+        assertEquals(2, dao.count())
     }
 
     @Test
     fun `counts limits per user`() {
-        repository.save(task(userId = "user-2", createdAt = Instant.now()))
-        repository.save(task(userId = "user-2", createdAt = Instant.now()))
+        dao.save(task(userId = "user-2", createdAt = Instant.now()))
+        dao.save(task(userId = "user-2", createdAt = Instant.now()))
 
         val result = sut.submitTask("user-1", "env-1")
 
@@ -88,9 +87,9 @@ class TransferEmailTaskServiceTest {
 
     @Test
     fun `fetches the active task for processing`() {
-        repository.save(task("user-1", TransferEmailTaskStatus.SUCCESS))
+        dao.save(task("user-1", TransferEmailTaskStatus.SUCCESS))
         val active = task("user-2", TransferEmailTaskStatus.ACTIVE)
-        repository.save(active)
+        dao.save(active)
 
         val fetched = sut.fetchLatestForProcessing()
 
@@ -105,11 +104,11 @@ class TransferEmailTaskServiceTest {
     @Test
     fun `persists task updates`() {
         val task = task("user-1", TransferEmailTaskStatus.ACTIVE)
-        repository.save(task)
+        dao.save(task)
 
         sut.updateTask(task.copy(status = TransferEmailTaskStatus.FAILED, failReason = "boom"))
 
-        val stored = repository.findById(task.id).get()
+        val stored = dao.findById(task.id)!!
         assertEquals(TransferEmailTaskStatus.FAILED, stored.status)
         assertEquals("boom", stored.failReason)
     }

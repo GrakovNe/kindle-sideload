@@ -1,25 +1,27 @@
 package org.grakovne.sideload.kindle.user.reference.service
 
+import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.user.reference.domain.Type
-import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
+import org.grakovne.sideload.kindle.user.reference.domain.User
+import org.grakovne.sideload.kindle.user.reference.repository.UserDao
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.time.Instant
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-@DataJpaTest
-class UserServiceTest {
+class UserServiceTest : TestDatabase() {
 
     @Autowired
-    lateinit var repository: UserRepository
+    lateinit var dao: UserDao
 
     private lateinit var sut: UserService
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     fun setUp() {
-        sut = UserService(repository)
+        sut = UserService(dao)
     }
 
     @Test
@@ -33,26 +35,54 @@ class UserServiceTest {
     }
 
     @Test
-    fun `reuses an existing user but refreshes the language`() {
-        repository.save(
-            org.grakovne.sideload.kindle.user.reference.domain.User(
+    fun `reuses an existing user, refreshes the language and the activity timestamp, and keeps the type`() {
+        val staleActivity = Instant.parse("2026-08-01T00:00:00Z")
+        dao.save(
+            User(
                 id = "user-1",
                 language = "en",
                 type = Type.SUPER_USER,
-                lastActivityTimestamp = Instant.parse("2026-08-01T00:00:00Z")
+                lastActivityTimestamp = staleActivity
             )
         )
 
         val user = sut.fetchOrCreateUser("user-1", "ru")
 
+        assertEquals("user-1", user.id)
         assertEquals(Type.SUPER_USER, user.type)
         assertEquals("ru", user.language)
-        assertEquals(1, repository.count())
+        val refreshed = assertNotNull(user.lastActivityTimestamp)
+        assertTrue(refreshed.isAfter(staleActivity))
+        assertEquals(1, dao.count())
+    }
+
+    /**
+     * fetchOrCreateUser runs on every incoming Telegram message and is the only thing that keeps
+     * the activity timestamp current for the metrics screen, so a returning user has to land back
+     * inside the active window.
+     */
+    @Test
+    fun `refreshing an existing user brings it back into the active user window`() {
+        dao.save(
+            User(
+                id = "user-1",
+                language = "en",
+                type = Type.FREE_USER,
+                lastActivityTimestamp = Instant.parse("2020-01-01T00:00:00Z")
+            )
+        )
+        val from = Instant.now().minusSeconds(60)
+
+        assertEquals(emptyList(), sut.fetchActiveUsers(from, Instant.now().plusSeconds(60)).map { it.id })
+
+        sut.fetchOrCreateUser("user-1", "ru")
+
+        assertEquals(listOf("user-1"), sut.fetchActiveUsers(from, Instant.now().plusSeconds(60)).map { it.id })
     }
 
     @Test
     fun `fetches the user by id`() {
-        repository.save(user("user-1", Type.FREE_USER))
+        dao.save(user("user-1", Type.FREE_USER))
 
         val fetched = sut.fetchUser("user-1")
 
@@ -61,7 +91,7 @@ class UserServiceTest {
 
     @Test
     fun `fetches active users inside the activity window`() {
-        repository.saveAll(
+        dao.saveAll(
             listOf(
                 userWithActivity("user-1", Instant.parse("2026-08-01T00:00:00Z")),
                 userWithActivity("user-2", Instant.parse("2026-08-03T00:00:00Z")),
@@ -79,7 +109,7 @@ class UserServiceTest {
 
     @Test
     fun `fetches only the super users`() {
-        repository.saveAll(
+        dao.saveAll(
             listOf(
                 user("user-1", Type.FREE_USER),
                 user("user-2", Type.SUPER_USER),
@@ -98,7 +128,7 @@ class UserServiceTest {
         id: String,
         lastActivity: Instant,
         type: Type = Type.FREE_USER
-    ) = org.grakovne.sideload.kindle.user.reference.domain.User(
+    ) = User(
         id = id,
         language = "en",
         type = type,

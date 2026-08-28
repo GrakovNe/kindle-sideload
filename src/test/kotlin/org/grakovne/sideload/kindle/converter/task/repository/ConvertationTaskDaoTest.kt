@@ -1,22 +1,21 @@
 package org.grakovne.sideload.kindle.converter.task.repository
 
+import org.grakovne.sideload.kindle.TestDatabase
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.time.Instant
 import java.util.UUID
 
-@DataJpaTest
-class ConvertationTaskRepositoryTest {
+class ConvertationTaskDaoTest : TestDatabase() {
 
     @Autowired
-    lateinit var repository: ConvertationTaskRepository
+    lateinit var dao: ConvertationTaskDao
 
     @Test
     fun `finds tasks created within the given window`() {
-        repository.saveAll(
+        dao.saveAll(
             listOf(
                 task(createdAt = Instant.parse("2026-08-01T00:00:00Z")),
                 task(createdAt = Instant.parse("2026-08-03T00:00:00Z")),
@@ -24,7 +23,7 @@ class ConvertationTaskRepositoryTest {
             )
         )
 
-        val found = repository.findByCreatedAtGreaterThanAndCreatedAtLessThan(
+        val found = dao.findByCreatedAtGreaterThanAndCreatedAtLessThan(
             Instant.parse("2026-08-02T00:00:00Z"),
             Instant.parse("2026-08-04T00:00:00Z")
         )
@@ -35,7 +34,7 @@ class ConvertationTaskRepositoryTest {
 
     @Test
     fun `finds active tasks created before the given instant`() {
-        repository.saveAll(
+        dao.saveAll(
             listOf(
                 task(createdAt = Instant.parse("2026-08-01T00:00:00Z"), status = ConvertationTaskStatus.ACTIVE),
                 task(createdAt = Instant.parse("2026-08-02T00:00:00Z"), status = ConvertationTaskStatus.ACTIVE),
@@ -44,7 +43,7 @@ class ConvertationTaskRepositoryTest {
             )
         )
 
-        val found = repository.findByStatusInAndCreatedAtLessThan(
+        val found = dao.findByStatusInAndCreatedAtLessThan(
             listOf(ConvertationTaskStatus.ACTIVE),
             Instant.parse("2026-08-04T00:00:00Z")
         )
@@ -61,9 +60,9 @@ class ConvertationTaskRepositoryTest {
 
     @Test
     fun `finds nothing when there are no matching tasks`() {
-        repository.save(task(createdAt = Instant.parse("2026-08-01T00:00:00Z"), status = ConvertationTaskStatus.SUCCESS))
+        dao.save(task(createdAt = Instant.parse("2026-08-01T00:00:00Z"), status = ConvertationTaskStatus.SUCCESS))
 
-        val found = repository.findByStatusInAndCreatedAtLessThan(
+        val found = dao.findByStatusInAndCreatedAtLessThan(
             listOf(ConvertationTaskStatus.ACTIVE),
             Instant.parse("2026-08-04T00:00:00Z")
         )

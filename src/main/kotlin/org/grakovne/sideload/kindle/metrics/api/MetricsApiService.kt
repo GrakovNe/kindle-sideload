@@ -1,28 +1,28 @@
 package org.grakovne.sideload.kindle.metrics.api
 
+import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
+import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
 import org.grakovne.sideload.kindle.metrics.api.domain.DailyMetrics
 import org.grakovne.sideload.kindle.metrics.api.domain.UserDailyMetrics
-import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
-import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskRepository
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
-import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskRepository
-import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportRepository
-import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
+import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskDao
+import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportDao
+import org.grakovne.sideload.kindle.user.reference.repository.UserDao
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.support.TransactionTemplate
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 
 @Service
 class MetricsApiService(
-    private val convertationTaskRepository: ConvertationTaskRepository,
-    private val transferEmailTaskRepository: TransferEmailTaskRepository,
-    private val userMessageReportRepository: UserMessageReportRepository,
-    private val userRepository: UserRepository,
+    private val convertationTaskRepository: ConvertationTaskDao,
+    private val transferEmailTaskRepository: TransferEmailTaskDao,
+    private val userMessageReportRepository: UserMessageReportDao,
+    private val userRepository: UserDao,
+    private val transactionTemplate: TransactionTemplate,
 ) {
 
-    @Transactional
     fun fetchDailyMetrics(): DailyMetrics {
         val (from, to) = dayWindow(LocalDate.now(UTC))
 
@@ -45,10 +45,9 @@ class MetricsApiService(
                 .map { (userId, messages) -> UserDailyMetrics(userId = userId, sentMessages = messages.count()) }
                 .sortedByDescending { it.sentMessages }
                 .also { users ->
-                    users
-                        .map { it.userId }
-                        .let { ids -> ids.distinct() }
-                        .forEach { id -> userRepository.touchLastActivity(id, Instant.now()) }
+                    transactionTemplate.execute {
+                        userRepository.touchLastActivity(users.map { it.userId }.distinct(), Instant.now())
+                    }
                 }
         )
     }

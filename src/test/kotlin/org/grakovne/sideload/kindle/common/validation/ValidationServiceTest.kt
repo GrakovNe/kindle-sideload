@@ -6,7 +6,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 private enum class SomeValidationError {
-    NOT_A_ZIP, TOO_LONG
+    NOT_A_ZIP,
+    TOO_LONG
 }
 
 class ValidationServiceTest {
@@ -20,9 +21,10 @@ class ValidationServiceTest {
             if (sut.length > limit) Either.Left(ValidationError(SomeValidationError.TOO_LONG)) else Either.Right(Unit)
     }
 
-    private class Svc : ValidationService<String, SomeValidationError>(
-        rules = listOf(AlwaysValid(), RejectsLongStrings(3))
-    )
+    private class Svc :
+        ValidationService<String, SomeValidationError>(
+            rules = listOf(AlwaysValid(), RejectsLongStrings(3))
+        )
 
     private val sut = Svc()
 

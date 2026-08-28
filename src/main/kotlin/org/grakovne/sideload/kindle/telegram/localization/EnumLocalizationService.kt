@@ -29,7 +29,7 @@ class EnumLocalizationService(val objectMapper: ObjectMapper) {
 
     private fun getLocalizationResource(language: Language?): InputStream {
         val resourceName = language
-            ?.let { "enums_${language}.json" }
+            ?.let { "enums_$language.json" }
             ?: "enums.json"
 
         return Path("locale").resolve(Path(resourceName)).toFile().let {

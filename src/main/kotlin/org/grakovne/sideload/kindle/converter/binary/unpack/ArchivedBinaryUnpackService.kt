@@ -9,7 +9,6 @@ import org.grakovne.sideload.kindle.converter.binary.reference.domain.BinaryErro
 import org.springframework.stereotype.Service
 import java.io.File
 
-
 @Service
 class ArchivedBinaryUnpackService(
     private val binaryProvider: ConverterBinaryProvider

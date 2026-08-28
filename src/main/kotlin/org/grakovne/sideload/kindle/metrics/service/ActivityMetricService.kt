@@ -1,8 +1,8 @@
 package org.grakovne.sideload.kindle.metrics.service
 
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
-import org.grakovne.sideload.kindle.metrics.domain.PeriodicMetrics
 import org.grakovne.sideload.kindle.metrics.domain.ActivityMetrics
+import org.grakovne.sideload.kindle.metrics.domain.PeriodicMetrics
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
 import java.time.Duration
@@ -27,13 +27,12 @@ class ActivityMetricService(
             weekly = countConvertations(MetricTimeRange.LAST_WEEK),
             yearly = countConvertations(MetricTimeRange.YEAR),
         )
-        
+
         return ActivityMetrics(
             users = activeUsers,
             fileConvertations = convertations
         )
     }
-
 
     private fun countUsers(range: MetricTimeRange) = range
         .toTimeFrame()

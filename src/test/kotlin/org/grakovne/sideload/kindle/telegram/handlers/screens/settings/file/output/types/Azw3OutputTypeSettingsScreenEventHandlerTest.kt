@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
-import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.handlers.screens.settings.file.output.Azw3ModeButton
@@ -26,6 +25,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 
 class Azw3OutputTypeSettingsScreenEventHandlerTest {
 

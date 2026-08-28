@@ -33,5 +33,4 @@ class ConversationPromptRequestedEventHandler(
     }
 
     override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> = Either.Right(Unit)
-
 }

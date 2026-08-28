@@ -48,7 +48,12 @@ class UnprocessedIncomingEventServiceTest {
         // Record the dispatch into the book-conversion handler without running its
         // real (network / bot / document) processEvent implementation.
         val bookConversion = object : BookConversionRequestHandler(
-            convertationTaskService, messageSender, bot, fileUploadProperties, buttonService, stateService
+            convertationTaskService,
+            messageSender,
+            bot,
+            fileUploadProperties,
+            buttonService,
+            stateService
         ) {
             override suspend fun processEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, Unit> {
                 bookConversionProcessInvoked = true

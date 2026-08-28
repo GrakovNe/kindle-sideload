@@ -42,7 +42,6 @@ class AsyncLoggerAppender(
                         bot.execute(SendMessage(user.id, flush()))
                         nextSendingAfter = Instant.now().plus(configurationProperties.loggingTimeout)
                     }
-
                 }
             }
     }

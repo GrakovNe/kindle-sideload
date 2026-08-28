@@ -7,8 +7,10 @@ integration tests → a few acceptance tests), no network, no real services, no 
 
 1. **No network.** Telegram, GitHub, SMTP and the `fb2c` binary are all mocked / stubbed. The bot
    never polls in tests (the library only polls once you call `getUpdates()`, which we never do).
-2. **H2 in PostgreSQL mode.** JPA + Flyway run against an in-memory H2
-   (`MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE`). No PostgreSQL needed.
+2. **Embedded PostgreSQL.** jOOQ + Flyway run against a real PostgreSQL started by
+    `io.zonky.test:embedded-postgres` (shared `TestPostgres`); the datasource url is injected
+    into every test context by `TestDatabaseContextCustomizer` (see `META-INF/spring.factories`).
+    No Docker, no external PostgreSQL needed.
 3. **Localisation files.** `LocalizationService`/`EnumLocalizationService` read `locale/*.json`
    through `Path("locale")` (working dir = project root in the Gradle test JVM), falling back to the
    classpath `*.json`. Tests may therefore use the **real** en/ru resource files — no fixtures needed.
@@ -26,9 +28,10 @@ integration tests → a few acceptance tests), no network, no real services, no 
 
 - **Unit** — plain JUnit 5 + Mockito (or hand-rolled fakes). No Spring context. Targets stateless
   services, domain objects, converters, and pure functions.
-- **Integration** — `@SpringBootTest` with H2, for services that genuinely need a JPA repository, or a
-  single service wired with its collaborators. Verifies real behaviour (queries, mapping, `Either`
-  flow) without a real DB.
+- **Integration** — `@SpringBootTest` against embedded PostgreSQL (shared base `TestDatabase`, which
+  truncates all non-Flyway tables between tests), for services that genuinely need the jOOQ DAOs, or a single
+  service wired with its collaborators. Verifies real behaviour (queries, mapping, `Either` flow)
+  without a real DB.
 - **Acceptance** — `@SpringBootTest`, full context, driving a real business scenario through the
   in-process event bus (`EventSender`) and the services, asserting the end-to-end outcome.
 
@@ -106,7 +109,7 @@ Real, testable logic:
 
 ### Block C — `converter.binary` lifecycle  (0.0% … 100.0%)
 - `ConverterBinaryProvider.provideBinaryFolder/Converter` — path building (temp dir).
-- `ConverterBinaryReferenceService` — H2 integration: `updateLatestPublishedAt` (insert vs reuse
+- `ConverterBinaryReferenceService` — embedded PostgreSQL integration: `updateLatestPublishedAt` (insert vs reuse
   latest), `fetchLatestPublishedAt`.
 - `ArchivedBinaryUnpackService.unpack` — real zip → folder (success), corrupt zip →
   `Left(UNABLE_TO_UNPACK_BINARY)`.
@@ -118,7 +121,7 @@ Real, testable logic:
 - `GitHubRelease`/`Asset` — Jackson snake_case deserialization.
 
 ### Block D — `converter.task` queue  (14.0% … 21.4%)
-- `ConvertationTaskService` — H2: `submitTask` persists ACTIVE, `fetchTasksForProcessing` returns
+- `ConvertationTaskService` — embedded PostgreSQL: `submitTask` persists ACTIVE, `fetchTasksForProcessing` returns
   active, `updateTask`.
 - `ConvertSourceFilePeriodicService.convertSourceFiles` — with mocked download/converter/event
   sender: success → SUCCESS + success event; download miss → `UnableFetchFile` → FAILED; converter
@@ -137,11 +140,11 @@ Real, testable logic:
 - `EventHandler.handleEvent` / `ReplyingEventHandler` — success/failure reply hooks fire correctly.
 
 ### Block G — `user` domain & config  (0.0% … 100.0%)
-- `UserService` — H2: `fetchOrCreateUser` (create / re-create with language), `fetchUser`,
+- `UserService` — embedded PostgreSQL: `fetchOrCreateUser` (create / re-create with language), `fetchUser`,
   `fetchActiveUsers`, `fetchSuperUsers`.
-- `UserPreferencesService` — H2: fetch-or-create defaults, `updateEmail` (valid/invalid),
+- `UserPreferencesService` — embedded PostgreSQL: fetch-or-create defaults, `updateEmail` (valid/invalid),
   `updateOutputFormat`, `updateDebugMode`, `updateAutomaticStk`.
-- `UserMessageReportService` — H2: `createReportEntry`.
+- `UserMessageReportService` — embedded PostgreSQL: `createReportEntry`.
 - `UserConverterConfigurationService` — real temp asset path: fetch (user file / default / none),
   update (valid zip / non-zip → validation error / io error), remove (present / absent).
 - `ConfigurationValidationService` + rules — zip pass, non-zip fail.
@@ -149,7 +152,7 @@ Real, testable logic:
   caches the temp file.
 
 ### Block H — `stk` (Send-to-Kindle)  (15.4% … 23.8%)
-- `TransferEmailTaskService` — H2: `submitTask` (normal, and **daily-limit** → `StkLimitExhausted`
+- `TransferEmailTaskService` — embedded PostgreSQL: `submitTask` (normal, and **daily-limit** → `StkLimitExhausted`
   when today's count ≥ limit), `fetchLatestForProcessing`, `updateTask`.
 - `StkEmailPeriodicService.stkEmail` — mocked env/prefs/mail/task: no task → no-op; success →
   SUCCESS + `StkFinishedEvent(SUCCESS)`; no e-mail → `UserEmailAbsent`; mail error → FAILED.
@@ -157,9 +160,9 @@ Real, testable logic:
   submit; auto on + null env → SKIPPED; auto off → SKIPPED.
 
 ### Block I — `shelf`  (0.0% … 100.0%)
-- `ShelfService` — H2: `fetchOrCreateShelf` (create once), `fetchUserId`, `fetchShelfContent`
+- `ShelfService` — embedded PostgreSQL: `fetchOrCreateShelf` (create once), `fetchUserId`, `fetchShelfContent`
   (joins items → env files), `fetchShelfLink`.
-- `ShelfItemService` — H2: `attachToShelf` (new / already-exists), `terminateItem` (present /
+- `ShelfItemService` — embedded PostgreSQL: `attachToShelf` (new / already-exists), `terminateItem` (present /
   absent), `provideShelfItems` (active only).
 - `ShelfContentItemConverter.apply`, `FileUrlConverter.toFileName` — name sanitisation.
 - `LocalizedTemplateProvider.provideLocalized` — existing localized template → `shelf_ru`, missing
@@ -187,9 +190,9 @@ Real, testable logic:
 - `InstantFormatter.toMessage` — fixed UTC format.
 
 ### Block K — `telegram` state & references  (0.0% … 50.0%)
-- `UserActivityStateService` — H2: `setCurrentState` (stores, null → ""), `fetchCurrentState`
+- `UserActivityStateService` — embedded PostgreSQL: `setCurrentState` (stores, null → ""), `fetchCurrentState`
   (latest / none).
-- `MessageReferenceService` — H2: `markAsProcessed`, `fetchMessage` (present / absent).
+- `MessageReferenceService` — embedded PostgreSQL: `markAsProcessed`, `fetchMessage` (present / absent).
 
 ### Block L — `telegram` handlers  (14.3% … 42.9%)
 Focus on handlers with real branching (delegating "screen" handlers are covered via their
@@ -224,7 +227,7 @@ Focus on handlers with real branching (delegating "screen" handlers are covered 
 
 ## Acceptance scenarios (end-to-end, offline)
 
-Driven through the real `EventSender` + services + H2:
+Driven through the real `EventSender` + services + embedded PostgreSQL:
 
 - **AC-1 — Convert an FB2 book.** Submit a `ConvertationTask`, run the periodic worker with a
   mocked downloader/converter returning a `ConversionResult`; assert the task becomes SUCCESS, a

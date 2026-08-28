@@ -1,24 +1,25 @@
 package org.grakovne.sideload.kindle.user.preferences.service
 
 import arrow.core.Either
+import org.grakovne.sideload.kindle.TestDatabase
+import org.grakovne.sideload.kindle.common.validation.ValidationError
 import org.grakovne.sideload.kindle.user.common.OutputFormat
 import org.grakovne.sideload.kindle.user.configuration.domain.EmailNotValidError
-import org.grakovne.sideload.kindle.user.preferences.repository.UserPreferencesRepository
+import org.grakovne.sideload.kindle.user.preferences.repository.UserPreferencesDao
+import org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationError
 import org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.springframework.beans.factory.annotation.Autowired
 import kotlin.test.assertEquals
 
-@DataJpaTest
-class UserPreferencesServiceTest {
+class UserPreferencesServiceTest : TestDatabase() {
 
     @Autowired
-    lateinit var repository: UserPreferencesRepository
+    lateinit var dao: UserPreferencesDao
 
     private val validationService: UpdateEmailValidationService = mock()
     private lateinit var sut: UserPreferencesService
@@ -26,7 +27,7 @@ class UserPreferencesServiceTest {
     @BeforeEach
     fun setUp() {
         whenever(validationService.validate(any())).thenReturn(Either.Right(Unit))
-        sut = UserPreferencesService(validationService, repository)
+        sut = UserPreferencesService(validationService, dao)
     }
 
     @Test
@@ -43,12 +44,12 @@ class UserPreferencesServiceTest {
     @Test
     fun `returns the stored preferences when present`() {
         val stored = sut.fetchPreferences("user-1")
-        repository.save(stored.copy(outputFormat = OutputFormat.AZW3))
+        dao.save(stored.copy(outputFormat = OutputFormat.AZW3))
 
         val preferences = sut.fetchPreferences("user-1")
 
         assertEquals(OutputFormat.AZW3, preferences.outputFormat)
-        assertEquals(1L, repository.count())
+        assertEquals(1L, dao.count().toLong())
     }
 
     @Test
@@ -60,11 +61,13 @@ class UserPreferencesServiceTest {
 
     @Test
     fun `reports an invalid email and keeps the previous value`() {
-        whenever(validationService.validate(any())).thenReturn(Either.Left(
-            org.grakovne.sideload.kindle.common.validation.ValidationError(
-                org.grakovne.sideload.kindle.user.preferences.service.validation.UpdateEmailValidationError.NOT_VALID_EMAIL
+        whenever(validationService.validate(any())).thenReturn(
+            Either.Left(
+                ValidationError(
+                    UpdateEmailValidationError.NOT_VALID_EMAIL
+                )
             )
-        ))
+        )
 
         val result = sut.updateEmail("user-1", "not-an-email")
 
@@ -92,5 +95,4 @@ class UserPreferencesServiceTest {
 
         assertEquals(true, sut.fetchPreferences("user-1").automaticStk)
     }
-
 }

@@ -6,5 +6,4 @@ enum class BinaryError {
     NO_NEWEST_VERSIONS,
     UNABLE_TO_UNPACK_BINARY,
     UNABLE_TO_STORE_BINARY
-
 }

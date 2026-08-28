@@ -5,7 +5,7 @@ import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.shelf.configuration.ShelfWebProperties
 import org.grakovne.sideload.kindle.shelf.domain.ShelfContentItem
 import org.grakovne.sideload.kindle.shelf.domain.ShelfReference
-import org.grakovne.sideload.kindle.shelf.repository.ShelfReferenceRepository
+import org.grakovne.sideload.kindle.shelf.repository.ShelfReferenceDao
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
 import java.util.UUID
@@ -14,7 +14,7 @@ import java.util.UUID
 class ShelfService(
     private val shelfItemService: ShelfItemService,
     private val environmentService: UserEnvironmentService,
-    private val repository: ShelfReferenceRepository,
+    private val repository: ShelfReferenceDao,
     private val shelfWebProperties: ShelfWebProperties
 ) {
 
@@ -46,17 +46,33 @@ class ShelfService(
             }
     }
 
-    fun fetchOrCreateShelf(userId: String) = repository
+    fun fetchOrCreateShelf(userId: String): ShelfReference = repository
         .findByUserId(userId)
         ?: createShelf(userId)
 
+    /**
+     * The short id is unique in the database, so uniqueness is decided by the insert rather than
+     * by a preceding lookup — a check-then-insert would still let two concurrent callers pick the
+     * same id. A rejected insert simply means the id was taken, so retry with a new one.
+     */
     private fun createShelf(userId: String): ShelfReference {
-        val entity = ShelfReference(
-            id = UUID.randomUUID(),
-            shortId = RandomStringUtils.randomAlphabetic(5),
-            userId = userId
-        )
+        repeat(SHORT_ID_ATTEMPTS) {
+            val reference = ShelfReference(
+                id = UUID.randomUUID(),
+                shortId = RandomStringUtils.randomAlphabetic(SHORT_ID_LENGTH),
+                userId = userId
+            )
 
-        return repository.save(entity)
+            repository.saveIfAbsent(reference)?.let { return it }
+        }
+
+        throw IllegalStateException(
+            "Unable to allocate a free short shelf id for user $userId in $SHORT_ID_ATTEMPTS attempts"
+        )
+    }
+
+    companion object {
+        private const val SHORT_ID_LENGTH = 5
+        private const val SHORT_ID_ATTEMPTS = 10
     }
 }

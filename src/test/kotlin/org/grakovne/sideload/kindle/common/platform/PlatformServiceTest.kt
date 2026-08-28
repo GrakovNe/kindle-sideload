@@ -19,13 +19,17 @@ class PlatformServiceTest {
     fun `returns the platform binary name for the current 64-bit host`() {
         val expected = when {
             SystemUtils.IS_OS_MAC -> "darwin-arm64"
+
             SystemUtils.IS_OS_LINUX -> when {
                 System.getProperty("os.arch").contains("arm") ||
                     System.getProperty("os.arch").contains("aarch64") -> "linux-arm64"
+
                 System.getProperty("os.arch").contains("amd64") ||
                     System.getProperty("os.arch").contains("x86_64") -> "linux-amd64"
+
                 else -> unsupportedHost()
             }
+
             else -> unsupportedHost()
         }
 

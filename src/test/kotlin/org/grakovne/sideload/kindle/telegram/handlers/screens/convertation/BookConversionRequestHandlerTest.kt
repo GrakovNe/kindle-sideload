@@ -13,7 +13,6 @@ import org.grakovne.sideload.kindle.common.BookIsTooLargeError
 import org.grakovne.sideload.kindle.common.TaskQueueingError
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
-import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 import org.grakovne.sideload.kindle.converter.FatalError
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -36,6 +35,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 
 class BookConversionRequestHandlerTest {
 

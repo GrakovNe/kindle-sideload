@@ -7,7 +7,6 @@ import com.pengrad.telegrambot.model.Chat
 import com.pengrad.telegrambot.model.Document
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
-import com.pengrad.telegrambot.model.File as TgFile
 import com.pengrad.telegrambot.request.GetFile
 import com.pengrad.telegrambot.request.SendDocument
 import com.pengrad.telegrambot.request.SendMessage
@@ -15,40 +14,41 @@ import com.pengrad.telegrambot.response.GetFileResponse
 import com.pengrad.telegrambot.response.SendResponse
 import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.KindleSideloadApplication
+import org.grakovne.sideload.kindle.NoOpScheduling
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.mail.MailSendingService
 import org.grakovne.sideload.kindle.converter.ConversionResult
 import org.grakovne.sideload.kindle.converter.ConverterService
-import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.StkLimitExhausted
+import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
 import org.grakovne.sideload.kindle.converter.task.periodic.ConvertSourceFilePeriodicService
-import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskRepository
+import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.events.core.EventSender
 import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedEvent
+import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
+import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.metrics.api.domain.DailyMetrics
 import org.grakovne.sideload.kindle.metrics.api.domain.UserDailyMetrics
 import org.grakovne.sideload.kindle.metrics.web.MetricsEndpoint
-import org.grakovne.sideload.kindle.events.internal.ConvertationFinishedStatus
-import org.grakovne.sideload.kindle.events.internal.UserEnvironmentUnnecessaryEvent
 import org.grakovne.sideload.kindle.shelf.domain.ShelfItemStatus
-import org.grakovne.sideload.kindle.shelf.repository.ShelfItemRepository
+import org.grakovne.sideload.kindle.shelf.repository.ShelfItemDao
 import org.grakovne.sideload.kindle.shelf.service.ShelfService
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTask
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
 import org.grakovne.sideload.kindle.stk.email.task.periodic.StkEmailPeriodicService
-import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskRepository
+import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskDao
 import org.grakovne.sideload.kindle.stk.email.task.service.TransferEmailTaskService
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.user.message.report.domain.UserMessageReport
-import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportRepository
+import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportDao
 import org.grakovne.sideload.kindle.user.preferences.service.UserPreferencesService
 import org.grakovne.sideload.kindle.user.reference.domain.Type
 import org.grakovne.sideload.kindle.user.reference.domain.User
-import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
+import org.grakovne.sideload.kindle.user.reference.repository.UserDao
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -60,27 +60,21 @@ import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.scheduling.TaskScheduler
-import org.springframework.scheduling.Trigger
 import java.io.File
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import com.pengrad.telegrambot.model.File as TgFile
 
 /**
  * Acceptance scenarios AC-1 … AC-6 from TEST_PLAN.md.
  *
- * The full Spring context runs against the in-memory H2 database (Flyway migrations) with the real
+ * The full Spring context runs against the embedded PostgreSQL database (Flyway migrations) with the real
  * event bus, services, repositories and localisation. Everything "outside" the application is
  * mocked so that no network connection is ever attempted:
  *
@@ -94,7 +88,7 @@ import kotlin.test.assertTrue
  * the scenarios drive the periodic services manually, so nothing runs in the background and the
  * shared database stays deterministic.
  */
-@SpringBootTest(classes = [KindleSideloadApplication::class, AcceptanceScenarioTest.NoOpScheduling::class])
+@SpringBootTest(classes = [KindleSideloadApplication::class, NoOpScheduling::class])
 class AcceptanceScenarioTest {
 
     @MockBean
@@ -113,7 +107,7 @@ class AcceptanceScenarioTest {
     private lateinit var taskService: ConvertationTaskService
 
     @Autowired
-    private lateinit var convertationTaskRepository: ConvertationTaskRepository
+    private lateinit var convertationTaskRepository: ConvertationTaskDao
 
     @Autowired
     private lateinit var convertSourceFilePeriodicService: ConvertSourceFilePeriodicService
@@ -125,7 +119,7 @@ class AcceptanceScenarioTest {
     private lateinit var stkEmailPeriodicService: StkEmailPeriodicService
 
     @Autowired
-    private lateinit var transferEmailTaskRepository: TransferEmailTaskRepository
+    private lateinit var transferEmailTaskRepository: TransferEmailTaskDao
 
     @Autowired
     private lateinit var userEnvironmentService: UserEnvironmentService
@@ -143,7 +137,7 @@ class AcceptanceScenarioTest {
     private lateinit var shelfService: ShelfService
 
     @Autowired
-    private lateinit var shelfItemRepository: ShelfItemRepository
+    private lateinit var shelfItemRepository: ShelfItemDao
 
     @Autowired
     private lateinit var configurationProperties: ConfigurationProperties
@@ -152,10 +146,10 @@ class AcceptanceScenarioTest {
     private lateinit var metricsEndpoint: MetricsEndpoint
 
     @Autowired
-    private lateinit var userMessageReportRepository: UserMessageReportRepository
+    private lateinit var userMessageReportRepository: UserMessageReportDao
 
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepository: UserDao
 
     private val replies = mutableListOf<SendMessage>()
     private val documents = mutableListOf<SendDocument>()
@@ -403,7 +397,7 @@ class AcceptanceScenarioTest {
         )
 
         // the endpoint refreshes the user activity, so the bot metrics see the user as active today
-        val activeUser = userRepository.findById(userId).get()
+        val activeUser = userRepository.findById(userId)!!
         assertTrue(activeUser.lastActivityTimestamp != null)
         assertTrue(userService.fetchActiveUsers(Instant.now().minus(Duration.ofHours(1)), Instant.now()).map { it.id }.contains(userId))
     }
@@ -469,7 +463,10 @@ class AcceptanceScenarioTest {
     }
 
     private fun tempBook(name: String): File =
-        File.createTempFile("acceptance-book-", ".$name").apply { deleteOnExit(); writeText("book bytes") }
+        File.createTempFile("acceptance-book-", ".$name").apply {
+            deleteOnExit()
+            writeText("book bytes")
+        }
 
     private fun tempOutput(name: String): File =
         File.createTempFile("acceptance-output-", ".$name").apply { writeText("output bytes") }
@@ -511,31 +508,5 @@ class AcceptanceScenarioTest {
         }
 
         return ButtonPressedEvent(update, userService.fetchOrCreateUser(userId, language))
-    }
-
-    /**
-     * A no-op scheduler: the `@EnableScheduling` post-processor schedules every `@Scheduled` method
-     * onto the `taskScheduler` bean, so pointing it at a scheduler that never fires keeps the
-     * periodic workers (the 100 ms converter, the 5 s STK and TTL workers) from running in the
-     * background and corrupting the shared test state.
-     */
-    @Configuration
-    open class NoOpScheduling {
-        // a single parked task keeps the executor alive until Spring shuts it down at context close
-        @Bean(destroyMethod = "shutdown")
-        open fun neverFiringExecutor(): ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
-
-        @Bean
-        open fun taskScheduler(executor: ScheduledThreadPoolExecutor): TaskScheduler {
-            val never: ScheduledFuture<*> = executor.schedule(Runnable {}, Long.MAX_VALUE, TimeUnit.MILLISECONDS)
-            return object : TaskScheduler {
-                override fun schedule(task: Runnable, trigger: Trigger): ScheduledFuture<*> = never
-                override fun schedule(task: Runnable, startTime: Instant): ScheduledFuture<*> = never
-                override fun scheduleAtFixedRate(task: Runnable, startTime: Instant, period: Duration): ScheduledFuture<*> = never
-                override fun scheduleAtFixedRate(task: Runnable, period: Duration): ScheduledFuture<*> = never
-                override fun scheduleWithFixedDelay(task: Runnable, startTime: Instant, delay: Duration): ScheduledFuture<*> = never
-                override fun scheduleWithFixedDelay(task: Runnable, delay: Duration): ScheduledFuture<*> = never
-            }
-        }
     }
 }

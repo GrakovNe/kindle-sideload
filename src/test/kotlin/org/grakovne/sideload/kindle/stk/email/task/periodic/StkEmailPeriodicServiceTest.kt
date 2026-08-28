@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.stk.email.task.periodic
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.common.mail.MailError
+import org.grakovne.sideload.kindle.common.mail.MailSendingService
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.events.core.Event
 import org.grakovne.sideload.kindle.events.core.EventSender
@@ -36,7 +37,7 @@ class StkEmailPeriodicServiceTest {
 
     private val userEnvironmentService = mock<UserEnvironmentService>()
     private val userPreferencesService = mock<UserPreferencesService>()
-    private val mailSendingService = mock<org.grakovne.sideload.kindle.common.mail.MailSendingService>()
+    private val mailSendingService = mock<MailSendingService>()
     private val taskService = mock<TransferEmailTaskService>()
     private val eventSender = mock<EventSender>()
 

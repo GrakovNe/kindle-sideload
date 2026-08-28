@@ -24,10 +24,10 @@ to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
 ## Tech stack
 
 - **Language / build**: Kotlin 1.9, Gradle (Kotlin DSL), Java 17 target.
-- **Framework**: Spring Boot 3.2 — `spring-boot-starter-web`, `data-jpa`, `mail`, `thymeleaf`, `flyway`.
+- **Framework**: Spring Boot 3.2 — `spring-boot-starter-web`, `jooq`, `mail`, `thymeleaf`, `flyway`.
 - **Bot**: `java-telegram-bot-api` (pengrad).
 - **Functionality / error handling**: Arrow (`Either`) for total, exception-free results.
-- **Persistence**: JPA/Hibernate + PostgreSQL (Flyway migrations).
+- **Persistence**: jOOQ (code-generated from the live schema) + PostgreSQL (Flyway migrations).
 - **Conversion**: the external `fb2c` binary, executed through a shell (`/bin/bash -c`).
 - **Zip handling**: zip4j (default configuration + converter-binary distribution archives).
 - **Text / localization**: commons-text (`StringSubstitutor`), ICU4J (transliteration), Jackson.
@@ -68,13 +68,13 @@ The codebase follows a layered, feature-oriented layout under `org.grakovne.side
 - **`events`** — a small **in-process publish/subscribe bus**. `EventSender` broadcasts an `Event` to
   all registered `EventHandler`s whose `acceptableEvents()` matches the event's `EventType`. This is
   what decouples the "a book was converted" moment from its many reactions.
-- **Domain features** (each with its own `service` / `repository` / `domain` / `configuration`):
+- **Domain features** (each with its own `service` / `dao` / `domain` / `configuration`):
   - **`converter`** — the conversion pipeline plus the binary lifecycle (`binary/...`) and the queued
     conversion task (`task/...`).
   - **`environment`** — temporary per-conversion folders (deploy / terminate / TTL).
   - **`stk`** — Send-to-Kindle: the e-mail task queue, the periodic worker, and the auto-STK event
     handler.
-  - **`shelf`** — the web shelf: JPA model, services, the REST/`@Controller` endpoint, and the
+  - **`shelf`** — the web shelf: domain model, services, the REST/`@Controller` endpoint, and the
     event handlers that attach/terminate shelf items.
   - **`user`** — user reference, per-user preferences (output format, debug, e-mail, auto-STK),
     converter configuration assets, and message reports.
@@ -112,7 +112,7 @@ Telegram Update
          └─> ButtonPressedEvent  ──(EventSender)──>  screen handler
                · "Convert Book" button  ──> ConversationPromptRequestedEventHandler
                      · user sends FB2/EPUB  ──> BookConversionRequestHandler
-                           └─> ConvertationTaskService.submitTask (JPA queue, ACTIVE)
+                            └─> ConvertationTaskService.submitTask (DB queue, ACTIVE)
 
 ConvertSourceFilePeriodicService (every 100ms)
    └─> downloads file, ConverterService.convertAndCollect
@@ -136,10 +136,18 @@ serves the (still-present) converted files until their environment expires.
 
 ### Persistence
 
-PostgreSQL, migrated by Flyway (`src/main/resources/db/migration/V1…V11`). Entities:
+PostgreSQL, migrated by Flyway (`src/main/resources/db/migration/V1…V11`). Tables:
 `user`, `user_message_report`, `converter_binary_reference`, `user_activity_state`,
 `convertation_task`, `message_reference`, `user_preferences`, `transfer_email_task`,
 `shelf_reference`, `shelf_item`.
+
+jOOQ classes are code-generated at build time straight from the Flyway migration scripts — the
+`jooq { ... }` block in `build.gradle.kts` points jOOQ's `DDLDatabase` at `db/migration/*.sql`
+with `sort = flyway`, so `db/migration` is the single source of truth and no database is needed
+to generate. The output lands in `build/generated/jooq/`, is added to the `compileKotlin` task
+rather than to a source set (which keeps it out of kotlinter), and is not committed. Each table
+has a hand-written `*Dao` (`dslContext`-backed) that services depend on instead of the generated
+types directly.
 
 ### External integrations (must be mocked in tests)
 
@@ -153,7 +161,8 @@ PostgreSQL, migrated by Flyway (`src/main/resources/db/migration/V1…V11`). Ent
 
 See [TEST_PLAN.md](TEST_PLAN.md) for the coverage strategy and test pyramid.
 
-- Tests run against **H2 in PostgreSQL mode** (Flyway migrations still apply) — no real database.
+- Tests run against an **embedded PostgreSQL** (started via `io.zonky.test:embedded-postgres`,
+  Flyway migrations still apply) — no external database or Docker needed.
 - All external integrations above are **mocked**; no test performs a real network call.
 - Line coverage is reported by **JaCoCo** (`./gradlew test jacocoTestReport`),
   report at `build/reports/jacoco/test/index.html`.

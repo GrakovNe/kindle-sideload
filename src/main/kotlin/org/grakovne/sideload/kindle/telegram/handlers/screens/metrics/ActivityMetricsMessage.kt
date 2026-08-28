@@ -10,4 +10,4 @@ data class ActivityMetricsMessage(
     val usersToday: Int,
     val usersWeekly: Int,
     val usersYearly: Int
-): Message
+) : Message

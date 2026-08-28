@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.createInstance
 
-
 @Service
 class ButtonService {
     private val buttons = Reflections(ConfigurationBuilder().forPackages("org.grakovne"))

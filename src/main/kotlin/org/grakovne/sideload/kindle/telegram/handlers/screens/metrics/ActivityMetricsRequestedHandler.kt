@@ -43,9 +43,7 @@ class ActivityMetricsRequestedHandler(
                     listOf(MainScreenButton)
                 )
             )
-
     }
 
     override fun processEvent(event: ButtonPressedEvent): Either<EventProcessingError, Unit> = Either.Right(Unit)
-
 }

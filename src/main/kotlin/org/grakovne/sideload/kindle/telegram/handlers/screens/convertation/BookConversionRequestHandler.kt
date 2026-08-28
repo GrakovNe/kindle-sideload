@@ -51,7 +51,7 @@ class BookConversionRequestHandler(
             )
     }
 
-    override  suspend fun onEvent(event: ButtonPressedEvent) = event
+    override suspend fun onEvent(event: ButtonPressedEvent) = event
         .update
         .message()
         ?.document()
@@ -82,5 +82,4 @@ class BookConversionRequestHandler(
     companion object {
         private val logger = KotlinLogging.logger { }
     }
-
 }

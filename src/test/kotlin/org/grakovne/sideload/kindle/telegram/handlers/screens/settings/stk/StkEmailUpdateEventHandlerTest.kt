@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
-import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
 import org.grakovne.sideload.kindle.telegram.sender.MessageWithNavigationSender
@@ -25,6 +24,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import org.grakovne.sideload.kindle.common.navigation.domain.Message as DomainMessage
 
 class StkEmailUpdateEventHandlerTest {
 

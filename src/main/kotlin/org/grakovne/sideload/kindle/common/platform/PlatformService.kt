@@ -5,7 +5,6 @@ import mu.KotlinLogging
 import org.apache.commons.lang3.SystemUtils
 import org.springframework.stereotype.Service
 
-
 @Service
 class PlatformService {
 
@@ -38,9 +37,13 @@ class PlatformService {
 
             return when {
                 architecture.contains("arm") -> Either.Right("linux-arm64")
+
                 architecture.contains("aarch64") -> Either.Right("linux-arm64")
+
                 architecture.contains("amd64") -> Either.Right("linux-amd64")
+
                 architecture.contains("x86_64") -> Either.Right("linux-amd64")
+
                 else -> Either.Left(PlatformError.UNABLE_TO_DEFINE_LINUX_PLATFORM)
                     .also { logger.warn { "Linux detected but arch not supported. Your arch is: $architecture" } }
             }

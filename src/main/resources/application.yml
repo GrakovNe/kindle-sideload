@@ -18,16 +18,18 @@ spring:
             enable: true
             required: true
 
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: validate
   datasource:
     platform: postgres
     url: jdbc:postgresql://localhost:5432/kindle_sideload
     username: kindle_sideload
     password: kindle_sideload
     driverClassName: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+
+  jooq:
+    sql-dialect: POSTGRES
 
 telegram:
   token: ""
@@ -71,7 +73,6 @@ logging:
   level:
     root: INFO
     org.grakovne: DEBUG
-    org.hibernate: ERROR
 
 shelf:
   web:

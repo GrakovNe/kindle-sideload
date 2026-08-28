@@ -2,9 +2,12 @@ package org.grakovne.sideload.kindle.converter
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.common.CliRunner
+import org.grakovne.sideload.kindle.common.validation.ValidationError
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinaryProperties
 import org.grakovne.sideload.kindle.converter.binary.provider.ConverterBinaryProvider
+import org.grakovne.sideload.kindle.converter.validation.ConvertationFileValidationError
 import org.grakovne.sideload.kindle.converter.validation.ConvertationFileValidationService
+import org.grakovne.sideload.kindle.environment.UnableDeployError
 import org.grakovne.sideload.kindle.environment.UserEnvironmentService
 import org.grakovne.sideload.kindle.environment.configuration.EnvironmentProperties
 import org.grakovne.sideload.kindle.user.common.OutputFormat
@@ -128,11 +131,13 @@ class Fb2ConverterServiceTest {
 
     @Test
     fun `reports file not supported when validation fails`() {
-        whenever(validationService.validate(any<File>())).thenReturn(Either.Left(
-            org.grakovne.sideload.kindle.common.validation.ValidationError(
-                org.grakovne.sideload.kindle.converter.validation.ConvertationFileValidationError.FILE_IS_NOT_SUPPORTED_TYPE
+        whenever(validationService.validate(any<File>())).thenReturn(
+            Either.Left(
+                ValidationError(
+                    ConvertationFileValidationError.FILE_IS_NOT_SUPPORTED_TYPE
+                )
             )
-        ))
+        )
 
         val result = sut.convertAndCollect("user-1", book("book.pdf"))
 
@@ -143,7 +148,7 @@ class Fb2ConverterServiceTest {
     @Test
     fun `reports an unable to deploy error when the environment deployment fails`() {
         whenever(userEnvironmentService.deployEnvironment("user-1"))
-            .thenReturn(Either.Left(org.grakovne.sideload.kindle.environment.UnableDeployError))
+            .thenReturn(Either.Left(UnableDeployError))
 
         val result = sut.convertAndCollect("user-1", book("book.fb2"))
 

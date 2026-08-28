@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.converter.binary.update
 
 import arrow.core.Either
+import org.grakovne.sideload.kindle.common.platform.PlatformError
 import org.grakovne.sideload.kindle.common.platform.PlatformService
 import org.grakovne.sideload.kindle.converter.binary.configuration.ConverterBinaryProperties
 import org.grakovne.sideload.kindle.converter.binary.fetch.GithubConverterBinaryFetchService
@@ -57,7 +58,7 @@ class ConverterBinaryUpdateServiceTest {
     @Test
     fun `wraps a platform error into the required platform binary error`() {
         whenever(platformService.fetchPlatformName())
-            .thenReturn(Either.Left(org.grakovne.sideload.kindle.common.platform.PlatformError.UNABLE_TO_DEFINE_PLATFORM))
+            .thenReturn(Either.Left(PlatformError.UNABLE_TO_DEFINE_PLATFORM))
 
         val result = sut.checkAndUpdate()
 

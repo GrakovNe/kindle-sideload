@@ -2,15 +2,15 @@ package org.grakovne.sideload.kindle.metrics.api
 
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
-import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskRepository
+import org.grakovne.sideload.kindle.converter.task.repository.ConvertationTaskDao
 import org.grakovne.sideload.kindle.metrics.api.domain.DailyMetrics
 import org.grakovne.sideload.kindle.metrics.api.domain.UserDailyMetrics
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTask
 import org.grakovne.sideload.kindle.stk.email.task.domain.TransferEmailTaskStatus
-import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskRepository
+import org.grakovne.sideload.kindle.stk.email.task.repository.TransferEmailTaskDao
 import org.grakovne.sideload.kindle.user.message.report.domain.UserMessageReport
-import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportRepository
-import org.grakovne.sideload.kindle.user.reference.repository.UserRepository
+import org.grakovne.sideload.kindle.user.message.report.repository.UserMessageReportDao
+import org.grakovne.sideload.kindle.user.reference.repository.UserDao
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -18,6 +18,8 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.transaction.support.TransactionCallback
+import org.springframework.transaction.support.TransactionTemplate
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID
@@ -26,15 +28,24 @@ import kotlin.test.assertTrue
 
 class MetricsApiServiceTest {
 
-    private val convertationTaskRepository: ConvertationTaskRepository = mock()
-    private val transferEmailTaskRepository: TransferEmailTaskRepository = mock()
-    private val userMessageReportRepository: UserMessageReportRepository = mock()
-    private val userRepository: UserRepository = mock()
+    private val convertationTaskRepository: ConvertationTaskDao = mock()
+    private val transferEmailTaskRepository: TransferEmailTaskDao = mock()
+    private val userMessageReportRepository: UserMessageReportDao = mock()
+    private val userRepository: UserDao = mock()
+    private val transactionTemplate: TransactionTemplate = mock()
+
+    init {
+        whenever(transactionTemplate.execute<Any>(any<TransactionCallback<Any>>())).thenAnswer { inv ->
+            (inv.arguments[0] as TransactionCallback<Any>).doInTransaction(mock())
+        }
+    }
+
     private val sut = MetricsApiService(
         convertationTaskRepository,
         transferEmailTaskRepository,
         userMessageReportRepository,
-        userRepository
+        userRepository,
+        transactionTemplate
     )
 
     private val now = Instant.now()
@@ -48,7 +59,9 @@ class MetricsApiServiceTest {
         whenever(transferEmailTaskRepository.findByFailReasonIsNotNullAndCreatedAtGreaterThanAndCreatedAtLessThan(any(), any())).thenReturn((1..2).map { transferEmailTask("smtp down") })
         whenever(userMessageReportRepository.findByCreatedAtGreaterThanAndCreatedAtLessThan(any(), any())).thenReturn(
             listOf(
-                message("user-1"), message("user-1"), message("user-1"),
+                message("user-1"),
+                message("user-1"),
+                message("user-1"),
                 message("user-2")
             )
         )
@@ -67,8 +80,9 @@ class MetricsApiServiceTest {
             metrics.users
         )
 
-        verify(userRepository).touchLastActivity(eq("user-1"), any<Instant>())
-        verify(userRepository).touchLastActivity(eq("user-2"), any<Instant>())
+        val idsCaptor = argumentCaptor<Collection<String>>()
+        verify(userRepository).touchLastActivity(idsCaptor.capture(), any<Instant>())
+        assertEquals(setOf("user-1", "user-2"), idsCaptor.firstValue.toSet())
     }
 
     @Test

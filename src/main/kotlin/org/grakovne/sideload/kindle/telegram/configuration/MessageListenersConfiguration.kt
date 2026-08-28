@@ -94,11 +94,9 @@ class MessageListenersConfiguration(
                     .also { logger.debug { "Raw user message has been logged: ${it.text}" } }
             }
             .also { messageReferenceService.markAsProcessed(update.fetchUniqueIdentifier()) }
-
     } catch (ex: Exception) {
         logger.error { "Unable process incoming message. See Details: $ex" }
     }
-
 
     private fun List<EventProcessingResult>.processedByNothing() =
         this.all { result -> result == EventProcessingResult.SKIPPED }

@@ -7,7 +7,6 @@ import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 import java.io.File
 
-
 @Service
 class MailSendingService(
     private val properties: EmailProperties,
