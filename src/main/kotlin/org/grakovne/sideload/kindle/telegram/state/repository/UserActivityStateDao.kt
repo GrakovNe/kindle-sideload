@@ -23,6 +23,8 @@ class UserActivityStateDao(
             .set(USER_ACTIVITY_STATE.CREATED_AT, toDb(state.createdAt))
             .onConflict(USER_ACTIVITY_STATE.ID)
             .doUpdate()
+            .set(USER_ACTIVITY_STATE.USER_ID, state.userId)
+            .set(USER_ACTIVITY_STATE.CREATED_AT, toDb(state.createdAt))
             .set(USER_ACTIVITY_STATE.ACTIVITY_STATE, state.activityState)
             .execute()
         return state

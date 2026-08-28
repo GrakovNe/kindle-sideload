@@ -32,8 +32,12 @@ class ConverterBinaryReferenceDao(
             .fetchOne()
             ?.let { it.toDomain() }
 
+    // published_at is nullable (V2__create_converter_binary_table.sql) and PostgreSQL sorts NULLs
+    // first under ORDER BY ... DESC, so such a row would win here and then fail to map to the
+    // non-nullable domain field. "Latest" means latest known publication date, so skip them.
     fun findLatest(): ConverterBinaryReference? =
         dsl.selectFrom(CONVERTER_BINARY_REFERENCE)
+            .where(CONVERTER_BINARY_REFERENCE.PUBLISHED_AT.isNotNull)
             .orderBy(CONVERTER_BINARY_REFERENCE.PUBLISHED_AT.desc())
             .limit(1)
             .fetchOne()

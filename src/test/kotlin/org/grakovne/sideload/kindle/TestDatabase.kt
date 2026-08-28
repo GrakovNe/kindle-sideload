@@ -1,10 +1,12 @@
 package org.grakovne.sideload.kindle
 
+import com.pengrad.telegrambot.TelegramBot
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.core.env.MapPropertySource
 import org.springframework.test.context.ContextConfigurationAttributes
 import org.springframework.test.context.ContextCustomizer
@@ -53,12 +55,28 @@ class TestDatabaseContextCustomizerFactory : ContextCustomizerFactory {
  * (application.yml: embedded PostgreSQL + Flyway migrations), so all tests in the JVM share
  * the same database. The [resetSharedTestDatabase] hook wipes every table before each test,
  * so subclasses can freely seed their fixtures.
+ *
+ * This is a full [SpringBootTest], not a slice, so everything "outside" the application has to
+ * be neutralised explicitly or it would run against the shared database and the network:
+ *
+ *  - [NoOpScheduling] parks the `@Scheduled` workers. Otherwise the 100 ms
+ *    `ConvertSourceFilePeriodicService` and the 5 s `StkEmailPeriodicService` would pick up the
+ *    ACTIVE tasks a test has just seeded and move them to FAILED before its assertions run, and
+ *    `ConverterBinaryPeriodicUpdateTask` would call the GitHub releases API for real;
+ *  - [TelegramBot] is mocked, because `MessageListenersConfiguration.onCreate()` registers an
+ *    updates listener in `@PostConstruct`, which starts long-polling api.telegram.org for the
+ *    whole test run.
+ *
+ * Tests that need a periodic worker to run inject it and call it directly.
  */
-@SpringBootTest
+@SpringBootTest(classes = [KindleSideloadApplication::class, NoOpScheduling::class])
 open class TestDatabase {
 
     @Autowired
     lateinit var dsl: DSLContext
+
+    @MockBean
+    private lateinit var telegramBot: TelegramBot
 
     @BeforeEach
     fun resetSharedTestDatabase() {

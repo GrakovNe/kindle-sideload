@@ -156,7 +156,9 @@ tasks.withType<Test> {
     // The tests share a single embedded PostgreSQL instance (see TestDatabase/TestPostgres),
     // so they must not run in parallel forks.
     maxParallelForks = 1
-    systemProperty("GRADLE_PARALLEL_WORKERS", 1)
+    // derived, not hardcoded: TestDatabase.checkTestDatabaseIsNotShared() reads this to fail fast
+    // if the forks are ever raised without isolating the database per fork
+    systemProperty("GRADLE_PARALLEL_WORKERS", maxParallelForks)
     finalizedBy(tasks.named("jacocoTestReport"))
 }
 

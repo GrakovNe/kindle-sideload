@@ -27,8 +27,12 @@ class ConvertationTaskDao(
             .set(CONVERTATION_TASK.FILE_NAME, task.fileName)
             .onConflict(CONVERTATION_TASK.ID)
             .doUpdate()
+            .set(CONVERTATION_TASK.USER_ID, task.userId)
+            .set(CONVERTATION_TASK.SOURCE_FILE_URL, task.sourceFileUrl)
+            .set(CONVERTATION_TASK.CREATED_AT, toDb(task.createdAt))
             .set(CONVERTATION_TASK.FAIL_REASON, task.failReason)
             .set(CONVERTATION_TASK.STATUS, task.status.name)
+            .set(CONVERTATION_TASK.FILE_NAME, task.fileName)
             .execute()
         return task
     }

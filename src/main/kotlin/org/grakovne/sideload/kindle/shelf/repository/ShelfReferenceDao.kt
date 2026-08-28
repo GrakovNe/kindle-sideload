@@ -17,12 +17,32 @@ class ShelfReferenceDao(
             .set(SHELF_REFERENCE.ID, reference.id)
             .set(SHELF_REFERENCE.SHORT_ID, reference.shortId)
             .set(SHELF_REFERENCE.USER_ID, reference.userId)
-            .onConflict(SHELF_REFERENCE.USER_ID)
+            .onConflict(SHELF_REFERENCE.ID)
             .doUpdate()
             .set(SHELF_REFERENCE.SHORT_ID, reference.shortId)
             .set(SHELF_REFERENCE.USER_ID, reference.userId)
             .execute()
         return reference
+    }
+
+    /**
+     * Claims a shelf for a user without overwriting anything. Both `user_id` and `short_id` are
+     * unique (V10__add_shelf_tables.sql), and the insert yields to either one, so this is safe to
+     * race: the winner keeps its row and the loser observes it.
+     *
+     * Returns the reference that ended up in the database for [ShelfReference.userId] — the
+     * inserted one, or the row a concurrent caller committed first. Returns null when the insert
+     * was rejected because somebody else holds [ShelfReference.shortId]; the caller is expected to
+     * retry with a freshly generated one.
+     */
+    fun saveIfAbsent(reference: ShelfReference): ShelfReference? {
+        dsl.insertInto(SHELF_REFERENCE)
+            .set(SHELF_REFERENCE.ID, reference.id)
+            .set(SHELF_REFERENCE.SHORT_ID, reference.shortId)
+            .set(SHELF_REFERENCE.USER_ID, reference.userId)
+            .onConflictDoNothing()
+            .execute()
+        return findByUserId(reference.userId)
     }
 
     fun findById(id: UUID): ShelfReference? =

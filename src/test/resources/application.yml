@@ -6,8 +6,8 @@ spring:
     host: "smtp.test.local"
     port: "587"
 
-  # The datasource url/username/password are provided by TestDatabase through
-  # @DynamicPropertySource (embedded PostgreSQL started in its companion object).
+  # The datasource url/username/password are provided by TestDatabaseContextCustomizer
+  # (registered in META-INF/spring.factories) from the shared embedded PostgreSQL in TestPostgres.
 
   flyway:
     enabled: true

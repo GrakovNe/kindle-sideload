@@ -41,3 +41,6 @@ out/
 
 ### macOS ###
 .DS_Store
+
+### Kotlin compiler daemon ###
+.kotlin/

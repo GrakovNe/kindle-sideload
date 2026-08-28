@@ -18,22 +18,26 @@ class UserService(private val userRepository: UserDao) {
         .findById(userId)
         ?: throw NoSuchElementException("User $userId not found")
 
+    /**
+     * Called on every incoming Telegram message, so it doubles as the activity tracker: the
+     * timestamp is refreshed on each call and feeds the active-user metrics
+     * ([fetchActiveUsers]). Only the type survives from the stored user.
+     */
     fun fetchOrCreateUser(userId: String, language: String): User =
         userRepository
             .findById(userId)
-            ?.let { persistUser(it.id, language, it.type, it.lastActivityTimestamp) }
-            ?: persistUser(userId, language, Type.FREE_USER, Instant.now())
+            ?.let { persistUser(it.id, language, it.type) }
+            ?: persistUser(userId, language, Type.FREE_USER)
 
     private fun persistUser(
         id: String,
         language: String,
-        type: Type,
-        lastActivityTimestamp: Instant?
+        type: Type
     ): User = User(
         id = id,
         language = language,
         type = type,
-        lastActivityTimestamp = lastActivityTimestamp
+        lastActivityTimestamp = Instant.now()
     ).let { userRepository.save(it) }
 
     companion object {

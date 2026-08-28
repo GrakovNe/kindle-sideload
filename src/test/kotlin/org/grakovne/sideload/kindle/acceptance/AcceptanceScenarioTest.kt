@@ -14,6 +14,7 @@ import com.pengrad.telegrambot.response.GetFileResponse
 import com.pengrad.telegrambot.response.SendResponse
 import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.KindleSideloadApplication
+import org.grakovne.sideload.kindle.NoOpScheduling
 import org.grakovne.sideload.kindle.common.FileDownloadService
 import org.grakovne.sideload.kindle.common.mail.MailSendingService
 import org.grakovne.sideload.kindle.converter.ConversionResult
@@ -59,19 +60,12 @@ import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.scheduling.TaskScheduler
-import org.springframework.scheduling.Trigger
 import java.io.File
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.ScheduledThreadPoolExecutor
-import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -94,7 +88,7 @@ import com.pengrad.telegrambot.model.File as TgFile
  * the scenarios drive the periodic services manually, so nothing runs in the background and the
  * shared database stays deterministic.
  */
-@SpringBootTest(classes = [KindleSideloadApplication::class, AcceptanceScenarioTest.NoOpScheduling::class])
+@SpringBootTest(classes = [KindleSideloadApplication::class, NoOpScheduling::class])
 class AcceptanceScenarioTest {
 
     @MockBean
@@ -514,31 +508,5 @@ class AcceptanceScenarioTest {
         }
 
         return ButtonPressedEvent(update, userService.fetchOrCreateUser(userId, language))
-    }
-
-    /**
-     * A no-op scheduler: the `@EnableScheduling` post-processor schedules every `@Scheduled` method
-     * onto the `taskScheduler` bean, so pointing it at a scheduler that never fires keeps the
-     * periodic workers (the 100 ms converter, the 5 s STK and TTL workers) from running in the
-     * background and corrupting the shared test state.
-     */
-    @Configuration
-    open class NoOpScheduling {
-        // a single parked task keeps the executor alive until Spring shuts it down at context close
-        @Bean(destroyMethod = "shutdown")
-        open fun neverFiringExecutor(): ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
-
-        @Bean
-        open fun taskScheduler(executor: ScheduledThreadPoolExecutor): TaskScheduler {
-            val never: ScheduledFuture<*> = executor.schedule(Runnable {}, Long.MAX_VALUE, TimeUnit.MILLISECONDS)
-            return object : TaskScheduler {
-                override fun schedule(task: Runnable, trigger: Trigger): ScheduledFuture<*> = never
-                override fun schedule(task: Runnable, startTime: Instant): ScheduledFuture<*> = never
-                override fun scheduleAtFixedRate(task: Runnable, startTime: Instant, period: Duration): ScheduledFuture<*> = never
-                override fun scheduleAtFixedRate(task: Runnable, period: Duration): ScheduledFuture<*> = never
-                override fun scheduleWithFixedDelay(task: Runnable, startTime: Instant, delay: Duration): ScheduledFuture<*> = never
-                override fun scheduleWithFixedDelay(task: Runnable, delay: Duration): ScheduledFuture<*> = never
-            }
-        }
     }
 }

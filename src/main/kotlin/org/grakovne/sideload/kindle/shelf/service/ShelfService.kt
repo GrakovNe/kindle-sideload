@@ -50,21 +50,29 @@ class ShelfService(
         .findByUserId(userId)
         ?: createShelf(userId)
 
+    /**
+     * The short id is unique in the database, so uniqueness is decided by the insert rather than
+     * by a preceding lookup — a check-then-insert would still let two concurrent callers pick the
+     * same id. A rejected insert simply means the id was taken, so retry with a new one.
+     */
     private fun createShelf(userId: String): ShelfReference {
-        val reference = ShelfReference(
-            id = UUID.randomUUID(),
-            shortId = randomUniqueShortId(),
-            userId = userId
-        )
+        repeat(SHORT_ID_ATTEMPTS) {
+            val reference = ShelfReference(
+                id = UUID.randomUUID(),
+                shortId = RandomStringUtils.randomAlphabetic(SHORT_ID_LENGTH),
+                userId = userId
+            )
 
-        return repository.save(reference)
+            repository.saveIfAbsent(reference)?.let { return it }
+        }
+
+        throw IllegalStateException(
+            "Unable to allocate a free short shelf id for user $userId in $SHORT_ID_ATTEMPTS attempts"
+        )
     }
 
-    private fun randomUniqueShortId(): String {
-        var shortId = RandomStringUtils.randomAlphabetic(5)
-        while (repository.findByShortId(shortId) != null) {
-            shortId = RandomStringUtils.randomAlphabetic(5)
-        }
-        return shortId
+    companion object {
+        private const val SHORT_ID_LENGTH = 5
+        private const val SHORT_ID_ATTEMPTS = 10
     }
 }

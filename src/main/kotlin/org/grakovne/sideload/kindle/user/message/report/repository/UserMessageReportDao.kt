@@ -23,6 +23,8 @@ class UserMessageReportDao(
             .set(USER_MESSAGE_REPORT.TEXT, report.text)
             .onConflict(USER_MESSAGE_REPORT.ID)
             .doUpdate()
+            .set(USER_MESSAGE_REPORT.USER_ID, report.userId)
+            .set(USER_MESSAGE_REPORT.CREATED_AT, toDb(report.createdAt))
             .set(USER_MESSAGE_REPORT.TEXT, report.text)
             .execute()
         return report

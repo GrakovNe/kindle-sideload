@@ -25,6 +25,9 @@ class ShelfItemDao(
             .set(SHELF_ITEM.STATUS, item.status.name)
             .onConflict(SHELF_ITEM.ID)
             .doUpdate()
+            .set(SHELF_ITEM.SHELF_ID, item.shelfId)
+            .set(SHELF_ITEM.ENVIRONMENT_ID, item.environmentId)
+            .set(SHELF_ITEM.CREATED_AT, toDb(item.createdAt))
             .set(SHELF_ITEM.STATUS, item.status.name)
             .execute()
         return item

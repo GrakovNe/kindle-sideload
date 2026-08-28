@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.Instant
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class UserServiceTest : TestDatabase() {
@@ -34,13 +35,14 @@ class UserServiceTest : TestDatabase() {
     }
 
     @Test
-    fun `reuses an existing user and refreshes the language without touching the other fields`() {
+    fun `reuses an existing user, refreshes the language and the activity timestamp, and keeps the type`() {
+        val staleActivity = Instant.parse("2026-08-01T00:00:00Z")
         dao.save(
             User(
                 id = "user-1",
                 language = "en",
                 type = Type.SUPER_USER,
-                lastActivityTimestamp = Instant.parse("2026-08-01T00:00:00Z")
+                lastActivityTimestamp = staleActivity
             )
         )
 
@@ -49,8 +51,33 @@ class UserServiceTest : TestDatabase() {
         assertEquals("user-1", user.id)
         assertEquals(Type.SUPER_USER, user.type)
         assertEquals("ru", user.language)
-        assertEquals(Instant.parse("2026-08-01T00:00:00Z"), user.lastActivityTimestamp)
+        val refreshed = assertNotNull(user.lastActivityTimestamp)
+        assertTrue(refreshed.isAfter(staleActivity))
         assertEquals(1, dao.count())
+    }
+
+    /**
+     * fetchOrCreateUser runs on every incoming Telegram message and is the only thing that keeps
+     * the activity timestamp current for the metrics screen, so a returning user has to land back
+     * inside the active window.
+     */
+    @Test
+    fun `refreshing an existing user brings it back into the active user window`() {
+        dao.save(
+            User(
+                id = "user-1",
+                language = "en",
+                type = Type.FREE_USER,
+                lastActivityTimestamp = Instant.parse("2020-01-01T00:00:00Z")
+            )
+        )
+        val from = Instant.now().minusSeconds(60)
+
+        assertEquals(emptyList(), sut.fetchActiveUsers(from, Instant.now().plusSeconds(60)).map { it.id })
+
+        sut.fetchOrCreateUser("user-1", "ru")
+
+        assertEquals(listOf("user-1"), sut.fetchActiveUsers(from, Instant.now().plusSeconds(60)).map { it.id })
     }
 
     @Test

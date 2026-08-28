@@ -141,10 +141,13 @@ PostgreSQL, migrated by Flyway (`src/main/resources/db/migration/V1…V11`). Tab
 `convertation_task`, `message_reference`, `user_preferences`, `transfer_email_task`,
 `shelf_reference`, `shelf_item`.
 
-jOOQ classes are code-generated at build time from the live schema
-(`jooq { generate { ... } }` in `build.gradle.kts`) into `build/generated/jooq/` and compiled as
-part of `mainSourceSet` — they are not committed. Each table has a hand-written `*Dao`
-(`dslContext`-backed) that services depend on instead of the generated types directly.
+jOOQ classes are code-generated at build time straight from the Flyway migration scripts — the
+`jooq { ... }` block in `build.gradle.kts` points jOOQ's `DDLDatabase` at `db/migration/*.sql`
+with `sort = flyway`, so `db/migration` is the single source of truth and no database is needed
+to generate. The output lands in `build/generated/jooq/`, is added to the `compileKotlin` task
+rather than to a source set (which keeps it out of kotlinter), and is not committed. Each table
+has a hand-written `*Dao` (`dslContext`-backed) that services depend on instead of the generated
+types directly.
 
 ### External integrations (must be mocked in tests)
 
