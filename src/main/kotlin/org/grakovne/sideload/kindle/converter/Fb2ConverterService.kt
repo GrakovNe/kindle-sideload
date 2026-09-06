@@ -54,7 +54,13 @@ class Fb2ConverterService(
 
         val environmentFiles = environment.snapshotDirectory()
         val userPreferences = userPreferencesService.fetchPreferences(userId)
-        val result = convertBook(inputFile, environment, userPreferences)
+        val result = convertBook(inputFile, environment, userPreferences, useConfiguration = true)
+            .fold(
+                ifRight = { Either.Right(it) },
+                ifLeft = { error ->
+                    fallbackToDefaultConfiguration(userId, environment, environmentFiles, inputFile, userPreferences, error)
+                }
+            )
         val outputFiles = dropVerboseFile(userPreferences, environment.snapshotDirectory() - environmentFiles.toSet())
 
         return result
@@ -83,13 +89,47 @@ class Fb2ConverterService(
         ?.find { file -> binaryProperties.configurationExtensions.any { file.extension == it } }
         ?.name
 
+    private fun fallbackToDefaultConfiguration(
+        userId: String,
+        environment: File,
+        environmentFiles: List<File>,
+        inputFile: File,
+        userPreferences: UserPreferences,
+        error: String
+    ): Either<String, String> {
+        if (environment.fetchConfigurationFileName() == null) {
+            return Either.Left(error)
+        }
+
+        logger.warn { "The conversion with the user configuration failed for user id: $userId. Retrying with the default configuration. See details: $error" }
+
+        environment
+            .snapshotDirectory()
+            .filterNot { environmentFiles.contains(it) }
+            .forEach { it.deleteRecursively() }
+
+        return convertBook(inputFile, environment, userPreferences, useConfiguration = false)
+            .fold(
+                ifRight = { converted ->
+                    logger.warn { "The conversion for user id: $userId succeeded with the default configuration" }
+                    Either.Right(converted)
+                },
+                ifLeft = { Either.Left(error) }
+            )
+    }
+
     private fun buildShellCommand(
         inputFile: File,
         environment: File,
-        userPreferences: UserPreferences
+        userPreferences: UserPreferences,
+        useConfiguration: Boolean
     ): String {
         val path = binaryProvider.provideBinaryConverter().absolutePath
-        val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
+        val configurationKey = if (useConfiguration) {
+            environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
+        } else {
+            ""
+        }
 
         return "$path $configurationKey convert --to ${userPreferences.outputFormat.converterFormat} ${binaryProperties.converterParameters} ${inputFile.name}"
             .also { logger.debug { "Shell command build: $it" } }
@@ -123,10 +163,11 @@ class Fb2ConverterService(
     private fun convertBook(
         inputFile: File,
         environment: File,
-        configuration: UserPreferences
+        configuration: UserPreferences,
+        useConfiguration: Boolean
     ) = environment
         .let {
-            val runCommand = buildShellCommand(inputFile, environment, configuration)
+            val runCommand = buildShellCommand(inputFile, environment, configuration, useConfiguration)
             logger.debug { "Running $runCommand on ${binaryProperties.shell} with args ${binaryProperties.shellArgs}" }
 
             cliRunner.runCli(
