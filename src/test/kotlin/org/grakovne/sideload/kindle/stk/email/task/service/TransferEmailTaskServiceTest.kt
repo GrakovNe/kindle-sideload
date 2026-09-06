@@ -56,7 +56,7 @@ class TransferEmailTaskServiceTest : TestDatabase() {
         val result = sut.submitTask("user-1", "env-4")
 
         assertTrue(result.isLeft())
-        assertEquals(StkLimitExhausted, result.swap().orNull())
+        assertEquals(StkLimitExhausted, result.swap().getOrNull())
         assertEquals(3, dao.count())
     }
 

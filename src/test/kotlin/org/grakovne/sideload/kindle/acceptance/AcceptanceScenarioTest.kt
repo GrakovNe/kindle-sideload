@@ -59,9 +59,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import java.io.File
 import java.time.Duration
 import java.time.Instant
@@ -91,16 +91,16 @@ import com.pengrad.telegrambot.model.File as TgFile
 @SpringBootTest(classes = [KindleSideloadApplication::class, NoOpScheduling::class])
 class AcceptanceScenarioTest {
 
-    @MockBean
+    @MockitoBean
     private lateinit var bot: TelegramBot
 
-    @MockBean
+    @MockitoBean
     private lateinit var downloadService: FileDownloadService
 
-    @MockBean
+    @MockitoBean
     private lateinit var converterService: ConverterService
 
-    @MockBean
+    @MockitoBean
     private lateinit var mailSendingService: MailSendingService
 
     @Autowired
@@ -267,7 +267,7 @@ class AcceptanceScenarioTest {
             stkEmailTaskService.submitTask(userId, "ac4-env-1")
             stkEmailTaskService.submitTask(userId, "ac4-env-2")
             val exceeded = stkEmailTaskService.submitTask(userId, "ac4-env-3")
-            assertEquals(StkLimitExhausted, exceeded.swap().orNull())
+            assertEquals(StkLimitExhausted, exceeded.swap().getOrNull())
 
             // the manual STK button (SendConvertedToEmailButton) hits the same limit and replies with the failure message
             eventSender.sendEvent(stkButtonEvent(userId, "ac4-env-3"))

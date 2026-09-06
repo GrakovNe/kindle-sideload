@@ -2,7 +2,7 @@ package org.grakovne.sideload.kindle.telegram.sender
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.sequence
+import arrow.core.raise.either
 import com.pengrad.telegrambot.model.LinkPreviewOptions
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton
@@ -57,7 +57,7 @@ class MessageWithNavigationSender(
                 is ResponseTarget.Edit ->
                     responseSender
                         .editMessage(buildEditMessage(target.chatId, target.messageId, preparedMessage, preparedNavigation))
-                        .tapLeft {
+                        .onLeft {
                             logger.warn {
                                 "Unable to edit the message ${target.messageId} in chat ${target.chatId}, " +
                                     "falling back to a new message"
@@ -89,24 +89,22 @@ class MessageWithNavigationSender(
             )
 
         val localizedNavigation =
-            navigation
-                .filter { it.isNotEmpty() }
-                .map { row ->
-                    row
-                        .map { button ->
+            either {
+                navigation
+                    .filter { it.isNotEmpty() }
+                    .map { row ->
+                        row.map { button ->
                             navigationLocalizationService.localize(button, user.language)
                                 .map { button to it }
-                        }
-                        .sequence()
-                }
-                .sequence()
-                .fold(
-                    ifLeft = {
-                        logger.error { "Unable to localize navigation $message due to: $it" }
-                        return Either.Left(LocalizationError)
-                    },
-                    ifRight = { it }
-                )
+                        }.bindAll()
+                    }
+            }.fold(
+                ifLeft = {
+                    logger.error { "Unable to localize navigation $message due to: $it" }
+                    return Either.Left(LocalizationError)
+                },
+                ifRight = { it }
+            )
 
         return Either.Right(localizedMessage to localizedNavigation)
     }

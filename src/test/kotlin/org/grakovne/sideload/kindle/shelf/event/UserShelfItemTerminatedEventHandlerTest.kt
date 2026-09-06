@@ -50,7 +50,7 @@ class UserShelfItemTerminatedEventHandlerTest {
         val result = sut.handleEvent(UserEnvironmentUnnecessaryEvent(environmentId = "env-1"))
 
         assertTrue(result.isLeft())
-        assertEquals(UnableTerminateItemError, result.swap().orNull())
+        assertEquals(UnableTerminateItemError, result.swap().getOrNull())
     }
 
     @Test

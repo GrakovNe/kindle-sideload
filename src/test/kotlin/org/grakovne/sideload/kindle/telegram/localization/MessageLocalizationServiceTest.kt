@@ -1,7 +1,5 @@
 package org.grakovne.sideload.kindle.telegram.localization
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.MainScreenRequestedMessage
@@ -21,8 +19,8 @@ class MessageLocalizationServiceTest {
 
     private val advertisingService: AdvertisingService = mock()
     private val sut = MessageLocalizationService(
-        ObjectMapper().registerKotlinModule(),
-        EnumLocalizationService(ObjectMapper().registerKotlinModule()),
+        kotlinMapper(),
+        EnumLocalizationService(kotlinMapper()),
         advertisingService
     )
 
@@ -38,7 +36,7 @@ class MessageLocalizationServiceTest {
         val result = sut.localize(UserConfigurationRequestedMessage, "en")
 
         assertTrue(result.isRight())
-        val prepared = result.orNull()!!
+        val prepared = result.getOrNull()!!
         assertEquals(
             "Upload a ZIP archive with extended configuration files\n\n" +
                 "If you're unsure about the configuration or where to find an example, " +
@@ -57,7 +55,7 @@ class MessageLocalizationServiceTest {
             "Загрузите ZIP архив с файлами расширенной конфигурации\n\n" +
                 "Если ты не знаешь, что такое конфигурация и где взять пример, " +
                 "найти подробное описание можно в расширенных настройках",
-            result.orNull()!!.text
+            result.getOrNull()!!.text
         )
     }
 
@@ -66,7 +64,7 @@ class MessageLocalizationServiceTest {
         val result = sut.localize(FileUploadFailedMessage(FileUploadFailedReason.FILE_IS_TOO_LARGE), "en")
 
         assertTrue(result.isRight())
-        assertEquals("Sorry, but your file must be below 20MB", result.orNull()!!.text)
+        assertEquals("Sorry, but your file must be below 20MB", result.getOrNull()!!.text)
     }
 
     @Test
@@ -79,7 +77,7 @@ class MessageLocalizationServiceTest {
                 "Файлы можно отправить их на настроенный E-Mail в течении 24 часов\n\n" +
                 "Чтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу " +
                 "<a href=\"https://shelf.example.com/abcde\">https://shelf.example.com/abcde</a>",
-            result.orNull()!!.text
+            result.getOrNull()!!.text
         )
     }
 
@@ -88,7 +86,7 @@ class MessageLocalizationServiceTest {
         val result = sut.localize(MainScreenRequestedMessage, "en")
 
         assertTrue(result.isRight())
-        assertTrue(result.orNull()!!.text.isNotBlank())
+        assertTrue(result.getOrNull()!!.text.isNotBlank())
     }
 
     @Test
@@ -96,7 +94,7 @@ class MessageLocalizationServiceTest {
         val result = sut.localize(UnlocalizedTestMessage(), "en")
 
         assertTrue(result.isLeft())
-        assertEquals(LocalizationError.TEMPLATE_NOT_FOUND, result.swap().orNull())
+        assertEquals(LocalizationError.TEMPLATE_NOT_FOUND, result.swap().getOrNull())
     }
 
     private class UnlocalizedTestMessage : Message

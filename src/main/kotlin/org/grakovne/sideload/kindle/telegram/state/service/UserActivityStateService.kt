@@ -32,7 +32,7 @@ class UserActivityStateService(
         return repository
             .save(entity)
             .let { Either.Right(Unit) }
-            .tap { logger.debug("Activity state for user $userId has been updated") }
+            .onRight { logger.debug("Activity state for user $userId has been updated") }
     }
 
     companion object {

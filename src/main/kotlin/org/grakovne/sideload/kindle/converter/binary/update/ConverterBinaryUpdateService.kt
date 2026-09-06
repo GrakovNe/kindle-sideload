@@ -24,7 +24,7 @@ class ConverterBinaryUpdateService(
         true -> updateIfNewerVersion()
         false -> fetchUpdatedBinary()
     }
-        .tap { converterBinaryReferenceService.updateLatestPublishedAt(it) }
+        .onRight { converterBinaryReferenceService.updateLatestPublishedAt(it) }
         .map { }
 
     private fun checkIsBinariesPresented() =

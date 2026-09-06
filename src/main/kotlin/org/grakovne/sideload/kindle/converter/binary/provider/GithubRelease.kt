@@ -1,8 +1,8 @@
 package org.grakovne.sideload.kindle.converter.binary.provider
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
-import com.fasterxml.jackson.databind.annotation.JsonNaming
+import tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
+import tools.jackson.databind.annotation.JsonNaming
 import java.time.Instant
 
 @JsonNaming(SnakeCaseStrategy::class)

@@ -6,13 +6,13 @@ import org.jooq.impl.DSL
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.core.env.MapPropertySource
 import org.springframework.test.context.ContextConfigurationAttributes
 import org.springframework.test.context.ContextCustomizer
 import org.springframework.test.context.ContextCustomizerFactory
 import org.springframework.test.context.MergedContextConfiguration
 import org.springframework.test.context.TestContext
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 
 /**
  * The single embedded PostgreSQL instance shared by every test context in the JVM. Every
@@ -75,7 +75,7 @@ open class TestDatabase {
     @Autowired
     lateinit var dsl: DSLContext
 
-    @MockBean
+    @MockitoBean
     private lateinit var telegramBot: TelegramBot
 
     @BeforeEach

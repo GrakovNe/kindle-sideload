@@ -21,7 +21,7 @@ class CliRunnerTest {
         val result = sut.runCli(shell, "-c", "echo line one; echo line two", workingDir)
 
         assertTrue(result.isRight())
-        assertEquals("line one\nline two", result.orNull())
+        assertEquals("line one\nline two", result.getOrNull())
     }
 
     @Test
@@ -31,7 +31,7 @@ class CliRunnerTest {
         val result = sut.runCli(shell, "-c", "cat marker.txt", workingDir)
 
         assertTrue(result.isRight())
-        assertEquals("i am here", result.orNull()?.trim())
+        assertEquals("i am here", result.getOrNull()?.trim())
     }
 
     @Test
@@ -39,7 +39,7 @@ class CliRunnerTest {
         val result = sut.runCli(shell, "-c", "echo boom; exit 3", workingDir)
 
         assertTrue(result.isLeft())
-        assertEquals("boom", result.swap().orNull())
+        assertEquals("boom", result.swap().getOrNull())
     }
 
     @Test
@@ -47,7 +47,7 @@ class CliRunnerTest {
         val result = sut.runCli(shell, "-c", "definitely-not-a-real-command-xyz", workingDir)
 
         assertTrue(result.isLeft())
-        val output = result.swap().orNull()
+        val output = result.swap().getOrNull()
         assertNotNull(output)
         assertTrue(output.isNotBlank())
     }
@@ -57,7 +57,7 @@ class CliRunnerTest {
         val result = sut.runCli(shell, "-c", "seq 1 3", workingDir)
 
         assertTrue(result.isRight())
-        val output = result.orNull()
+        val output = result.getOrNull()
         assertEquals("1\n2\n3", output)
         assertFalse(output.isNullOrBlank())
     }

@@ -36,7 +36,7 @@ class EpubBypassConverterServiceTest {
         val result = sut.convertAndCollect("user-1", book)
 
         assertTrue(result.isRight())
-        val conversion = result.orNull()
+        val conversion = result.getOrNull()
         assertEquals("Bypass conversion completed: book.epub", conversion?.log)
         assertEquals("env-user-1", conversion?.environmentId)
         assertEquals(listOf("book.epub"), conversion?.output?.map { it.name })
@@ -51,7 +51,7 @@ class EpubBypassConverterServiceTest {
 
         val result = sut.convertAndCollect("user-2", book)
 
-        val conversion = result.orNull()
+        val conversion = result.getOrNull()
         assertEquals("Bypass conversion completed: book.txt", conversion?.log)
         assertEquals(emptyList<File>(), conversion?.output)
     }

@@ -42,7 +42,7 @@ class GithubConverterBinaryFetchService(
         val releases = fetchReleases()
 
         val downloadLink = releases
-            .tap { logger.info { "Fetching latest version of Binary for $platform" } }
+            .onRight { logger.info { "Fetching latest version of Binary for $platform" } }
             .map { it.assets }
             .map { it.filter { asset -> asset.browserDownloadUrl.endsWith(binaryFileExtension) } }
             .map {
@@ -72,7 +72,7 @@ class GithubConverterBinaryFetchService(
             )
             ?.also { logger.info { "Fetched Binary file by url: $downloadLink" } }
             ?.let { archivedBinaryUnpackService.unpack(it) }
-            ?.tap { logger.info { "Saved unpacked Binary file" } }
+            ?.onRight { logger.info { "Saved unpacked Binary file" } }
             ?.flatMap { releases.map { it.publishedAt } }
             ?: return Either
                 .Left(BinaryError.UNABLE_TO_STORE_BINARY)

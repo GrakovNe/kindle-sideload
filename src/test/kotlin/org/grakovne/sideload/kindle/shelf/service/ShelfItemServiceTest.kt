@@ -41,7 +41,7 @@ class ShelfItemServiceTest : TestDatabase() {
         val result = sut.attachToShelf(shelfId = UUID.randomUUID(), environmentId = "env-1")
 
         assertTrue(result.isLeft())
-        assertEquals(ShelfItemError.ITEM_ALREADY_EXISTS, result.swap().orNull())
+        assertEquals(ShelfItemError.ITEM_ALREADY_EXISTS, result.swap().getOrNull())
         assertEquals(1, dao.count())
     }
 
@@ -60,7 +60,7 @@ class ShelfItemServiceTest : TestDatabase() {
         val result = sut.terminateItem("unknown-env")
 
         assertTrue(result.isLeft())
-        assertEquals(ShelfItemError.ITEM_NOT_EXISTS, result.swap().orNull())
+        assertEquals(ShelfItemError.ITEM_NOT_EXISTS, result.swap().getOrNull())
     }
 
     @Test

@@ -1,7 +1,5 @@
 package org.grakovne.sideload.kindle.telegram.localization
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.RequestProjectInfoButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.RequestSettingButton
@@ -11,15 +9,15 @@ import kotlin.test.assertTrue
 
 class NavigationLocalizationServiceTest {
 
-    private val sut = NavigationLocalizationService(ObjectMapper().registerKotlinModule(), EnumLocalizationService(ObjectMapper().registerKotlinModule()))
+    private val sut = NavigationLocalizationService(kotlinMapper(), EnumLocalizationService(kotlinMapper()))
 
     @Test
     fun `localizes the button from the english resource`() {
         val result = sut.localize(RequestSettingButton, "en")
 
         assertTrue(result.isRight())
-        assertEquals("Settings", result.orNull()!!.text)
-        assertEquals("RequestSettingButton", result.orNull()!!.action)
+        assertEquals("Settings", result.getOrNull()!!.text)
+        assertEquals("RequestSettingButton", result.getOrNull()!!.action)
     }
 
     @Test
@@ -27,8 +25,8 @@ class NavigationLocalizationServiceTest {
         val result = sut.localize(RequestProjectInfoButton, "ru")
 
         assertTrue(result.isRight())
-        assertEquals("О проекте", result.orNull()!!.text)
-        assertEquals("RequestProjectInfoButton", result.orNull()!!.action)
+        assertEquals("О проекте", result.getOrNull()!!.text)
+        assertEquals("RequestProjectInfoButton", result.getOrNull()!!.action)
     }
 
     @Test
@@ -36,7 +34,7 @@ class NavigationLocalizationServiceTest {
         val result = sut.localize(RequestSettingButton, "fr")
 
         assertTrue(result.isRight())
-        assertEquals("Settings", result.orNull()!!.text)
+        assertEquals("Settings", result.getOrNull()!!.text)
     }
 
     @Test
@@ -44,7 +42,7 @@ class NavigationLocalizationServiceTest {
         val result = sut.localize(RequestSettingButton, null)
 
         assertTrue(result.isRight())
-        assertEquals("Settings", result.orNull()!!.text)
+        assertEquals("Settings", result.getOrNull()!!.text)
     }
 
     @Test
@@ -52,7 +50,7 @@ class NavigationLocalizationServiceTest {
         val result = sut.localize(UnlocalizedTestButton(), "en")
 
         assertTrue(result.isLeft())
-        assertEquals(LocalizationError.TEMPLATE_NOT_FOUND, result.swap().orNull())
+        assertEquals(LocalizationError.TEMPLATE_NOT_FOUND, result.swap().getOrNull())
     }
 
     private class UnlocalizedTestButton : Button()

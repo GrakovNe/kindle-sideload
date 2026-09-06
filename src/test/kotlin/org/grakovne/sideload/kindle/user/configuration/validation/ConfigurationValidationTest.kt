@@ -22,6 +22,6 @@ class ConfigurationValidationTest {
         val result = sut.validate(File("configuration.txt"))
 
         assertTrue(result.isLeft())
-        assertEquals(ConfigurationValidationError.FILE_IS_NOT_ZIP_FILE, result.swap().orNull()!!.code)
+        assertEquals(ConfigurationValidationError.FILE_IS_NOT_ZIP_FILE, result.swap().getOrNull()!!.code)
     }
 }

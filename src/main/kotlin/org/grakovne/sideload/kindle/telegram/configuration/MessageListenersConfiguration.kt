@@ -1,7 +1,7 @@
 package org.grakovne.sideload.kindle.telegram.configuration
 
 import arrow.core.Either
-import arrow.core.sequence
+import arrow.core.raise.either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.Update
@@ -75,10 +75,8 @@ class MessageListenersConfiguration(
 
         val incomingMessageEvent = ButtonPressedEvent(update, user)
 
-        eventSender
-            .sendEvent(incomingMessageEvent)
-            .sequence()
-            .tap {
+        either { eventSender.sendEvent(incomingMessageEvent).bindAll() }
+            .onRight {
                 it
                     .processedByNothing()
                     .ifTrue {

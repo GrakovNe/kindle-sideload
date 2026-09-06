@@ -21,7 +21,7 @@ class UpdateEmailValidationTest {
         val result = sut.validate("user-example-com")
 
         assertTrue(result.isLeft())
-        assertEquals(UpdateEmailValidationError.NOT_VALID_EMAIL, result.swap().orNull()!!.code)
+        assertEquals(UpdateEmailValidationError.NOT_VALID_EMAIL, result.swap().getOrNull()!!.code)
     }
 
     @Test
@@ -29,7 +29,7 @@ class UpdateEmailValidationTest {
         val result = sut.validate("user@")
 
         assertTrue(result.isLeft())
-        assertEquals(UpdateEmailValidationError.NOT_VALID_EMAIL, result.swap().orNull()!!.code)
+        assertEquals(UpdateEmailValidationError.NOT_VALID_EMAIL, result.swap().getOrNull()!!.code)
     }
 
     @Test
@@ -37,6 +37,6 @@ class UpdateEmailValidationTest {
         val result = sut.validate("")
 
         assertTrue(result.isLeft())
-        assertEquals(UpdateEmailValidationError.NOT_VALID_EMAIL, result.swap().orNull()!!.code)
+        assertEquals(UpdateEmailValidationError.NOT_VALID_EMAIL, result.swap().getOrNull()!!.code)
     }
 }
