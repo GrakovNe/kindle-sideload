@@ -192,13 +192,15 @@ def render_v1(pattern, ctx, series_pad=2, author_format=None):
             return "{{ $serword }}", 'ne $series ""'
         if kw == "#abbrseries":
             capture("$series", '{{ $series := "" }}{{ with first .Series }}{{ $series = .Name }}{{ end }}')
-            capture("$abbr", '{{ $abbr := "" }}{{ range $w := splitList " " $series }}'
-                             '{{ $abbr = printf "%s%s" $abbr (lower (first (splitList "" $w))) }}{{ end }}')
+            capture("$abbr", '{{ $abbr := "" }}{{ if $series }}{{ range $w := splitList " " $series }}'
+                             '{{ if $w }}{{ $abbr = printf "%s%s" $abbr (lower (first (splitList "" $w))) }}{{ end }}'
+                             '{{ end }}{{ end }}')
             return "{{ $abbr }}", 'ne $series ""'
         if kw == "#ABBRseries":
             capture("$series", '{{ $series := "" }}{{ with first .Series }}{{ $series = .Name }}{{ end }}')
-            capture("$abbrup", '{{ $abbrup := "" }}{{ range $w := splitList " " $series }}'
-                               '{{ $abbrup = printf "%s%s" $abbrup (upper (first (splitList "" $w))) }}{{ end }}')
+            capture("$abbrup", '{{ $abbrup := "" }}{{ if $series }}{{ range $w := splitList " " $series }}'
+                               '{{ if $w }}{{ $abbrup = printf "%s%s" $abbrup (upper (first (splitList "" $w))) }}{{ end }}'
+                               '{{ end }}{{ end }}')
             return "{{ $abbrup }}", 'ne $series ""'
         if kw == "#date":
             raise KeyError("#date")

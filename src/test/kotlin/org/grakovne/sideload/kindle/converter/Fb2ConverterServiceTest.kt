@@ -17,12 +17,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.io.File
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class Fb2ConverterServiceTest {
@@ -206,6 +210,49 @@ class Fb2ConverterServiceTest {
             "${File(environment, "fbc").absolutePath}  convert --to azw8 --verbose book.fb2",
             environment
         )
+    }
+
+    @Test
+    fun `falls back to the default configuration when the user configuration fails`() {
+        File(environment, "configuration.toml").writeText("key = value")
+        whenever(validationService.validate(any<File>())).thenReturn(Either.Right(Unit))
+        whenever(cliRunner.runCli(any<String>(), any<String>(), any<String>(), any<File>()))
+            .thenAnswer {
+                File(environment, "partial.azw8").writeText("partial output")
+                Either.Left("user configuration exploded")
+            }
+            .thenAnswer {
+                File(environment, "book.azw8").writeText("azw3")
+                Either.Right("default log")
+            }
+
+        val result = sut.convertAndCollect("user-1", book("book.fb2"))
+
+        assertTrue(result.isRight())
+        assertEquals("default log", result.getOrNull()?.log)
+        assertEquals(listOf("book.azw8"), result.getOrNull()?.output?.map { it.name })
+        assertFalse(File(environment, "partial.azw8").exists())
+
+        val commands = argumentCaptor<String>()
+        verify(cliRunner, times(2)).runCli(eq("/bin/bash"), eq("-c"), commands.capture(), eq(environment))
+        assertTrue(commands.allValues[0].contains("-c configuration.toml"))
+        assertFalse(commands.allValues[1].contains("-c configuration.toml"))
+    }
+
+    @Test
+    fun `reports the original error when the fallback conversion fails too`() {
+        File(environment, "configuration.toml").writeText("key = value")
+        whenever(validationService.validate(any<File>())).thenReturn(Either.Right(Unit))
+        whenever(cliRunner.runCli(any<String>(), any<String>(), any<String>(), any<File>()))
+            .thenReturn(Either.Left("user configuration exploded"))
+            .thenReturn(Either.Left("default configuration exploded"))
+
+        val result = sut.convertAndCollect("user-1", book("book.fb2"))
+
+        assertTrue(result.isLeft())
+        val error = result.fold(ifLeft = { it }, ifRight = { throw AssertionError() })
+        assertEquals(UnableConvertFile("user configuration exploded", "fb2-env"), error)
+        verify(cliRunner, times(2)).runCli(any<String>(), any<String>(), any<String>(), any<File>())
     }
 
     private fun book(name: String) = File(tempDir, name).apply { writeText("source content") }
