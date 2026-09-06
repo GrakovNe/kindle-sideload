@@ -39,13 +39,13 @@ class Fb2ConverterServiceTest {
     private val binaryProperties = ConverterBinaryProperties().apply {
         shell = "/bin/bash"
         shellArgs = "-c"
-        converterFileName = "fb2c"
+        converterFileName = "fbc"
         configurationExtensions = listOf("toml")
         converterParameters = "--verbose"
     }
 
     private val environmentProperties = EnvironmentProperties().apply {
-        outputFileExtensions = listOf("epub", "azw3")
+        outputFileExtensions = listOf("epub", "azw8")
     }
 
     private val preferences = UserPreferences(
@@ -73,10 +73,10 @@ class Fb2ConverterServiceTest {
     fun setUp() {
         environment = File(tempDir, "fb2-env").apply { mkdirs() }
         // a converter binary that the production code marks executable
-        File(environment, "fb2c").apply { writeText("fake fb2c") }
+        File(environment, "fbc").apply { writeText("fake converter binary") }
         whenever(userEnvironmentService.deployEnvironment("user-1")).thenReturn(Either.Right(environment))
         whenever(userPreferencesService.fetchPreferences("user-1")).thenReturn(preferences)
-        whenever(binaryProvider.provideBinaryConverter()).thenReturn(File(environment, "fb2c"))
+        whenever(binaryProvider.provideBinaryConverter()).thenReturn(File(environment, "fbc"))
     }
 
     @Test
@@ -84,7 +84,7 @@ class Fb2ConverterServiceTest {
         whenever(validationService.validate(any<File>())).thenReturn(Either.Right(Unit))
         whenever(cliRunner.runCli(any<String>(), any<String>(), any<String>(), any<File>()))
             .thenAnswer {
-                File(environment, "book.azw3").writeText("converted azw3")
+                File(environment, "book.azw8").writeText("converted azw3")
                 Either.Right("conversion log")
             }
 
@@ -94,7 +94,7 @@ class Fb2ConverterServiceTest {
         val conversion = result.getOrNull()
         assertEquals("conversion log", conversion?.log)
         assertEquals("fb2-env", conversion?.environmentId)
-        assertEquals(listOf("book.azw3"), conversion?.output?.map { it.name })
+        assertEquals(listOf("book.azw8"), conversion?.output?.map { it.name })
     }
 
     @Test
@@ -102,14 +102,14 @@ class Fb2ConverterServiceTest {
         whenever(validationService.validate(any<File>())).thenReturn(Either.Right(Unit))
         whenever(cliRunner.runCli(any<String>(), any<String>(), any<String>(), any<File>()))
             .thenAnswer {
-                File(environment, "book.azw3").writeText("azw3")
-                File(environment, "book.azw3.tmp").writeText("verbose temp")
+                File(environment, "book.azw8").writeText("azw3")
+                File(environment, "book.azw8.tmp").writeText("verbose temp")
                 Either.Right("log")
             }
 
         val result = sut.convertAndCollect("user-1", book("book.fb2"))
 
-        assertEquals(listOf("book.azw3"), result.getOrNull()?.output?.map { it.name })
+        assertEquals(listOf("book.azw8"), result.getOrNull()?.output?.map { it.name })
     }
 
     @Test
@@ -119,14 +119,14 @@ class Fb2ConverterServiceTest {
         whenever(validationService.validate(any<File>())).thenReturn(Either.Right(Unit))
         whenever(cliRunner.runCli(any<String>(), any<String>(), any<String>(), any<File>()))
             .thenAnswer {
-                File(environment, "book.azw3").writeText("azw3")
-                File(environment, "book.azw3.tmp").writeText("verbose temp")
+                File(environment, "book.azw8").writeText("azw3")
+                File(environment, "book.azw8.tmp").writeText("verbose temp")
                 Either.Right("log")
             }
 
         val result = sut.convertAndCollect("user-1", book("book.fb2"))
 
-        assertEquals(setOf("book.azw3", "book.azw3.tmp"), result.getOrNull()?.output?.map { it.name }?.toSet())
+        assertEquals(setOf("book.azw8", "book.azw8.tmp"), result.getOrNull()?.output?.map { it.name }?.toSet())
     }
 
     @Test
@@ -175,7 +175,7 @@ class Fb2ConverterServiceTest {
         whenever(validationService.validate(any<File>())).thenReturn(Either.Right(Unit))
         whenever(cliRunner.runCli(any<String>(), any<String>(), any<String>(), any<File>()))
             .thenAnswer {
-                File(environment, "book.azw3").writeText("azw3")
+                File(environment, "book.azw8").writeText("azw3")
                 Either.Right("log")
             }
 
@@ -184,7 +184,7 @@ class Fb2ConverterServiceTest {
         verify(cliRunner).runCli(
             "/bin/bash",
             "-c",
-            "${File(environment, "fb2c").absolutePath} -c configuration.toml convert --to azw3 --verbose book.fb2",
+            "${File(environment, "fbc").absolutePath} -c configuration.toml convert --to azw8 --verbose book.fb2",
             environment
         )
     }
@@ -194,7 +194,7 @@ class Fb2ConverterServiceTest {
         whenever(validationService.validate(any<File>())).thenReturn(Either.Right(Unit))
         whenever(cliRunner.runCli(any<String>(), any<String>(), any<String>(), any<File>()))
             .thenAnswer {
-                File(environment, "book.azw3").writeText("azw3")
+                File(environment, "book.azw8").writeText("azw3")
                 Either.Right("log")
             }
 
@@ -203,7 +203,7 @@ class Fb2ConverterServiceTest {
         verify(cliRunner).runCli(
             "/bin/bash",
             "-c",
-            "${File(environment, "fb2c").absolutePath}  convert --to azw3 --verbose book.fb2",
+            "${File(environment, "fbc").absolutePath}  convert --to azw8 --verbose book.fb2",
             environment
         )
     }

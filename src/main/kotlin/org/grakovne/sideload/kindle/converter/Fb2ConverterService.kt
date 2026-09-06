@@ -91,7 +91,7 @@ class Fb2ConverterService(
         val path = binaryProvider.provideBinaryConverter().absolutePath
         val configurationKey = environment.fetchConfigurationFileName()?.let { "-c $it" } ?: ""
 
-        return "$path $configurationKey convert --to ${userPreferences.outputFormat.name.lowercase()} ${binaryProperties.converterParameters} ${inputFile.name}"
+        return "$path $configurationKey convert --to ${userPreferences.outputFormat.converterFormat} ${binaryProperties.converterParameters} ${inputFile.name}"
             .also { logger.debug { "Shell command build: $it" } }
     }
 

@@ -9,7 +9,7 @@
 >
 > The service will remain free and available to all users without restrictions as long as possible
 >
-> The project uses the <a href="https://github.com/rupor-github/fb2converter">fb2converter</a> under the GPL-3.0, and I would like to thank the author for his work
+> The project uses the <a href="https://github.com/rupor-github/fb2cng">fb2cng</a> under the GPL-3.0, and I would like to thank the author for his work
 > Please use the service for good and do not deprive authors of the opportunity to earn from their books
 
 ---
@@ -17,7 +17,7 @@
 ## What it is
 
 `kindle-sideload` is a Telegram bot that takes an **FB2** (or **EPUB**) file, converts it into a
-Kindle-ready format (**EPUB / KEPUB / AZW3**) using the external `fb2converter` binary, and lets the
+Kindle-ready format (**EPUB / KEPUB / AZW3**) using the external `fb2cng` (`fbc`) binary, and lets the
 user obtain the result either through a web "shelf" (download in the Kindle browser) or by sending it
 to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
 
@@ -28,7 +28,7 @@ to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
 - **Bot**: `java-telegram-bot-api` (pengrad).
 - **Functionality / error handling**: Arrow (`Either`) for total, exception-free results.
 - **Persistence**: jOOQ (code-generated from the live schema) + PostgreSQL (Flyway migrations).
-- **Conversion**: the external `fb2c` binary, executed through a shell (`/bin/bash -c`).
+- **Conversion**: the external `fbc` binary, executed through a shell (`/bin/bash -c`).
 - **Zip handling**: zip4j (default configuration + converter-binary distribution archives).
 - **Text / localization**: commons-text (`StringSubstitutor`), ICU4J (transliteration), Jackson.
 - **Async**: kotlinx-coroutines.
@@ -38,9 +38,9 @@ to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
 - **Telegram UX** — a menu-driven bot (main screen, settings, project info, metrics) with inline
   buttons, multi-step "prompts" (e.g. "send a file now") and per-user language (en/ru).
 - **Book conversion** — upload an FB2/EPUB; an EPUB is *passed through* unchanged, an FB2 is run
-  through `fb2converter`. Output format is user-selectable (EPUB / KEPUB / AZW3).
+  through `fb2cng`. Output format is user-selectable (EPUB / KEPUB / AZW3).
 - **Per-user converter configuration** — the user can upload/replace/remove a `configuration.zip`
-  (a `fb2converter` profile). A default configuration is shipped as a classpath asset.
+  (a `fb2cng` profile). A default configuration is shipped as a classpath asset.
 - **Temporary per-conversion environments** — each conversion runs in an isolated temp folder
   (unpacked user config + the book), which is terminated after a TTL and whose output files become
   downloadable.
@@ -48,7 +48,7 @@ to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
   downloads (`/download/{environmentId}/{fileUrl}`) with sanitized file names.
 - **Send-to-Kindle (STK)** — finished books can be mailed to a user-configured address; a per-user
   **daily limit** applies, and an **auto-STK** option mails the book as soon as conversion finishes.
-- **Self-updating converter** — the bot polls GitHub releases of `fb2converter`, detects the host
+- **Self-updating converter** — the bot polls GitHub releases of `fb2cng`, detects the host
   platform, and downloads/unpacks a newer binary.
 - **Activity metrics** — a super-user screen with today/week/year counts of users and conversions.
 - **Localization & ads** — message/button/enum templates in `locale/*.json` (en/ru), plus an
@@ -117,7 +117,7 @@ Telegram Update
 ConvertSourceFilePeriodicService (every 100ms)
    └─> downloads file, ConverterService.convertAndCollect
          · EPUB  ─> EpubBypassConverterService (pass-through)
-         · FB2   ─> Fb2ConverterService (CliRunner runs fb2c)
+         · FB2   ─> Fb2ConverterService (CliRunner runs fbc)
    └─> ConvertationFinishedEvent  ──(EventSender)──>
          · BookConversionFinishHandler  (reply to user, send docs)
          · ConvertationFinishedShelfEventHandler (attach to user's shelf)
@@ -154,7 +154,7 @@ types directly.
 - **Telegram** — the `TelegramBot` bean and the bot's outgoing calls.
 - **GitHub** — `RestTemplate` calls to fetch release metadata and the binary archive.
 - **SMTP** — `JavaMailSender` for STK e-mails.
-- **The `fb2c` binary** — executed via `CliRunner` (`ProcessBuilder`).
+- **The `fbc` binary** — executed via `CliRunner` (`ProcessBuilder`).
 - **Filesystem** — temporary environments, config assets, downloaded files.
 
 ## Testing
