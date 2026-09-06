@@ -68,7 +68,7 @@ class UserEnvironmentServiceTest {
         val result = sut.deployEnvironment("user-1")
 
         assertTrue(result.isRight())
-        val environment = result.orNull()!!
+        val environment = result.getOrNull()!!
         assertEquals(File(tempDir, "environments"), environment.parentFile)
         assertTrue(environment.isDirectory)
         assertTrue(File(environment, "configuration.toml").readText() == "key = value")
@@ -83,7 +83,7 @@ class UserEnvironmentServiceTest {
         val result = sut.deployEnvironment("user-1")
 
         assertTrue(result.isRight())
-        assertTrue(result.orNull()?.listFiles()?.isEmpty() == true)
+        assertTrue(result.getOrNull()?.listFiles()?.isEmpty() == true)
     }
 
     @Test

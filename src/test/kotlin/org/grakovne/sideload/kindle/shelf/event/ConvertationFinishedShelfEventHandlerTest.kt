@@ -66,7 +66,7 @@ class ConvertationFinishedShelfEventHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertEquals(UnableAttachItemError, result.swap().orNull())
+        assertEquals(UnableAttachItemError, result.swap().getOrNull())
     }
 
     @Test
@@ -76,7 +76,7 @@ class ConvertationFinishedShelfEventHandlerTest {
         )
 
         assertTrue(result.isLeft())
-        assertEquals(UnableAttachItemError, result.swap().orNull())
+        assertEquals(UnableAttachItemError, result.swap().getOrNull())
         verify(shelfService, never()).fetchOrCreateShelf(any())
     }
 

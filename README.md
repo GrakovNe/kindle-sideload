@@ -23,8 +23,8 @@ to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
 
 ## Tech stack
 
-- **Language / build**: Kotlin 1.9, Gradle (Kotlin DSL), Java 17 target.
-- **Framework**: Spring Boot 3.2 — `spring-boot-starter-web`, `jooq`, `mail`, `thymeleaf`, `flyway`.
+- **Language / build**: Kotlin 2.4, Gradle (Kotlin DSL), Java 25 toolchain.
+- **Framework**: Spring Boot 4.1 — `spring-boot-starter-web`, `jooq`, `mail`, `thymeleaf`, `flyway`, `restclient`.
 - **Bot**: `java-telegram-bot-api` (pengrad).
 - **Functionality / error handling**: Arrow (`Either`) for total, exception-free results.
 - **Persistence**: jOOQ (code-generated from the live schema) + PostgreSQL (Flyway migrations).

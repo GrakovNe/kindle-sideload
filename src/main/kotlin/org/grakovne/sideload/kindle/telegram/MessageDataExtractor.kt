@@ -9,8 +9,8 @@ fun Update.fetchUniqueIdentifier(): String {
         return this.message().messageId().toString()
     }
 
-    if (null != this.callbackQuery()) {
-        return this.callbackQuery().message().messageId().toString()
+    if (null != this.callbackQuery()?.id()) {
+        return this.callbackQuery().id()
     }
 
     logger.error { "Unable to extract unique message identifier from $this" }

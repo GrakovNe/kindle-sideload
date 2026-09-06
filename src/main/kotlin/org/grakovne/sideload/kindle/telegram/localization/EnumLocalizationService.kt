@@ -1,11 +1,11 @@
 package org.grakovne.sideload.kindle.telegram.localization
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.grakovne.sideload.kindle.common.Language
 import org.grakovne.sideload.kindle.telegram.localization.template.EnumTemplate
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 import java.io.InputStream
 import kotlin.io.path.Path
 

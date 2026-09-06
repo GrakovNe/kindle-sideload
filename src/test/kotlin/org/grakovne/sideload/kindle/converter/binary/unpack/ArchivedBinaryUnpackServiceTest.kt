@@ -47,14 +47,14 @@ class ArchivedBinaryUnpackServiceTest {
 
         val result = sut.unpack(archive)
 
-        assertEquals(BinaryError.UNABLE_TO_UNPACK_BINARY, result.swap().orNull())
+        assertEquals(BinaryError.UNABLE_TO_UNPACK_BINARY, result.swap().getOrNull())
     }
 
     @Test
     fun `reports an unpack error when the archive is missing`() {
         val result = sut.unpack(File(tempDir, "does-not-exist.zip"))
 
-        assertEquals(BinaryError.UNABLE_TO_UNPACK_BINARY, result.swap().orNull())
+        assertEquals(BinaryError.UNABLE_TO_UNPACK_BINARY, result.swap().getOrNull())
     }
 
     private fun createZip(vararg entries: Pair<String, String>): File {

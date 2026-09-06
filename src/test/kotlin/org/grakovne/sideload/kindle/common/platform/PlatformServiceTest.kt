@@ -36,7 +36,7 @@ class PlatformServiceTest {
         val result = sut.fetchPlatformName()
 
         assertTrue(result.isRight())
-        assertEquals(expected, result.orNull())
+        assertEquals(expected, result.getOrNull())
     }
 
     private fun unsupportedHost(): Nothing =

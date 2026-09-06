@@ -58,7 +58,7 @@ class Fb2ConverterService(
         val outputFiles = dropVerboseFile(userPreferences, environment.snapshotDirectory() - environmentFiles.toSet())
 
         return result
-            .tap { logger.info { "The convertation of ${book.name} for user id: $userId finished successfully. Output files are: ${outputFiles.map { it.name }}" } }
+            .onRight { logger.info { "The convertation of ${book.name} for user id: $userId finished successfully. Output files are: ${outputFiles.map { it.name }}" } }
             .map { ConversionResult(it, environment.name, outputFiles) }
             .mapLeft {
                 UnableConvertFile(

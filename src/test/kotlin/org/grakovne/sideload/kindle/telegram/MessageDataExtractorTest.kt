@@ -38,13 +38,23 @@ class MessageDataExtractorTest {
     }
 
     @Test
-    fun `fetches the unique identifier from the callback query message`() {
+    fun `fetches the unique identifier from the callback query id`() {
         whenever(update.message()).thenReturn(null)
-        val callbackWithMessage = callbackQueryWithMessage()
-        whenever(update.callbackQuery()).thenReturn(callbackWithMessage)
-        whenever(callbackMessage.messageId()).thenReturn(7)
+        whenever(update.callbackQuery()).thenReturn(callbackQuery)
+        whenever(callbackQuery.id()).thenReturn("callback-7")
 
-        assertEquals("7", update.fetchUniqueIdentifier())
+        assertEquals("callback-7", update.fetchUniqueIdentifier())
+    }
+
+    @Test
+    fun `falls back to a random uuid when the callback query has no id`() {
+        whenever(update.message()).thenReturn(null)
+        whenever(update.callbackQuery()).thenReturn(callbackQuery)
+        whenever(callbackQuery.id()).thenReturn(null)
+
+        val id = update.fetchUniqueIdentifier()
+
+        assertTrue(id.matches(Regex("[0-9a-f-]{36}")), "expected a uuid, got $id")
     }
 
     @Test

@@ -1,9 +1,9 @@
 plugins {
-    id("org.springframework.boot") version "3.5.16"
+    id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
-    id("org.jooq.jooq-codegen-gradle") version "3.19.35"
+    kotlin("jvm") version "2.4.10"
+    kotlin("plugin.spring") version "2.4.10"
+    id("org.jooq.jooq-codegen-gradle") version "3.21.8"
     id("org.jmailen.kotlinter") version "5.7.0"
     jacoco
 }
@@ -12,7 +12,9 @@ group = "org.grakovne"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 repositories {
@@ -22,16 +24,16 @@ repositories {
 dependencies {
     // DDLDatabase: jOOQ generates the classes by parsing the Flyway migration
     // scripts directly, so db/migration is the single source of truth.
-    jooqCodegen("org.jooq:jooq-meta-extensions:3.19.35")
+    jooqCodegen("org.jooq:jooq-meta-extensions:3.21.8")
 
     implementation("com.github.pengrad:java-telegram-bot-api:10.1.0")
 
-    implementation("io.arrow-kt:arrow-core:1.2.4")
+    implementation("io.arrow-kt:arrow-core:2.2.3")
     implementation("org.apache.commons:commons-text:1.15.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("tools.jackson.module:jackson-module-kotlin")
 
-    implementation("org.jooq:jooq")
-    implementation("org.jooq:jooq-kotlin")
+    implementation("org.jooq:jooq:3.21.8")
+    implementation("org.jooq:jooq-kotlin:3.21.8")
 
     implementation("net.lingala.zip4j:zip4j:2.11.6")
     implementation("org.apache.commons:commons-lang3:3.20.0")
@@ -40,12 +42,15 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
+    implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-restclient")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -56,7 +61,7 @@ dependencies {
 
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.zonky.test:embedded-postgres:2.1.0")
+    testImplementation("io.zonky.test:embedded-postgres:2.2.2")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation(kotlin("test"))
@@ -173,6 +178,6 @@ tasks.named<JacocoReport>("jacocoTestReport") {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     compilerOptions {
         freeCompilerArgs.add("-Xjsr305=strict")
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_25)
     }
 }

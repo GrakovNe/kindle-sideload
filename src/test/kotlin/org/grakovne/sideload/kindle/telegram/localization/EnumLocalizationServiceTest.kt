@@ -1,7 +1,5 @@
 package org.grakovne.sideload.kindle.telegram.localization
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingType
 import org.junit.jupiter.api.Test
@@ -9,7 +7,7 @@ import kotlin.test.assertEquals
 
 class EnumLocalizationServiceTest {
 
-    private val sut = EnumLocalizationService(ObjectMapper().registerKotlinModule())
+    private val sut = EnumLocalizationService(kotlinMapper())
 
     @Test
     fun `localizes the enum value from the english resource`() {

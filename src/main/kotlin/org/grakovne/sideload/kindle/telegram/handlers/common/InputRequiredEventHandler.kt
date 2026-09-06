@@ -29,15 +29,15 @@ abstract class InputRequiredEventHandler<T : EventProcessingError>(
         return when (getRequiredButton().any { it == requestedButton }) {
             true -> logger.info { "Received incoming message event for user ${event.user} to ${this.javaClass.simpleName}" }
                 .let { processEvent(event) }
-                .tap {
+                .onRight {
                     userActivityStateService.setCurrentState(
                         event.user.id,
                         null
                     )
                 }
                 .map { EventProcessingResult.PROCESSED }
-                .tap { logger.info { "Incoming message event for user ${event.user} has been successfully processed by ${this.javaClass.simpleName}" } }
-                .tapLeft { logger.warn { "Incoming message event for user ${event.user} has been failed by ${this.javaClass.simpleName}. See details: $it" } }
+                .onRight { logger.info { "Incoming message event for user ${event.user} has been successfully processed by ${this.javaClass.simpleName}" } }
+                .onLeft { logger.warn { "Incoming message event for user ${event.user} has been failed by ${this.javaClass.simpleName}. See details: $it" } }
 
             false -> Either.Right(EventProcessingResult.SKIPPED)
         }

@@ -28,7 +28,7 @@ class ConverterServiceTest {
 
         val result = sut.convertAndCollect("user-1", book)
 
-        assertSame(expected, result.orNull())
+        assertSame(expected, result.getOrNull())
         verifyNoInteractions(fb2Converter)
     }
 
@@ -40,7 +40,7 @@ class ConverterServiceTest {
 
         val result = sut.convertAndCollect("user-1", book)
 
-        assertSame(expected, result.orNull())
+        assertSame(expected, result.getOrNull())
         verifyNoInteractions(fb2Converter)
     }
 
@@ -52,7 +52,7 @@ class ConverterServiceTest {
 
         val result = sut.convertAndCollect("user-1", book)
 
-        assertSame(expected, result.orNull())
+        assertSame(expected, result.getOrNull())
         verifyNoInteractions(epubBypass)
     }
 

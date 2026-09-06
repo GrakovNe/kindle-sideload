@@ -1,7 +1,7 @@
 package org.grakovne.sideload.kindle.telegram.configuration
 
 import arrow.core.Either
-import arrow.core.sequence
+import arrow.core.raise.either
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.Update
@@ -19,6 +19,7 @@ import org.grakovne.sideload.kindle.telegram.fetchUserId
 import org.grakovne.sideload.kindle.telegram.handlers.UnprocessedIncomingEventService
 import org.grakovne.sideload.kindle.telegram.message.reference.domain.MessageStatus
 import org.grakovne.sideload.kindle.telegram.message.reference.service.MessageReferenceService
+import org.grakovne.sideload.kindle.telegram.sender.ResponseSender
 import org.grakovne.sideload.kindle.user.message.report.service.UserMessageReportService
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
@@ -31,7 +32,8 @@ class MessageListenersConfiguration(
     private val userMessageReportService: UserMessageReportService,
     private val unprocessedIncomingEventService: UnprocessedIncomingEventService,
     private val messageReferenceService: MessageReferenceService,
-    private val configurationProperties: ConfigurationProperties
+    private val configurationProperties: ConfigurationProperties,
+    private val responseSender: ResponseSender
 ) {
 
     @PostConstruct
@@ -51,6 +53,8 @@ class MessageListenersConfiguration(
     }
 
     private suspend fun onMessage(update: Update) = try {
+        update.callbackQuery()?.id()?.let { responseSender.answerCallbackQuery(it) }
+
         if (configurationProperties.deduplicateMessages) {
             messageReferenceService
                 .fetchMessage(update.fetchUniqueIdentifier())
@@ -71,10 +75,8 @@ class MessageListenersConfiguration(
 
         val incomingMessageEvent = ButtonPressedEvent(update, user)
 
-        eventSender
-            .sendEvent(incomingMessageEvent)
-            .sequence()
-            .tap {
+        either { eventSender.sendEvent(incomingMessageEvent).bindAll() }
+            .onRight {
                 it
                     .processedByNothing()
                     .ifTrue {

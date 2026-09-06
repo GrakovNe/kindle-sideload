@@ -52,7 +52,7 @@ class UserConverterConfigurationServiceTest {
         val result = sut.fetchConverterConfiguration("user-without-config")
 
         assertTrue(result.isRight())
-        val asset = result.orNull()
+        val asset = result.getOrNull()
         assertTrue(asset != null && asset.exists() && asset.extension == "zip")
     }
 
@@ -64,7 +64,7 @@ class UserConverterConfigurationServiceTest {
         val result = sut.updateConverterConfiguration(user, configuration)
 
         assertTrue(result.isRight())
-        val asset = result.orNull()!!
+        val asset = result.getOrNull()!!
         assertEquals(File(properties.path, "user-1/${properties.fileName}"), asset)
         assertEquals("new configuration", asset.readText())
     }

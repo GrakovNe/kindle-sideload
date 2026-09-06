@@ -91,7 +91,7 @@ class Fb2ConverterServiceTest {
         val result = sut.convertAndCollect("user-1", book("book.fb2"))
 
         assertTrue(result.isRight())
-        val conversion = result.orNull()
+        val conversion = result.getOrNull()
         assertEquals("conversion log", conversion?.log)
         assertEquals("fb2-env", conversion?.environmentId)
         assertEquals(listOf("book.azw3"), conversion?.output?.map { it.name })
@@ -109,7 +109,7 @@ class Fb2ConverterServiceTest {
 
         val result = sut.convertAndCollect("user-1", book("book.fb2"))
 
-        assertEquals(listOf("book.azw3"), result.orNull()?.output?.map { it.name })
+        assertEquals(listOf("book.azw3"), result.getOrNull()?.output?.map { it.name })
     }
 
     @Test
@@ -126,7 +126,7 @@ class Fb2ConverterServiceTest {
 
         val result = sut.convertAndCollect("user-1", book("book.fb2"))
 
-        assertEquals(setOf("book.azw3", "book.azw3.tmp"), result.orNull()?.output?.map { it.name }?.toSet())
+        assertEquals(setOf("book.azw3", "book.azw3.tmp"), result.getOrNull()?.output?.map { it.name }?.toSet())
     }
 
     @Test

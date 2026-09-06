@@ -34,8 +34,8 @@ abstract class ButtonPressedEventHandler<T : EventProcessingError>(
                     }
                     .let { processEvent(event) }
                     .map { EventProcessingResult.PROCESSED }
-                    .tap { logger.info { "Incoming message event for user ${event.user} has been successfully processed by ${this.javaClass.simpleName}" } }
-                    .tapLeft { logger.warn { "Incoming message event for user ${event.user} has been failed by ${this.javaClass.simpleName}. See details: $it" } }
+                    .onRight { logger.info { "Incoming message event for user ${event.user} has been successfully processed by ${this.javaClass.simpleName}" } }
+                    .onLeft { logger.warn { "Incoming message event for user ${event.user} has been failed by ${this.javaClass.simpleName}. See details: $it" } }
 
             false -> Either.Right(EventProcessingResult.SKIPPED)
         }

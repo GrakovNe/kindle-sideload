@@ -96,7 +96,7 @@ class ConvertationFinishedAutoStkEventHandlerTest {
         val result = sut.handleEvent(event(status = ConvertationFinishedStatus.SUCCESS, environmentId = "env-1"))
 
         assertTrue(result.isLeft())
-        assertEquals(InternalError, result.swap().orNull())
+        assertEquals(InternalError, result.swap().getOrNull())
     }
 
     private fun event(
