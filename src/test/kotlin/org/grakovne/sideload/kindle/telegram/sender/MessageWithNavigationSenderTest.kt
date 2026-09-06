@@ -1,14 +1,20 @@
 package org.grakovne.sideload.kindle.telegram.sender
 
 import arrow.core.Either
+import com.pengrad.telegrambot.model.CallbackQuery
+import com.pengrad.telegrambot.model.Chat
+import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove
+import com.pengrad.telegrambot.request.EditMessageText
 import com.pengrad.telegrambot.request.SendMessage
 import org.grakovne.sideload.kindle.common.navigation.domain.Button.Companion.buildQualifiedName
 import org.grakovne.sideload.kindle.common.navigation.domain.Message
+import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.telegram.domain.PreparedButton
 import org.grakovne.sideload.kindle.telegram.domain.PreparedMessage
+import org.grakovne.sideload.kindle.telegram.domain.error.UnableSendResponse
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.RequestProjectInfoButton
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.RequestSettingButton
 import org.grakovne.sideload.kindle.telegram.localization.LocalizationError
@@ -27,6 +33,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import com.pengrad.telegrambot.model.Message as TelegramMessage
 import org.grakovne.sideload.kindle.telegram.domain.error.LocalizationError as SendError
 
 class MessageWithNavigationSenderTest {
@@ -34,12 +41,18 @@ class MessageWithNavigationSenderTest {
     private val responseSender = mock<ResponseSender>()
     private val navigationLocalizationService = mock<NavigationLocalizationService>()
     private val messageLocalizationService = mock<MessageLocalizationService>()
+    private val configurationProperties = ConfigurationProperties()
 
     private lateinit var sut: MessageWithNavigationSender
 
     @BeforeEach
     fun setUp() {
-        sut = MessageWithNavigationSender(responseSender, navigationLocalizationService, messageLocalizationService)
+        sut = MessageWithNavigationSender(
+            responseSender,
+            navigationLocalizationService,
+            messageLocalizationService,
+            configurationProperties
+        )
     }
 
     @Test
@@ -152,6 +165,180 @@ class MessageWithNavigationSenderTest {
 
         assertEquals(Either.Left(SendError), result)
         verify(responseSender, never()).sendMessage(any<SendMessage>())
+    }
+
+    @Test
+    fun `edits the pressed message when interactive editing is enabled`() {
+        configurationProperties.interactiveMessageEditing = true
+        val message = givenMessage("Новый текст")
+        whenever(responseSender.editMessage(any<EditMessageText>())).thenReturn(Either.Right(Unit))
+
+        val result = sut.sendResponse(
+            callbackUpdate(pressedTextMessage()),
+            user(),
+            message,
+            listOf(listOf(RequestSettingButton))
+        )
+
+        assertEquals(Either.Right(Unit), result)
+        val captor = argumentCaptor<EditMessageText>()
+        verify(responseSender).editMessage(captor.capture())
+        verify(responseSender, never()).sendMessage(any<SendMessage>())
+        val edited = captor.firstValue.getParameters()
+        assertEquals("100", edited["chat_id"])
+        assertEquals(7, edited["message_id"])
+        assertEquals("Новый текст", edited["text"])
+        assertEquals("HTML", edited["parse_mode"].toString())
+        val markup = edited["reply_markup"]
+        assertTrue(markup is InlineKeyboardMarkup)
+        assertEquals(RequestSettingButton.buildQualifiedName(), markup.inlineKeyboard()[0][0].callbackData)
+    }
+
+    @Test
+    fun `sends a new message when interactive editing is disabled`() {
+        configurationProperties.interactiveMessageEditing = false
+        val message = givenMessage("Текст")
+        whenever(responseSender.sendMessage(any<SendMessage>())).thenReturn(Either.Right(Unit))
+
+        val result = sut.sendResponse(
+            callbackUpdate(pressedTextMessage()),
+            user(),
+            message,
+            listOf(listOf(RequestSettingButton))
+        )
+
+        assertEquals(Either.Right(Unit), result)
+        verify(responseSender, never()).editMessage(any<EditMessageText>())
+        verify(responseSender).sendMessage(any<SendMessage>())
+    }
+
+    @Test
+    fun `sends a new message when the update is not a callback`() {
+        configurationProperties.interactiveMessageEditing = true
+        val message = givenMessage("Текст")
+        whenever(responseSender.sendMessage(any<SendMessage>())).thenReturn(Either.Right(Unit))
+
+        val plainMessage = mock<TelegramMessage>()
+        val plainMessageChat = chatWithId(100L)
+        whenever(plainMessage.chat()).thenReturn(plainMessageChat)
+        val update = mock<Update>()
+        whenever(update.myChatMember()).thenReturn(null)
+        whenever(update.message()).thenReturn(plainMessage)
+        whenever(update.callbackQuery()).thenReturn(null)
+
+        val result = sut.sendResponse(update, user(), message, listOf(listOf(RequestSettingButton)))
+
+        assertEquals(Either.Right(Unit), result)
+        verify(responseSender, never()).editMessage(any<EditMessageText>())
+        verify(responseSender).sendMessage(any<SendMessage>())
+    }
+
+    @Test
+    fun `sends a new message when the pressed message is not a text one`() {
+        configurationProperties.interactiveMessageEditing = true
+        val message = givenMessage("Текст")
+        whenever(responseSender.sendMessage(any<SendMessage>())).thenReturn(Either.Right(Unit))
+
+        val pressedMessage = mock<TelegramMessage>()
+        whenever(pressedMessage.text()).thenReturn(null)
+        val pressedMessageChat = chatWithId(100L)
+        whenever(pressedMessage.chat()).thenReturn(pressedMessageChat)
+
+        val result = sut.sendResponse(callbackUpdate(pressedMessage), user(), message, listOf(listOf(RequestSettingButton)))
+
+        assertEquals(Either.Right(Unit), result)
+        verify(responseSender, never()).editMessage(any<EditMessageText>())
+        verify(responseSender).sendMessage(any<SendMessage>())
+    }
+
+    @Test
+    fun `falls back to a new message when the edit fails`() {
+        configurationProperties.interactiveMessageEditing = true
+        val message = givenMessage("Текст")
+        whenever(responseSender.editMessage(any<EditMessageText>())).thenReturn(Either.Left(UnableSendResponse))
+        whenever(responseSender.sendMessage(any<SendMessage>())).thenReturn(Either.Right(Unit))
+
+        val result = sut.sendResponse(
+            callbackUpdate(pressedTextMessage()),
+            user(),
+            message,
+            listOf(listOf(RequestSettingButton))
+        )
+
+        assertEquals(Either.Right(Unit), result)
+        verify(responseSender).editMessage(any<EditMessageText>())
+        verify(responseSender).sendMessage(any<SendMessage>())
+    }
+
+    @Test
+    fun `reports the failure when both the edit and the fallback send fail`() {
+        configurationProperties.interactiveMessageEditing = true
+        val message = givenMessage("Текст")
+        whenever(responseSender.editMessage(any<EditMessageText>())).thenReturn(Either.Left(UnableSendResponse))
+        whenever(responseSender.sendMessage(any<SendMessage>())).thenReturn(Either.Left(UnableSendResponse))
+
+        val result = sut.sendResponse(
+            callbackUpdate(pressedTextMessage()),
+            user(),
+            message,
+            listOf(listOf(RequestSettingButton))
+        )
+
+        assertEquals(Either.Left(UnableSendResponse), result)
+        verify(responseSender).editMessage(any<EditMessageText>())
+        verify(responseSender).sendMessage(any<SendMessage>())
+    }
+
+    @Test
+    fun `clears the keyboard when editing without navigation`() {
+        configurationProperties.interactiveMessageEditing = true
+        val message = givenMessage("Текст")
+        whenever(responseSender.editMessage(any<EditMessageText>())).thenReturn(Either.Right(Unit))
+
+        val result = sut.sendResponse(callbackUpdate(pressedTextMessage()), user(), message, emptyList())
+
+        assertEquals(Either.Right(Unit), result)
+        val captor = argumentCaptor<EditMessageText>()
+        verify(responseSender).editMessage(captor.capture())
+        val markup = captor.firstValue.getParameters()["reply_markup"]
+        assertTrue(markup is InlineKeyboardMarkup, "expected an empty inline keyboard, got ${markup?.let { it.javaClass.simpleName }}")
+        assertEquals(0, markup.inlineKeyboard().size)
+    }
+
+    private fun givenMessage(text: String): Message {
+        val message = object : Message {}
+        whenever(messageLocalizationService.localize(eq(message), any()))
+            .thenReturn(Either.Right(PreparedMessage(text, true)))
+        whenever(navigationLocalizationService.localize(eq(RequestSettingButton), any()))
+            .thenReturn(Either.Right(PreparedButton("Настройки", "RequestSettingButton")))
+        return message
+    }
+
+    private fun pressedTextMessage(): TelegramMessage {
+        val pressedMessage = mock<TelegramMessage>()
+        whenever(pressedMessage.text()).thenReturn("старый текст")
+        whenever(pressedMessage.messageId()).thenReturn(7)
+        val pressedMessageChat = chatWithId(100L)
+        whenever(pressedMessage.chat()).thenReturn(pressedMessageChat)
+        return pressedMessage
+    }
+
+    private fun callbackUpdate(pressedMessage: TelegramMessage): Update {
+        val callbackQuery = mock<CallbackQuery>()
+        whenever(callbackQuery.message()).thenReturn(pressedMessage)
+        whenever(callbackQuery.id()).thenReturn("callback-1")
+
+        val update = mock<Update>()
+        whenever(update.myChatMember()).thenReturn(null)
+        whenever(update.message()).thenReturn(null)
+        whenever(update.callbackQuery()).thenReturn(callbackQuery)
+        return update
+    }
+
+    private fun chatWithId(id: Long): Chat {
+        val chat = mock<Chat>()
+        whenever(chat.id()).thenReturn(id)
+        return chat
     }
 
     private fun user(language: String = "en") = User(

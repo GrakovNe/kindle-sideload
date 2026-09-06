@@ -35,6 +35,7 @@ telegram:
   token: ""
   level: WARN
   deduplicateMessages: true
+  interactiveMessageEditing: false
 
 ads:
   blockDelimiter: "\n\n_____\n\n"
