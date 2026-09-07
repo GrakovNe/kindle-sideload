@@ -13,6 +13,10 @@ fun Update.fetchUniqueIdentifier(): String {
         return this.callbackQuery().id()
     }
 
+    if (null != this.myChatMember()?.chat()?.id()) {
+        return "${this.myChatMember().chat().id()}-${this.myChatMember().date()}"
+    }
+
     logger.error { "Unable to extract unique message identifier from $this" }
     return UUID.randomUUID().toString()
 }

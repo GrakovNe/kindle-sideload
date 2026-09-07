@@ -58,9 +58,22 @@ class MessageDataExtractorTest {
     }
 
     @Test
+    fun `fetches the unique identifier from the my chat member`() {
+        whenever(update.message()).thenReturn(null)
+        whenever(update.callbackQuery()).thenReturn(null)
+        whenever(update.myChatMember()).thenReturn(chatMember)
+        whenever(chatMember.chat()).thenReturn(chat)
+        whenever(chat.id()).thenReturn(5L)
+        whenever(chatMember.date()).thenReturn(1788765355)
+
+        assertEquals("5-1788765355", update.fetchUniqueIdentifier())
+    }
+
+    @Test
     fun `falls back to a random uuid when there is no message and no callback`() {
         whenever(update.message()).thenReturn(null)
         whenever(update.callbackQuery()).thenReturn(null)
+        whenever(update.myChatMember()).thenReturn(null)
 
         val id = update.fetchUniqueIdentifier()
 
