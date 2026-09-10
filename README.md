@@ -174,5 +174,21 @@ See [TEST_PLAN.md](TEST_PLAN.md) for the coverage strategy and test pyramid.
 ./gradlew test             # runs the (offline) test suite
 ```
 
+### Production start with a Leyden AOT cache (JDK 25+)
+
+`tools/leyden-run.sh` starts the bot with a Project Leyden AOT cache, which roughly halves the
+startup time (about 3.0 s → 1.5 s for the Spring context). The cache is bound to the JDK build,
+OS/arch and classpath, so it is produced **on the target machine**: the script extracts the jar,
+runs a short training pass (context refresh, then exit; the Telegram token is overridden so no real
+updates are consumed) and starts the app. Training is repeated automatically whenever the jar is
+newer than the cache, so a deploy is still just "copy the jar and restart".
+
+```
+./gradlew bootJar
+scp build/libs/kindle-sideload-0.0.1-SNAPSHOT.jar server:/opt/kindle-sideload/app.jar
+# on the server, from the working directory that holds locale/, fb2_converter/ etc.:
+tools/leyden-run.sh app.jar          # JAVA_HOME, HEAP_MAX and JAVA_OPTS are honoured
+```
+
 > ⚠️ `src/main/resources/application.yml` contains real credentials (Telegram token, SMTP, DB).
 > Do not commit changes that make these worse; prefer environment overrides in production.
