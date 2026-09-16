@@ -1,6 +1,7 @@
 package org.grakovne.sideload.kindle.common
 
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import kotlin.test.assertEquals
@@ -60,5 +61,26 @@ class CliRunnerTest {
         val output = result.getOrNull()
         assertEquals("1\n2\n3", output)
         assertFalse(output.isNullOrBlank())
+    }
+
+    @Test
+    @Timeout(30)
+    fun `does not deadlock when the command writes more than the os pipe buffer`() {
+        // A chatty converter (e.g. fb2cng on a messy book) writes far more than the ~64 KiB
+        // pipe buffer. Reading the output only after waitFor() deadlocks the child on write,
+        // so runCli must drain the stream while the process runs.
+        val result = sut.runCli(
+            shell,
+            "-c",
+            "for i in \$(seq 1 40000); do echo \"line \$i padded out to exceed the pipe buffer\"; echo \"warn \$i\" 1>&2; done",
+            workingDir
+        )
+
+        assertTrue(result.isRight())
+        val output = result.getOrNull()!!
+        val lines = output.lines()
+        assertEquals(80000, lines.size, "both stdout and stderr must be captured in full")
+        assertTrue(lines.contains("line 40000 padded out to exceed the pipe buffer"))
+        assertTrue(lines.contains("warn 40000"))
     }
 }

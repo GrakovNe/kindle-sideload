@@ -21,17 +21,24 @@ class CliRunner {
             .redirectErrorStream(true)
             .start()
             .also { logger.debug { "Started a executable process ${it.pid()}" } }
-            .also { it.waitFor() }
 
-        return if (process.exitValue() == 0) {
+        // Drain the merged stdout/stderr before waiting. The stream is backed by a bounded OS
+        // pipe: a chatty converter that writes more than the pipe buffer blocks on write, so
+        // waiting for the exit code first would deadlock the process (and the shared scheduler).
+        val output = BufferedReader(InputStreamReader(process.inputStream))
+            .use { it.readLines() }
+            .joinToString("\n")
+
+        val exitCode = process.waitFor()
+
+        return if (exitCode == 0) {
             logger.debug { "Executable process ${process.pid()} has been finished successfully. Exit code = 0" }
-            Either.Right(BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n"))
+            Either.Right(output)
         } else {
-            val errorResult = BufferedReader(InputStreamReader(process.inputStream)).readLines().joinToString("\n")
-            logger.error { "Executable process ${process.pid()} has been failed. Exit code = ${process.exitValue()}" }
-            logger.error { "Executable process ${process.pid()} error output is: $errorResult" }
+            logger.error { "Executable process ${process.pid()} has been failed. Exit code = $exitCode" }
+            logger.error { "Executable process ${process.pid()} error output is: $output" }
 
-            Either.Left(errorResult)
+            Either.Left(output)
         }
     }
 
