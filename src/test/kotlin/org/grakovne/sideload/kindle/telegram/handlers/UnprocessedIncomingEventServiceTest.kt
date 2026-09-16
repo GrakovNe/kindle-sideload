@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.runBlocking
 import org.grakovne.sideload.kindle.common.FileUploadFailedError
+import org.grakovne.sideload.kindle.common.TaskQueueingError
 import org.grakovne.sideload.kindle.common.configuration.FileUploadProperties
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.converter.task.service.ConvertationTaskService
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFalse
@@ -39,6 +39,7 @@ class UnprocessedIncomingEventServiceTest {
     private val message: Message = mock()
 
     private var bookConversionProcessInvoked = false
+    private var bookConversionProcessResult: Either<FileUploadFailedError, Unit> = Either.Right(Unit)
     private lateinit var sut: UnprocessedIncomingEventService
 
     @BeforeEach
@@ -57,22 +58,36 @@ class UnprocessedIncomingEventServiceTest {
         ) {
             override suspend fun processEvent(event: ButtonPressedEvent): Either<FileUploadFailedError, Unit> {
                 bookConversionProcessInvoked = true
-                return Either.Right(Unit)
+                return bookConversionProcessResult
             }
         }
         sut = UnprocessedIncomingEventService(mainScreen, bookConversion)
     }
 
     @Test
-    fun `routs a document message to the book conversion handler`() {
+    fun `routs a document message to the book conversion handler and replies on success`() {
         whenever(update.message()).thenReturn(message)
         whenever(message.document()).thenReturn(mock<Document>())
+        bookConversionProcessResult = Either.Right(Unit)
         val event = ButtonPressedEvent(update, User("user-1", "en", Type.FREE_USER, null))
 
         runBlocking { sut.handle(event) }
 
         assertTrue(bookConversionProcessInvoked, "book conversion handler should process a document message")
-        verify(messageSender, never()).sendResponse(any<Update>(), any(), any(), any())
+        verify(messageSender).sendResponse(any<Update>(), any(), any(), any())
+    }
+
+    @Test
+    fun `replies with a failure when the document conversion cannot be queued`() {
+        whenever(update.message()).thenReturn(message)
+        whenever(message.document()).thenReturn(mock<Document>())
+        bookConversionProcessResult = Either.Left(TaskQueueingError)
+        val event = ButtonPressedEvent(update, User("user-1", "en", Type.FREE_USER, null))
+
+        runBlocking { sut.handle(event) }
+
+        assertTrue(bookConversionProcessInvoked, "book conversion handler should process a document message")
+        verify(messageSender).sendResponse(any<Update>(), any(), any(), any())
     }
 
     @Test

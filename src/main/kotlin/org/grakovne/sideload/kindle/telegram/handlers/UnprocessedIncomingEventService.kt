@@ -13,12 +13,15 @@ class UnprocessedIncomingEventService(
 ) {
 
     suspend fun handle(event: ButtonPressedEvent) {
-        event
-            .update
-            .message()
-            ?.document()
-            ?.let { bookConversionRequestHandler.processEvent(event) }
-            ?: mainScreenRequestedEventListener.sendSuccessfulResponse(event)
+        if (event.update.message()?.document() == null) {
+            mainScreenRequestedEventListener.sendSuccessfulResponse(event)
+            return
+        }
+
+        bookConversionRequestHandler
+            .processEvent(event)
+            .onRight { bookConversionRequestHandler.sendSuccessfulResponse(event) }
+            .onLeft { bookConversionRequestHandler.sendFailureResponse(event, it) }
     }
 
     companion object {
