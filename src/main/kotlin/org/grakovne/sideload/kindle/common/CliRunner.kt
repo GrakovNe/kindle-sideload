@@ -15,8 +15,15 @@ class CliRunner {
         shell: String,
         shellArgs: String,
         command: String,
+        directory: File
+    ): Either<String, String> = runCli(shell, shellArgs, command, directory, DEFAULT_TIMEOUT)
+
+    fun runCli(
+        shell: String,
+        shellArgs: String,
+        command: String,
         directory: File,
-        timeout: Duration = DEFAULT_TIMEOUT
+        timeout: Duration
     ): Either<String, String> {
         val process = ProcessBuilder(shell, shellArgs, command)
             .directory(directory)
