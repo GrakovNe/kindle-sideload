@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import java.time.Duration
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -82,5 +83,30 @@ class CliRunnerTest {
         assertEquals(80000, lines.size, "both stdout and stderr must be captured in full")
         assertTrue(lines.contains("line 40000 padded out to exceed the pipe buffer"))
         assertTrue(lines.contains("warn 40000"))
+    }
+
+    @Test
+    @Timeout(20)
+    fun `kills the process and returns left when it runs past the timeout`() {
+        // A wedged converter (e.g. fbc stuck on a malformed book) must not block the shared
+        // scheduler thread forever: runCli bounds the wait and force-kills the child on timeout.
+        val started = System.nanoTime()
+
+        val result = sut.runCli(shell, "-c", "sleep 30", workingDir, timeout = Duration.ofMillis(500))
+
+        val elapsedMillis = (System.nanoTime() - started) / 1_000_000
+        assertTrue(result.isLeft())
+        assertTrue(result.swap().getOrNull()!!.contains("timed out"))
+        assertTrue(elapsedMillis < 10_000, "runCli returned only after ${elapsedMillis}ms instead of killing the child")
+    }
+
+    @Test
+    @Timeout(20)
+    fun `returns the partial output of a process killed on timeout`() {
+        val result = sut.runCli(shell, "-c", "echo partial-marker; sleep 30", workingDir, timeout = Duration.ofMillis(1_000))
+
+        assertTrue(result.isLeft())
+        val left = result.swap().getOrNull()!!
+        assertTrue(left.contains("partial-marker"), "expected the output written before the hang to be captured, got: $left")
     }
 }

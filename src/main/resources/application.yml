@@ -31,6 +31,22 @@ spring:
   jooq:
     sql-dialect: POSTGRES
 
+  # All @Scheduled workers (the 100ms conversion queue, the STK and TTL workers, the hourly
+  # converter-binary update) share this pool. More than one thread so a single slow worker can
+  # never starve the others; the binary-update task used to hang the only scheduler thread.
+  task:
+    scheduling:
+      pool:
+        size: 4
+
+# Bounds every outbound HTTP call (GitHub release checks, Telegram file downloads) so a stalled
+# connection fails fast instead of parking a scheduler thread forever. read-timeout is a
+# per-read inactivity timeout, so large book downloads that stream steadily are not cut off.
+http:
+  client:
+    connect-timeout: 5s
+    read-timeout: 60s
+
 telegram:
   token: ""
   level: WARN

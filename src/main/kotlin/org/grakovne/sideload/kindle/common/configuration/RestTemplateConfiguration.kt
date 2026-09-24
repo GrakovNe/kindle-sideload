@@ -5,8 +5,13 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class RestTemplateConfiguration {
+class RestTemplateConfiguration(
+    private val properties: OutboundHttpClientProperties
+) {
 
     @Bean
-    fun restTemplate(builder: RestTemplateBuilder) = builder.build()
+    fun restTemplate(builder: RestTemplateBuilder) = builder
+        .connectTimeout(properties.connectTimeout)
+        .readTimeout(properties.readTimeout)
+        .build()
 }
