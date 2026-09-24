@@ -30,10 +30,11 @@ class RestTemplateConfigurationTest {
             .also { it.start() }
 
         try {
-            val restTemplate = RestTemplateConfiguration(
-                Duration.ofMillis(500),
-                Duration.ofMillis(500)
-            ).restTemplate(RestTemplateBuilder())
+            val properties = OutboundHttpClientProperties().apply {
+                connectTimeout = Duration.ofMillis(500)
+                readTimeout = Duration.ofMillis(500)
+            }
+            val restTemplate = RestTemplateConfiguration(properties).restTemplate(RestTemplateBuilder())
 
             assertFailsWith<ResourceAccessException> {
                 restTemplate.getForObject("http://127.0.0.1:${server.localPort}/", String::class.java)
