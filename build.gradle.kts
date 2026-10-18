@@ -1,9 +1,9 @@
 plugins {
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.4.10"
-    kotlin("plugin.spring") version "2.4.10"
-    id("org.jooq.jooq-codegen-gradle") version "3.21.8"
+    kotlin("jvm") version "2.4.21"
+    kotlin("plugin.spring") version "2.4.21"
+    id("org.jooq.jooq-codegen-gradle") version "3.21.9"
     id("org.jmailen.kotlinter") version "5.7.0"
     jacoco
 }
@@ -24,19 +24,19 @@ repositories {
 dependencies {
     // DDLDatabase: jOOQ generates the classes by parsing the Flyway migration
     // scripts directly, so db/migration is the single source of truth.
-    jooqCodegen("org.jooq:jooq-meta-extensions:3.21.8")
+    jooqCodegen("org.jooq:jooq-meta-extensions:3.21.9")
 
-    implementation("com.github.pengrad:java-telegram-bot-api:10.1.0")
+    implementation("com.github.pengrad:java-telegram-bot-api:10.3.0")
 
     implementation("io.arrow-kt:arrow-core:2.2.3")
     implementation("org.apache.commons:commons-text:1.15.0")
     implementation("tools.jackson.module:jackson-module-kotlin")
 
-    implementation("org.jooq:jooq:3.21.8")
-    implementation("org.jooq:jooq-kotlin:3.21.8")
+    implementation("org.jooq:jooq:3.21.9")
+    implementation("org.jooq:jooq-kotlin:3.21.9")
 
     implementation("net.lingala.zip4j:zip4j:2.11.6")
-    implementation("org.apache.commons:commons-lang3:3.20.0")
+    implementation("org.apache.commons:commons-lang3:3.21.0")
 
     implementation("com.ibm.icu:icu4j:78.3")
 
@@ -62,9 +62,20 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.zonky.test:embedded-postgres:2.2.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.4.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation(kotlin("test"))
+}
+
+// ktlint 1.8.0 (bundled by kotlinter) breaks on kotlin-compiler-embeddable >= 2.4.21
+// ("Extensions storage is not registered"), so pin its Kotlin stack to the version it ships with;
+// KGP otherwise aligns every org.jetbrains.kotlin module in this config to the project's Kotlin version
+configurations.named("ktlint") {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin-")) {
+            useVersion("2.2.21")
+        }
+    }
 }
 
 jacoco {
