@@ -17,7 +17,7 @@
 ## What it is
 
 `kindle-sideload` is a Telegram bot that takes an **FB2** (or **EPUB**) file, converts it into a
-Kindle-ready format (**EPUB / KEPUB / AZW3**) using the external `fb2cng` (`fbc`) binary, and lets the
+Kindle-ready format (**EPUB / EPUB 3 / KEPUB / AZW3**) using the external `fb2cng` (`fbc`) binary, and lets the
 user obtain the result either through a web "shelf" (download in the Kindle browser) or by sending it
 to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
 
@@ -38,7 +38,7 @@ to an e-mail (Amazon's *Send-to-Kindle* / STK mechanism).
 - **Telegram UX** — a menu-driven bot (main screen, settings, project info, metrics) with inline
   buttons, multi-step "prompts" (e.g. "send a file now") and per-user language (en/ru).
 - **Book conversion** — upload an FB2/EPUB; an EPUB is *passed through* unchanged, an FB2 is run
-  through `fb2cng`. Output format is user-selectable (EPUB / KEPUB / AZW3).
+  through `fb2cng`. Output format is user-selectable (EPUB / EPUB 3 / KEPUB / AZW3).
 - **Per-user converter configuration** — the user can upload/replace/remove a `configuration.zip`
   (a `fb2cng` profile). A default configuration is shipped as a classpath asset.
 - **Temporary per-conversion environments** — each conversion runs in an isolated temp folder

@@ -68,6 +68,10 @@
     "template": "EPUB"
   },
   {
+    "name": "Epub3OutputButton",
+    "template": "EPUB 3"
+  },
+  {
     "name": "KEpubOutputButton",
     "template": "KEPUB"
   },
