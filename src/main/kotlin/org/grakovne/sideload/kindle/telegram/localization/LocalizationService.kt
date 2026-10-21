@@ -8,7 +8,7 @@ import org.grakovne.sideload.kindle.telegram.domain.PreparedItem
 import org.grakovne.sideload.kindle.telegram.localization.converter.toMessage
 import org.grakovne.sideload.kindle.telegram.localization.template.TextTemplate
 import org.springframework.core.io.ClassPathResource
-import java.io.InputStream
+import java.io.File
 import java.time.Instant
 import kotlin.io.path.Path
 import kotlin.reflect.full.memberProperties
@@ -18,9 +18,27 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
     private val enumLocalizationService: EnumLocalizationService
 ) {
 
-    private fun findLocalizationResources(language: Language?) = getLocalizationResource(language)
-        .readBytes()
-        .let { deserializeResourceContent(it) }
+    private fun findOverrideTemplate(language: Language?, name: String): F? {
+        val file = getLocalizedResourceFile(language)
+
+        if (!file.exists()) {
+            return null
+        }
+
+        val content = try {
+            deserializeResourceContent(file.inputStream().use { it.readBytes() })
+        } catch (e: Exception) {
+            logger.error(e) { "Unable to parse the localized resource file ${file.name}. Falling back to the default classpath templates" }
+            return null
+        }
+
+        return content.find { it.name == name }
+    }
+
+    private fun findDefaultTemplate(name: String): F? =
+        ClassPathResource("$resourceName.json").inputStream.use { it.readBytes() }
+            .let { deserializeResourceContent(it) }
+            .find { it.name == name }
 
     abstract fun deserializeResourceContent(content: ByteArray): List<F>
 
@@ -31,14 +49,21 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
     ): Either<LocalizationError, R>
 
     fun localize(message: T, language: Language?): Either<LocalizationError, R> {
-        logger.info { "Localize ${message.javaClass.simpleName} with $language language" }
+        val templateName = message.javaClass.simpleName
+        logger.info { "Localize $templateName with $language language" }
 
-        val localizationTemplate: F = findLocalizationResources(language)
-            .find { it.name == message.javaClass.simpleName }
-            ?.also { logger.trace { "Found acceptable template for message $message: ${it.name}" } }
-            ?: return Either
+        val localizationTemplate: F? = findOverrideTemplate(language, templateName)
+            ?: findDefaultTemplate(templateName).also { fallback ->
+                if (fallback != null && getLocalizedResourceFile(language).exists()) {
+                    logger.warn { "The template $templateName is missing from the localized resource file. Falling back to the default classpath template" }
+                }
+            }
+
+        if (localizationTemplate == null) {
+            return Either
                 .Left(LocalizationError.TEMPLATE_NOT_FOUND)
-                .also { logger.error { "Unable to find acceptable template for message $message. Skipping responding" } }
+                .also { logger.error { "Unable to find acceptable template for message $message in both the localized and the default resources. Skipping responding" } }
+        }
 
         val values = message::class
             .memberProperties
@@ -48,17 +73,12 @@ abstract class LocalizationService<T : Message, R : PreparedItem, F : TextTempla
         return applyLocalization(language, values, localizationTemplate)
     }
 
-    private fun getLocalizationResource(language: Language?): InputStream {
+    private fun getLocalizedResourceFile(language: Language?): File {
         val resourceFile = language
             ?.let { "${resourceName}_$language.json" }
             ?: "$resourceName.json"
 
-        return Path("locale").resolve(Path(resourceFile)).toFile().let {
-            when (it.exists()) {
-                true -> it.inputStream()
-                false -> ClassPathResource("$resourceName.json").inputStream
-            }
-        }
+        return Path("locale").resolve(resourceFile).toFile()
     }
 
     private fun Any.getField(fieldName: String, language: Language?): String? {
