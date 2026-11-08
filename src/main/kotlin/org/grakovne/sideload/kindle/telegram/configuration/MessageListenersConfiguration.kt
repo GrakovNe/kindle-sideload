@@ -46,6 +46,11 @@ class MessageListenersConfiguration(
     private suspend fun onMessageBatch(batch: List<Update>) {
         batch
             .forEach { update ->
+                if (null == update.message() && null == update.callbackQuery()) {
+                    logger.debug { "Skipping update ${update.updateId()} with neither message nor callback query payload" }
+                    return@forEach
+                }
+
                 update
                     .also { logger.trace { "Received update $it. Processing" } }
                     .let { onMessage(it) }

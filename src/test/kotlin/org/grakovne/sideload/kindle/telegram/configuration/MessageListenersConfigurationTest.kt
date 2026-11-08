@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.model.Chat
+import com.pengrad.telegrambot.model.ChatMemberUpdated
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
@@ -110,6 +111,47 @@ class MessageListenersConfigurationTest {
 
         verify(responseSender, never()).answerCallbackQuery(any())
         verify(eventSender).sendEvent(any())
+    }
+
+    @Test
+    fun `skips my chat member update without touching the pipeline`() {
+        listener.process(listOf(myChatMemberUpdate()))
+
+        verify(responseSender, never()).answerCallbackQuery(any())
+        verify(messageReferenceService, never()).fetchMessage(any())
+        verify(userService, never()).fetchOrCreateUser(any(), any())
+        verify(eventSender, never()).sendEvent(any())
+        verify(userMessageReportService, never()).createReportEntry(any(), anyOrNull())
+        verify(messageReferenceService, never()).markAsProcessed(any())
+    }
+
+    @Test
+    fun `still processes other updates of the same batch after a skipped one`() {
+        whenever(messageReferenceService.fetchMessage("5")).thenReturn(null)
+
+        val message = mock<Message>()
+        whenever(message.messageId()).thenReturn(5)
+        val messageChat = chatWithId(100L)
+        whenever(message.chat()).thenReturn(messageChat)
+
+        val update = mock<Update>()
+        whenever(update.message()).thenReturn(message)
+        whenever(update.callbackQuery()).thenReturn(null)
+
+        listener.process(listOf(myChatMemberUpdate(), update))
+
+        verify(eventSender).sendEvent(any())
+        verify(messageReferenceService).markAsProcessed("5")
+    }
+
+    private fun myChatMemberUpdate(): Update {
+        val chatMemberUpdated = mock<ChatMemberUpdated>()
+        val update = mock<Update>()
+        whenever(update.updateId()).thenReturn(724314921)
+        whenever(update.message()).thenReturn(null)
+        whenever(update.callbackQuery()).thenReturn(null)
+        whenever(update.myChatMember()).thenReturn(chatMemberUpdated)
+        return update
     }
 
     private fun callbackUpdate(): Update {
