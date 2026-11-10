@@ -20,6 +20,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.time.Duration
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -80,6 +81,23 @@ class AsyncLoggerAppenderTest {
 
         verify(userService, never()).fetchSuperUsers()
         verify(bot, never()).execute(any<SendMessage>())
+    }
+
+    @Test
+    fun `never forwards the bot token of a file link to the super user`() {
+        val token = "6586219940:AAF8repTIYK_mb9xBjsM-yDySV4PAYNnxD0"
+        val appender = AsyncLoggerAppender(bot, userService, configuration(Level.ERROR, Duration.ofSeconds(-1)))
+        whenever(userService.fetchSuperUsers()).thenReturn(listOf(superUser))
+
+        deliver(
+            appender,
+            event(Level.ERROR, "Attempt 1 of 3 failed due to: 404 on https://api.telegram.org/file/bot$token/documents/file_7195.fb2")
+        )
+
+        val sent = capturedSentMessages()
+        assertEquals(1, sent.size)
+        assertFalse(token in sent[0].text)
+        assertTrue("file/bot***/documents/file_7195.fb2" in sent[0].text)
     }
 
     // The flush runs on the appender's single-thread executor; poll until the bot

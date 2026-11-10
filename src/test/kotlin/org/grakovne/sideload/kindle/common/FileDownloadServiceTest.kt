@@ -1,5 +1,8 @@
 package org.grakovne.sideload.kindle.common
 
+import ch.qos.logback.classic.Logger
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.read.ListAppender
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -8,9 +11,12 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.slf4j.LoggerFactory
 import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.client.ClientHttpResponse
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.ResponseExtractor
 import org.springframework.web.client.RestTemplate
@@ -168,6 +174,46 @@ class FileDownloadServiceTest {
         } finally {
             runCatching { server.close() }
         }
+    }
+
+    @Test
+    fun `failures are logged without the bot token of the source link`() = runTest {
+        val token = "6586219940:AAF8repTIYK_mb9xBjsM-yDySV4PAYNnxD0"
+        val link = "https://api.telegram.org/file/bot$token/documents/file_7195.fb2%20%281%29"
+        whenever(
+            restTemplate.execute(
+                any<URI>(),
+                any<HttpMethod>(),
+                isNull(),
+                any<ResponseExtractor<*>>()
+            )
+        ).thenThrow(
+            HttpClientErrorException(
+                HttpStatusCode.valueOf(404),
+                "Not Found on GET request for \"$link\""
+            )
+        )
+
+        val messages = captureLogs { sut.download(link, "book.fb2") }
+
+        assertTrue(messages.isNotEmpty())
+        assertFalse(messages.any { token in it })
+        assertTrue(messages.any { "file/bot***/documents/file_7195.fb2%20%281%29" in it })
+    }
+
+    private suspend fun captureLogs(action: suspend () -> Unit): List<String> {
+        val logger = LoggerFactory.getLogger(FileDownloadService::class.java) as Logger
+        val appender = ListAppender<ILoggingEvent>()
+        appender.start()
+        logger.addAppender(appender)
+
+        try {
+            action()
+        } finally {
+            logger.detachAppender(appender)
+        }
+
+        return appender.list.map { it.formattedMessage }
     }
 
     @Nested

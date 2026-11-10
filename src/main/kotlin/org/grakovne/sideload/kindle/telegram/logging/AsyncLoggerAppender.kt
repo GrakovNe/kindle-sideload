@@ -5,6 +5,7 @@ import ch.qos.logback.core.AppenderBase
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.request.SendMessage
 import org.grakovne.sideload.kindle.common.ifTrue
+import org.grakovne.sideload.kindle.common.maskTelegramToken
 import org.grakovne.sideload.kindle.telegram.ConfigurationProperties
 import org.grakovne.sideload.kindle.user.reference.service.UserService
 import org.springframework.stereotype.Service
@@ -46,7 +47,7 @@ class AsyncLoggerAppender(
             }
     }
 
-    private fun appendLog(event: ILoggingEvent) = loggingEvents.add("${event.level}: ${event.formattedMessage}")
+    private fun appendLog(event: ILoggingEvent) = loggingEvents.add("${event.level}: ${maskTelegramToken(event.formattedMessage)}")
 
     private fun flush() = synchronized(loggingEvents) {
         loggingEvents.joinToString("\n").also { loggingEvents.clear() }

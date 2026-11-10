@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.converter.task.service
 
 import arrow.core.Either
 import mu.KotlinLogging
+import org.grakovne.sideload.kindle.common.maskTelegramToken
 import org.grakovne.sideload.kindle.converter.ConvertationError
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTask
 import org.grakovne.sideload.kindle.converter.task.domain.ConvertationTaskStatus
@@ -19,7 +20,7 @@ class ConvertationTaskService(
     fun fetchTasks(from: Instant, to: Instant) = repository.findByCreatedAtGreaterThanAndCreatedAtLessThan(from, to)
 
     fun updateTask(task: ConvertationTask) = repository
-        .also { logger.debug { "Updating periodic task: $task" } }
+        .also { logger.debug { "Updating periodic task: ${maskTelegramToken(task)}" } }
         .save(task)
         .let { Either.Right(Unit) }
 
@@ -39,7 +40,7 @@ class ConvertationTaskService(
         )
 
         return repository
-            .also { logger.debug { "Submitting to queue a new one convertation task: $entity" } }
+            .also { logger.debug { "Submitting to queue a new one convertation task: ${maskTelegramToken(entity)}" } }
             .save(entity)
             .let { Either.Right(Unit) }
     }
