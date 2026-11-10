@@ -3,10 +3,12 @@ package org.grakovne.sideload.kindle.common
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import org.mockito.kotlin.any
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.http.HttpMethod
 import org.springframework.http.client.ClientHttpResponse
 import org.springframework.web.client.ResourceAccessException
@@ -14,6 +16,10 @@ import org.springframework.web.client.ResponseExtractor
 import org.springframework.web.client.RestTemplate
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.net.ServerSocket
+import java.net.URI
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -40,7 +46,7 @@ class FileDownloadServiceTest {
     private fun bindNextDownload(body: ClientHttpResponse) {
         whenever(
             restTemplate.execute(
-                any<String>(),
+                any<URI>(),
                 any<HttpMethod>(),
                 isNull(),
                 any<ResponseExtractor<*>>()
@@ -83,7 +89,7 @@ class FileDownloadServiceTest {
         var attempts = 0
         whenever(
             restTemplate.execute(
-                any<String>(),
+                any<URI>(),
                 any<HttpMethod>(),
                 isNull(),
                 any<ResponseExtractor<*>>()
@@ -111,7 +117,7 @@ class FileDownloadServiceTest {
         var attempts = 0
         whenever(
             restTemplate.execute(
-                any<String>(),
+                any<URI>(),
                 any<HttpMethod>(),
                 isNull(),
                 any<ResponseExtractor<*>>()
@@ -125,6 +131,43 @@ class FileDownloadServiceTest {
 
         assertNull(result)
         assertEquals(3, attempts)
+    }
+
+    @Test
+    @Timeout(20)
+    fun `download requests an already encoded link without encoding it once more`() = runTest {
+        // Telegram hands over an already percent encoded file link ("file_7195.fb2%20%281%29").
+        // Passing it to RestTemplate as a String makes it expand the value as a uri template and
+        // encode it a second time, so the request goes for a path containing a literal "%2520"
+        // and Telegram answers 404. The link has to reach the wire exactly as it was given.
+        val server = ServerSocket(0)
+        val requestLine = CompletableFuture<String>()
+        Thread {
+            runCatching {
+                server.accept().use { socket ->
+                    requestLine.complete(socket.getInputStream().bufferedReader().readLine().orEmpty())
+
+                    val body = "ok".toByteArray()
+                    socket.getOutputStream().use { output ->
+                        output.write("HTTP/1.1 200 OK\r\nContent-Length: ${body.size}\r\nConnection: close\r\n\r\n".toByteArray())
+                        output.write(body)
+                        output.flush()
+                    }
+                }
+            }
+        }.apply { isDaemon = true }.start()
+
+        try {
+            val link = "http://127.0.0.1:${server.localPort}/file/botTOKEN/documents/file_7195.fb2%20%281%29"
+
+            val result = FileDownloadService(RestTemplateBuilder().build()).download(link)
+
+            assertNotNull(result)
+            assertEquals("GET /file/botTOKEN/documents/file_7195.fb2%20%281%29 HTTP/1.1", requestLine.get(10, TimeUnit.SECONDS))
+            assertTrue(result.delete())
+        } finally {
+            runCatching { server.close() }
+        }
     }
 
     @Nested

@@ -10,6 +10,7 @@ import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URI
 import java.util.Locale
 
 @Service
@@ -20,7 +21,7 @@ class FileDownloadService(
     suspend fun download(link: String, fileName: String? = null): File? = withRetry { tryDownload(link, fileName) }
 
     private fun tryDownload(link: String, fileName: String?): File? = restTemplate.execute(
-        link,
+        URI.create(link),
         HttpMethod.GET,
         null,
         {

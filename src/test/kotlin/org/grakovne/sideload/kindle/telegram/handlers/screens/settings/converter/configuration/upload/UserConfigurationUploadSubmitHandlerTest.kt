@@ -43,6 +43,7 @@ import org.springframework.web.client.ResponseExtractor
 import org.springframework.web.client.RestTemplate
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.net.URI
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -208,7 +209,7 @@ class UserConfigurationUploadSubmitHandlerTest {
     private fun bindDownload(file: ByteArray?) {
         whenever(
             restTemplate.execute(
-                any<String>(),
+                any<URI>(),
                 any<HttpMethod>(),
                 isNull(),
                 any<ResponseExtractor<*>>()
