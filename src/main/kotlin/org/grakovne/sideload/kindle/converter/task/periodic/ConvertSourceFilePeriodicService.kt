@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.grakovne.sideload.kindle.common.FileDownloadService
+import org.grakovne.sideload.kindle.common.maskTelegramToken
 import org.grakovne.sideload.kindle.common.parallelMap
 import org.grakovne.sideload.kindle.converter.ConversionResult
 import org.grakovne.sideload.kindle.converter.ConvertationError
@@ -89,8 +90,8 @@ class ConvertSourceFilePeriodicService(
             ?.let { converterService.convertAndCollect(task.userId, it) }
             ?: Either.Left(UnableFetchFile)
     } catch (ex: Exception) {
-        logger.error("Fatal error occurred while file convert task: $ex")
-        Either.Left(FatalError(ex.stackTraceToString()))
+        logger.error("Fatal error occurred while file convert task: ${maskTelegramToken(ex)}")
+        Either.Left(FatalError(maskTelegramToken(ex.stackTraceToString())))
     }
 
     companion object {

@@ -10,6 +10,7 @@ import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URI
 import java.util.Locale
 
 @Service
@@ -20,7 +21,7 @@ class FileDownloadService(
     suspend fun download(link: String, fileName: String? = null): File? = withRetry { tryDownload(link, fileName) }
 
     private fun tryDownload(link: String, fileName: String?): File? = restTemplate.execute(
-        link,
+        URI.create(link),
         HttpMethod.GET,
         null,
         {
@@ -34,7 +35,7 @@ class FileDownloadService(
             logger.debug { "Created empty temporary file: ${file.absoluteFile}" }
 
             StreamUtils.copy(it.body, FileOutputStream(file))
-            logger.debug { "Content from $link successfully downloaded to ${file.absoluteFile}" }
+            logger.debug { "Content from ${maskTelegramToken(link)} successfully downloaded to ${file.absoluteFile}" }
 
             file
         }
@@ -49,7 +50,7 @@ class FileDownloadService(
                 return operation()
             } catch (ex: Exception) {
                 lastException = ex
-                logger.warn { "Attempt ${attempt + 1} of $MAX_RETRY_ATTEMPTS failed due to: ${ex.message}" }
+                logger.warn { "Attempt ${attempt + 1} of $MAX_RETRY_ATTEMPTS failed due to: ${maskTelegramToken(ex.message)}" }
 
                 if (attempt < MAX_RETRY_ATTEMPTS - 1) {
                     delay(RETRY_DELAY_MS)
@@ -57,7 +58,7 @@ class FileDownloadService(
             }
         }
 
-        logger.warn { "All $MAX_RETRY_ATTEMPTS attempts failed to download from remote. Last exception: ${lastException?.message}" }
+        logger.warn { "All $MAX_RETRY_ATTEMPTS attempts failed to download from remote. Last exception: ${maskTelegramToken(lastException?.message)}" }
         return null
     }
 
