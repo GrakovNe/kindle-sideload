@@ -61,6 +61,8 @@ dependencies {
 
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // the default converter configuration is parsed in tests to check it against the binary schema
+    testImplementation("org.yaml:snakeyaml")
     testImplementation("io.zonky.test:embedded-postgres:2.2.2")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
