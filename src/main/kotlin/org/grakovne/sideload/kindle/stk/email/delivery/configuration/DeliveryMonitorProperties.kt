@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.delivery.configuration
+package org.grakovne.sideload.kindle.stk.email.delivery.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration

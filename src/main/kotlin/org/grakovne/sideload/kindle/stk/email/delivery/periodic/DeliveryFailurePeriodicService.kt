@@ -1,7 +1,7 @@
-package org.grakovne.sideload.kindle.delivery.periodic
+package org.grakovne.sideload.kindle.stk.email.delivery.periodic
 
 import mu.KotlinLogging
-import org.grakovne.sideload.kindle.delivery.service.DeliveryFailureMonitorService
+import org.grakovne.sideload.kindle.stk.email.delivery.service.DeliveryFailureMonitorService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
@@ -12,11 +12,8 @@ class DeliveryFailurePeriodicService(
 
     @Scheduled(fixedDelay = POLL_INTERVAL, initialDelay = INITIAL_DELAY)
     fun pollMailbox() {
-        try {
-            deliveryFailureMonitorService.poll()
-        } catch (e: Exception) {
-            logger.warn(e) { "Delivery failure mailbox poll failed" }
-        }
+        runCatching(deliveryFailureMonitorService::poll)
+            .onFailure { logger.warn(it) { "Delivery failure mailbox poll failed" } }
     }
 
     companion object {

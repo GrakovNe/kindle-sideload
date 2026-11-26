@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.delivery.imap
+package org.grakovne.sideload.kindle.stk.email.delivery.imap
 
 data class RawEmailMessage(
     val folder: String,

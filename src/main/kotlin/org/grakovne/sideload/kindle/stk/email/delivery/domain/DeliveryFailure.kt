@@ -1,4 +1,4 @@
-package org.grakovne.sideload.kindle.delivery.domain
+package org.grakovne.sideload.kindle.stk.email.delivery.domain
 
 import java.time.LocalDateTime
 import java.util.UUID
@@ -8,7 +8,7 @@ data class DeliveryFailure(
     val imapFolder: String,
     val imapUid: Long,
     val recipient: String?,
-    val reason: DeliveryFailureReason,
+    val reason: FailureReason,
     val detail: String?,
     val detectedAt: LocalDateTime,
 )

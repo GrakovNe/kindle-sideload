@@ -62,3 +62,9 @@ shelf:
 
 admin:
   token: "test-admin-token"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
