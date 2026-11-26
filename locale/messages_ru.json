@@ -144,7 +144,7 @@
     "name": "UpdateEmailUpdatedMessage",
     "type": "HTML",
     "enablePreview": "false",
-    "template": "E-Mail, на который будут отправляться файлы после конвертации обновлен\n\nНажмите на кнопку \"Отправить на почту\", чтобы получить файлы\n\nНе забудь добавить E-Mail sideload@grakovne.org в список доверенных, чтобы книги приходили автоматически\n\nПодробнее о том, как это сделать, можно прочитать здесь: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
+    "template": "E-Mail, на который будут отправляться файлы после конвертации обновлен\n\nНажмите на кнопку \"Отправить на почту\", чтобы получить файлы\n\nНе забудь добавить E-Mail booksend@grakovne.org в список доверенных, чтобы книги приходили автоматически\n\nПодробнее о том, как это сделать, можно прочитать здесь: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
   },
   {
     "name": "UpdateEmailUpdateFailedMessage",
