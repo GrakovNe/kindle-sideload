@@ -81,3 +81,20 @@ shelf:
 
 admin:
   token: "CHANGE_ME_metrics_admin_token"
+
+# Monitors the sender mailbox for delivery-failure bounces; enable and fill
+# credentials on the server (same iCloud app password as spring.mail.password)
+delivery:
+  monitor:
+    enabled: false
+    host: "imap.mail.me.com"
+    port: "993"
+    username: "grakovne"
+    password: ""
+    folder: "INBOX"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"

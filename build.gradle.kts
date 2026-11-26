@@ -32,6 +32,13 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.15.0")
     implementation("tools.jackson.module:jackson-module-kotlin")
 
+    // Exposes /actuator/prometheus for Grafana
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
+    // Delivery-failure monitoring reads the sender mailbox over IMAP
+    implementation("org.eclipse.angus:angus-mail")
+
     implementation("org.jooq:jooq:3.21.8")
     implementation("org.jooq:jooq-kotlin:3.21.8")
 
