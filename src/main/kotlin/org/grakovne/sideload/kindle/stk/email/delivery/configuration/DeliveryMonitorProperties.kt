@@ -12,4 +12,11 @@ class DeliveryMonitorProperties {
     var username: String = ""
     var password: String = ""
     var folder: String = "INBOX"
+
+    /**
+     * Whether a mailbox without a stored baseline is scanned from its first message.
+     * Off by default: the first poll then starts at the newest message instead of
+     * re-reading years of history and counting old bounces as fresh ones.
+     */
+    var backfillHistory: Boolean = false
 }

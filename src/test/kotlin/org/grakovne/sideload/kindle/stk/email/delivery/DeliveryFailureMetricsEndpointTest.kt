@@ -5,10 +5,12 @@ import org.grakovne.sideload.kindle.KindleSideloadApplication
 import org.grakovne.sideload.kindle.NoOpScheduling
 import org.grakovne.sideload.kindle.stk.email.delivery.imap.MailboxReader
 import org.grakovne.sideload.kindle.stk.email.delivery.imap.RawEmailMessage
+import org.grakovne.sideload.kindle.stk.email.delivery.imap.ScanResult
 import org.grakovne.sideload.kindle.stk.email.delivery.service.DeliveryFailureMonitorService
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -114,9 +116,10 @@ class DeliveryFailureMetricsEndpointTest {
         Regex("""$PROMETHEUS_METRIC\{reason="${Regex.escape(reason)}",?\}\s+$value""")
 
     private fun givenMailboxContains(vararg messages: RawEmailMessage) {
-        whenever(mailboxReader.fetchUnseen(any())).thenAnswer { invocation ->
-            val handler = invocation.getArgument<(RawEmailMessage) -> Boolean>(0)
-            messages.all { handler(it) }
+        whenever(mailboxReader.scan(anyOrNull(), any())).thenAnswer { invocation ->
+            val handler = invocation.getArgument<(RawEmailMessage) -> Unit>(1)
+            messages.forEach(handler)
+            ScanResult("INBOX", 1L, messages.maxOf { it.uid })
         }
     }
 

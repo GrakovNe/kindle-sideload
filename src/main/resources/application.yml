@@ -92,6 +92,8 @@ delivery:
     username: "grakovne"
     password: ""
     folder: "INBOX"
+    # first poll starts at the newest message; set true to scan the whole mailbox once
+    backfill-history: false
 
 management:
   endpoints:
