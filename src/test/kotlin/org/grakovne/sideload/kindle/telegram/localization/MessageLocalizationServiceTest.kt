@@ -75,7 +75,7 @@ class MessageLocalizationServiceTest {
         assertTrue(result.isRight())
         assertEquals(
             "Конвертация прошла успешно\n\n" +
-                "Файлы можно отправить их на настроенный E-Mail в течении 24 часов\n\n" +
+                "Файлы можно отправить их на настроенный E-Mail в течение 24 часов\n\n" +
                 "Чтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу " +
                 "<a href=\"https://shelf.example.com/abcde\">https://shelf.example.com/abcde</a>",
             result.getOrNull()!!.text

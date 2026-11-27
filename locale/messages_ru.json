@@ -27,17 +27,32 @@
   {
     "name": "FileConvertarionSuccessMessage",
     "type": "HTML",
-    "template": "Конвертация прошла успешно\n\nФайлы можно отправить их на настроенный E-Mail в течении 24 часов\n\nЧтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>"
+    "template": "Конвертация прошла успешно\n\nФайлы можно отправить их на настроенный E-Mail в течение 24 часов\n\nЧтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>",
+    "enablePreview": "false",
+    "advertising": {
+      "creativeName": "default",
+      "status": "ENABLED"
+    }
   },
   {
     "name": "FileConvertarionSuccessEmptyOutputMessage",
     "type": "HTML",
-    "template": "Конвертация прошла успешно, но готовая книга была удалена в процессе\n\nЕсли ваша расширенная конфигурация предполагает автоматическую отправку файлов на E-Mail, книги уже отправлены"
+    "template": "Конвертация прошла успешно, но готовая книга была удалена в процессе\n\nЕсли ваша расширенная конфигурация предполагает автоматическую отправку файлов на E-Mail, книги уже отправлены",
+    "enablePreview": "false",
+    "advertising": {
+      "creativeName": "default",
+      "status": "ENABLED"
+    }
   },
   {
     "name": "FileConvertarionSuccessAutomaticStkMessage",
     "type": "HTML",
-    "template": "Конвертация прошла успешно\n\nЧерез несколько секунд отправим файл на указанный в настройках E-Mail\n\nЧтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>"
+    "template": "Конвертация прошла успешно\n\nЧерез несколько секунд отправим файл на указанный в настройках E-Mail\n\nЧтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>",
+    "enablePreview": "false",
+    "advertising": {
+      "creativeName": "default",
+      "status": "ENABLED"
+    }
   },
   {
     "name": "FileConvertarionErrorMessage",
@@ -67,7 +82,7 @@
   {
     "name": "SettingsScreenRequestedMessage",
     "type": "HTML",
-    "template": "Здесь ты можешь настроить параметры конвертации и отправки файлов"
+    "template": "Здесь ты можешь настроить преобразование книг по своему выбору\n\n<b>Формат файла</b> - раздел, где можно выбрать целевой формат конвертирования\n\n<b>Экспорт книг</b> - раздел, где можно сконфигурировать бота для отправки книг на Kindle через E-Mail\n\n<b>Расширенные настройки</b> пригодятся, если нужно тонко настроить отображение шрифтов, стилей, виньеток в книге, а так же имен файлов\n\n"
   },
   {
     "name": "ConversationPromptMessage",
@@ -180,6 +195,11 @@
   {
     "name": "ActivityMetricsMessage",
     "type": "HTML",
-    "template": "Метрики приложения\n\n<b>Активные пользователи</b>:\n\nЗа сегодня: ${usersToday}\nЗа последнюю неделю: ${usersWeekly}\nЗа год: ${usersYearly}\n\n<b>Сконвертированно файлов</b>:\n\nСегодня: ${fileConvertationsToday}\nЗа последнюю неделю: ${fileConvertationsWeekly}\nЗа год: ${fileConvertationsYearly}"
+    "template": "Метрики приложения\n\n<b>Активные пользователи</b>:\n\nЗа сегодня: ${usersToday}\nЗа последнюю неделю: ${usersWeekly}\nЗа год: ${usersYearly}\n\n<b>Сконвертированно файлов</b>:\n\nСегодня: ${fileConvertationsToday}\nЗа последнюю неделю: ${fileConvertationsWeekly}\nЗа год: ${fileConvertationsYearly}",
+    "enablePreview": "false",
+    "advertising": {
+      "creativeName": "default",
+      "status": "ENABLED"
+    }
   }
 ]
