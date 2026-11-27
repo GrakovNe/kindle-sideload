@@ -82,6 +82,33 @@ class MessageLocalizationServiceTest {
     }
 
     @Test
+    fun `keeps the shelf link when the user language is unknown`() {
+        // a null language resolves to locale/messages.json (no language suffix), not to the
+        // classpath default, so that file must carry the ${bookShelfUrl} placeholder too
+        val result = sut.localize(FileConvertarionSuccessMessage(bookShelfUrl = "https://shelf.example.com/abcde"), null)
+
+        assertTrue(result.isRight())
+        assertTrue(
+            result.getOrNull()!!.text.contains("https://shelf.example.com/abcde"),
+            "The shelf link was dropped for a user without a language: ${result.getOrNull()!!.text}"
+        )
+    }
+
+    @Test
+    fun `substitutes the shelf link into the english template`() {
+        val result = sut.localize(FileConvertarionSuccessMessage(bookShelfUrl = "https://shelf.example.com/abcde"), "en")
+
+        assertTrue(result.isRight())
+        assertEquals(
+            "Conversion was successful\n\n" +
+                "Files can be sent to the configured E-Mail within 24 hours\n\n" +
+                "To download files directly, go to the following address in the Kindle browser: " +
+                "<a href=\"https://shelf.example.com/abcde\">https://shelf.example.com/abcde</a>",
+            result.getOrNull()!!.text
+        )
+    }
+
+    @Test
     fun `localizes the message with fields from the english resource`() {
         val result = sut.localize(MainScreenRequestedMessage, "en")
 

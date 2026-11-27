@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter.ofPattern
@@ -27,14 +27,19 @@ class ShelfEndpoint(
     private val localizedTemplateProvider: LocalizedTemplateProvider
 ) {
 
-    @RequestMapping("/download/{environmentId}/{fileUrl}")
+    @GetMapping("/download/{environmentId}/{fileUrl}")
     fun downloadBinary(
         @PathVariable environmentId: String,
         @PathVariable fileUrl: String,
     ): ResponseEntity<FileSystemResource> {
+        // the file system listing order is not stable, so pick deterministically: an environment can
+        // hold two files whose sanitized names collide, and the Kindle browser must not alternate
+        // between them across requests
         val file = environmentService
             .provideEnvironmentFiles(environmentId)
-            .first { it.name.toFileName() == fileUrl }
+            .sortedBy { it.name }
+            .firstOrNull { it.name.toFileName() == fileUrl }
+            ?: return ResponseEntity.notFound().build()
 
         val resource = FileSystemResource(file)
 
@@ -46,7 +51,7 @@ class ShelfEndpoint(
         return ResponseEntity(resource, headers, HttpStatus.OK)
     }
 
-    @RequestMapping("/{shortUserId}")
+    @GetMapping("/{shortUserId}")
     fun index(
         @PathVariable shortUserId: String,
         model: Model

@@ -22,6 +22,7 @@ import org.springframework.ui.Model
 import java.io.File
 import java.time.Instant
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class ShelfEndpointTest {
@@ -94,6 +95,37 @@ class ShelfEndpointTest {
         assertEquals("attachment; filename=\"The_Book__final_.azw3\"", headers[HttpHeaders.CONTENT_DISPOSITION]?.single())
         assertEquals("application/octet-stream", headers[HttpHeaders.CONTENT_TYPE]?.single())
         assertTrue(response.body?.file == file)
+    }
+
+    @Test
+    fun `answers not found when the requested file is not in the environment`() {
+        whenever(environmentService.provideEnvironmentFiles("env-1")).thenReturn(emptyList())
+
+        val response = sut.downloadBinary("env-1", "missing.epub")
+
+        assertEquals(HttpStatus.NOT_FOUND, response.statusCode)
+        assertNull(response.body)
+    }
+
+    @Test
+    fun `answers not found when the environment itself is unknown`() {
+        whenever(environmentService.provideEnvironmentFiles("unknown")).thenReturn(emptyList())
+
+        assertEquals(HttpStatus.NOT_FOUND, sut.downloadBinary("unknown", "book.epub").statusCode)
+    }
+
+    @Test
+    fun `serves the same file when two sanitized names collide`() {
+        // "book!.epub" and "book?.epub" both sanitize to "book_.epub"; the listing order comes from
+        // the file system, so the choice must not depend on it
+        val first = File("/env/1/book!.epub")
+        val second = File("/env/1/book?.epub")
+        whenever(environmentService.provideEnvironmentFiles("env-1")).thenReturn(listOf(second, first))
+
+        val response = sut.downloadBinary("env-1", "book_.epub")
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(first, response.body?.file)
     }
 
     private fun contentItem(path: String, environmentId: String, createdAt: Instant) = ShelfContentItem(

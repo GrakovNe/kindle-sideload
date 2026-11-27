@@ -54,6 +54,18 @@ class UserEnvironmentServiceTest {
     }
 
     @Test
+    fun `provides a kepub book through the epub extension`() {
+        // fb2cng writes KEPUB as `name.kepub.epub`, so the "epub" entry of outputFileExtensions is
+        // what puts KEPUB books on the shelf — File.extension takes the part after the LAST dot
+        File(sut.provideTemporaryEnvironmentsFolder(), "env-1").apply {
+            mkdirs()
+            File(this, "book.kepub.epub").writeText("kepub")
+        }
+
+        assertEquals(listOf("book.kepub.epub"), sut.provideEnvironmentFiles("env-1").map { it.name })
+    }
+
+    @Test
     fun `provides an empty list for an empty environment`() {
         File(sut.provideTemporaryEnvironmentsFolder(), "env-1").mkdirs()
 
