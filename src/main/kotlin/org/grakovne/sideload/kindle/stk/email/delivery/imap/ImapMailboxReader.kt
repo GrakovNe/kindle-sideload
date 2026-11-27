@@ -44,23 +44,16 @@ class ImapMailboxReader(
         val messages = uidFolder.getMessagesByUID(lastProcessed + 1, UIDFolder.MAXUID)
         logFound(folder.fullName, messages.size, lastProcessed)
 
-        var lastHandled = lastProcessed
-        for (message in messages) {
+        // lazy, so a handler failure stops the scan without decoding the rest of the batch
+        val read = messages.asSequence().map { message ->
             val uid = uidFolder.getUID(message)
-            if (uid <= lastProcessed) continue
-            try {
-                handler(toRawMessage(message, uid))
-            } catch (e: Exception) {
-                logger.warn(e) { "Failed to process message $uid, stopping the scan" }
-                break
-            }
-            lastHandled = maxOf(lastHandled, uid)
+            uid to readMessage(message, uid)
         }
 
         return ScanResult(
             folder = folder.fullName,
             uidValidity = uidValidity,
-            lastHandledUid = lastHandled,
+            lastHandledUid = drain(read, lastProcessed, handler),
         )
     }
 
@@ -74,13 +67,17 @@ class ImapMailboxReader(
         else -> logger.info { "Found $found messages above uid $lastProcessed in $folder" }
     }
 
-    private fun toRawMessage(message: Message, uid: Long): RawEmailMessage =
-        RawEmailMessage(
-            folder = message.folder.fullName,
-            uid = uid,
-            subject = MimeUtility.decodeText(message.subject ?: ""),
-            body = MimeTextExtractor.textOf(message),
-        )
+    /** Null when the message cannot be decoded at all — see [drain]. */
+    private fun readMessage(message: Message, uid: Long): RawEmailMessage? =
+        runCatching {
+            RawEmailMessage(
+                folder = message.folder.fullName,
+                uid = uid,
+                subject = MimeUtility.decodeText(message.subject ?: ""),
+                body = MimeTextExtractor.textOf(message),
+            )
+        }.onFailure { logger.warn(it) { "Skipping undecodable message $uid in ${message.folder.fullName}" } }
+            .getOrNull()
 
     companion object {
         private const val PROTOCOL = "imaps"
@@ -102,5 +99,27 @@ class ImapMailboxReader(
             ?.takeIf { it.uidValidity == uidValidity }
             ?.lastProcessedUid
             ?: if (backfillHistory) 0L else uidNext - 1
+
+        /**
+         * Walks the new messages oldest first and returns the highest uid dealt with.
+         *
+         * The two ways a message can fail are deliberately handled differently:
+         *  - a null entry means the message could not be decoded. That is permanent, so
+         *    it is skipped *and counted as handled*: refusing to move past it would wedge
+         *    the monitor on that uid forever and hide every later bounce. The cost is that
+         *    one unreadable message is never classified.
+         *  - [handler] throwing (the database being down, say) is worth retrying, so it
+         *    propagates and no position is returned — the caller keeps the old baseline
+         *    and the next poll retries from there.
+         */
+        internal fun drain(
+            read: Sequence<Pair<Long, RawEmailMessage?>>,
+            lastProcessed: Long,
+            handler: (RawEmailMessage) -> Unit,
+        ): Long = read.fold(lastProcessed) { handled, (uid, message) ->
+            if (uid <= lastProcessed) return@fold handled
+            message?.let(handler)
+            maxOf(handled, uid)
+        }
     }
 }
