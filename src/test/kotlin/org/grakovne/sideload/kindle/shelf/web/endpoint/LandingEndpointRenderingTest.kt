@@ -52,6 +52,31 @@ class LandingEndpointRenderingTest {
     }
 
     @Test
+    fun `centers the landing notice in every served language`() {
+        val served = listOf(
+            null to LandingCopy("english", "book shelf lives at a personal address"),
+            "ru-RU,ru;q=0.8" to LandingCopy("russian", "книжная полка живёт по личному адресу"),
+        )
+
+        served.forEach { (acceptLanguage, copy) ->
+            val body = fetch(acceptLanguage).body()
+
+            assertTrue(
+                body.contains(copy.marker),
+                "expected the ${copy.label} landing copy, got: $body"
+            )
+
+            val notice = body.substringAfter(".notice {").substringBefore("}")
+            assertTrue(
+                notice.contains("text-align: center") && notice.contains("align-items: center"),
+                "the ${copy.label} landing notice is not centered: $notice"
+            )
+        }
+    }
+
+    private data class LandingCopy(val label: String, val marker: String)
+
+    @Test
     fun `does not shadow the shelf route`() {
         // an unregistered shelf id still goes to the shelf handler, not to the landing page
         val response = client.send(
