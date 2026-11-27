@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kindle Sideload Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: black;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        header {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        .notice {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.5em;
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+        .notice p {
+            margin: 0 0 1em 0;
+        }
+        .muted {
+            font-size: 0.85em;
+        }
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            border-top: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<header>
+    Kindle Sideload Web
+</header>
+<div class="notice">
+    <p>Ваша книжная полка живёт по личному адресу.</p>
+    <p>Отправьте книгу Telegram боту. После завершения конвертации бот пришлёт ссылку — откройте её в браузере Kindle, чтобы увидеть и скачать файлы.</p>
+    <p class="muted">Файлы удаляются через 24 часа после конвертации.</p>
+</div>
+<footer>
+    <span th:text="${currentDate}">06.07.2024</span>
+    <span th:text="${currentTime}">15:45</span>
+</footer>
+</body>
+</html>
