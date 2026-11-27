@@ -15,7 +15,7 @@ data object FileConvertationRequestedMessage : Message
 data class FileUploadFailedMessage(val reason: FileUploadFailedReason) : Message
 
 data class FileConvertarionSuccessMessage(val bookShelfUrl: String) : Message
-data class FileConvertarionSuccessAutomaticStkMessage(val result: String) : Message
+data class FileConvertarionSuccessAutomaticStkMessage(val result: String, val bookShelfUrl: String) : Message
 data class FileConvertarionSuccessEmptyOutputMessage(val result: String) : Message
 
 data object FileConvertarionFailedUnsupportedMessage : Message

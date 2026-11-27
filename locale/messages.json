@@ -37,7 +37,7 @@
   {
     "name": "FileConvertarionSuccessAutomaticStkMessage",
     "type": "HTML",
-    "template": "Conversion was successful; the file will be automatically sent via email in a few seconds."
+    "template": "Conversion was successful; the file will be automatically sent via email in a few seconds.\n\nTo download files directly, go to the following address in the Kindle browser: <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>"
   },
   {
     "name": "FileConvertarionErrorMessage",

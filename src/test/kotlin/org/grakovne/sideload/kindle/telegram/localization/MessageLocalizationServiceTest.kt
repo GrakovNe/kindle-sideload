@@ -4,6 +4,7 @@ import org.grakovne.sideload.kindle.common.navigation.domain.Message
 import org.grakovne.sideload.kindle.telegram.domain.FileUploadFailedReason
 import org.grakovne.sideload.kindle.telegram.handlers.screens.main.MainScreenRequestedMessage
 import org.grakovne.sideload.kindle.telegram.localization.adverisement.AdvertisingService
+import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessAutomaticStkMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileConvertarionSuccessMessage
 import org.grakovne.sideload.kindle.telegram.navigation.FileUploadFailedMessage
 import org.grakovne.sideload.kindle.telegram.navigation.UserConfigurationRequestedMessage
@@ -105,6 +106,51 @@ class MessageLocalizationServiceTest {
                 "To download files directly, go to the following address in the Kindle browser: " +
                 "<a href=\"https://shelf.example.com/abcde\">https://shelf.example.com/abcde</a>",
             result.getOrNull()!!.text
+        )
+    }
+
+    @Test
+    fun `substitutes the shelf link into the automatic stk russian template`() {
+        val result = sut.localize(
+            FileConvertarionSuccessAutomaticStkMessage(result = "log", bookShelfUrl = "https://shelf.example.com/abcde"),
+            "ru"
+        )
+
+        assertTrue(result.isRight())
+        assertEquals(
+            "Конвертация прошла успешно\n\n" +
+                "Через несколько секунд отправим файл на указанный в настройках E-Mail\n\n" +
+                "Чтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу " +
+                "<a href=\"https://shelf.example.com/abcde\">https://shelf.example.com/abcde</a>",
+            result.getOrNull()!!.text
+        )
+    }
+
+    @Test
+    fun `substitutes the shelf link into the automatic stk english template`() {
+        val result = sut.localize(
+            FileConvertarionSuccessAutomaticStkMessage(result = "log", bookShelfUrl = "https://shelf.example.com/abcde"),
+            "en"
+        )
+
+        assertTrue(result.isRight())
+        assertTrue(
+            result.getOrNull()!!.text.contains("<a href=\"https://shelf.example.com/abcde\">https://shelf.example.com/abcde</a>"),
+            "The shelf link was dropped from the english automatic sending message: ${result.getOrNull()!!.text}"
+        )
+    }
+
+    @Test
+    fun `keeps the automatic stk shelf link when the user language is unknown`() {
+        val result = sut.localize(
+            FileConvertarionSuccessAutomaticStkMessage(result = "log", bookShelfUrl = "https://shelf.example.com/abcde"),
+            null
+        )
+
+        assertTrue(result.isRight())
+        assertTrue(
+            result.getOrNull()!!.text.contains("https://shelf.example.com/abcde"),
+            "The shelf link was dropped for a user without a language: ${result.getOrNull()!!.text}"
         )
     }
 

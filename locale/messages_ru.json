@@ -37,7 +37,7 @@
   {
     "name": "FileConvertarionSuccessAutomaticStkMessage",
     "type": "HTML",
-    "template": "Конвертация прошла успешно\n\nЧерез несколько секунд отправим файл на указанный в настройках E-Mail"
+    "template": "Конвертация прошла успешно\n\nЧерез несколько секунд отправим файл на указанный в настройках E-Mail\n\nЧтобы скачать файлы напрямую, в браузере Kindle перейдите по адресу <a href=\"${bookShelfUrl}\">${bookShelfUrl}</a>"
   },
   {
     "name": "FileConvertarionErrorMessage",
