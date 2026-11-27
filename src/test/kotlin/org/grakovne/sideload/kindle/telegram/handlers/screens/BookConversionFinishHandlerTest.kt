@@ -80,13 +80,15 @@ class BookConversionFinishHandlerTest {
     }
 
     @Test
-    fun `sends the automatic stk message when automatic stk is enabled`() {
+    fun `sends the automatic stk message with the shelf link when automatic stk is enabled`() {
         whenever(userService.fetchUser("user-1")).thenReturn(user)
         whenever(userPreferencesService.fetchPreferences("user-1")).thenReturn(preferences(automaticStk = true))
+        whenever(shelfService.fetchShelfLink("user-1")).thenReturn("https://shelf.example.com/abcde")
 
         sut.sendSuccessfulResponse(ConvertationFinishedEvent("user-1", ConvertationFinishedStatus.SUCCESS, "log", emptyList(), "env-1"))
 
-        assertTrue(capturedMessage() is FileConvertarionSuccessAutomaticStkMessage)
+        val message = capturedMessage() as FileConvertarionSuccessAutomaticStkMessage
+        assertEquals("https://shelf.example.com/abcde", message.bookShelfUrl)
     }
 
     @Test

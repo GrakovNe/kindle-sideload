@@ -61,7 +61,10 @@ class BookConversionFinishHandler(
                     .sendResponse(
                         chatId = user.id,
                         user = user,
-                        message = FileConvertarionSuccessAutomaticStkMessage(event.log),
+                        message = FileConvertarionSuccessAutomaticStkMessage(
+                            result = event.log,
+                            bookShelfUrl = shelfService.fetchShelfLink(event.userId)
+                        ),
                         navigation = emptyList()
                     )
             }
