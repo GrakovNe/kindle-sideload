@@ -1,6 +1,6 @@
 spring:
   mail:
-    from: "library@grakovne.org"
+    from: "booksend@grakovne.org"
     subject: "Kindle Sideload Book"
     text: "Your Books are ready!"
     host: "smtp.mail.me.com"
@@ -97,3 +97,22 @@ shelf:
 
 admin:
   token: "CHANGE_ME_metrics_admin_token"
+
+# Monitors the sender mailbox for delivery-failure bounces; enable and fill
+# credentials on the server (same iCloud app password as spring.mail.password)
+delivery:
+  monitor:
+    enabled: false
+    host: "imap.mail.me.com"
+    port: "993"
+    username: "grakovne"
+    password: ""
+    folder: "INBOX"
+    # first poll starts at the newest message; set true to scan the whole mailbox once
+    backfill-history: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
