@@ -7,6 +7,7 @@ import org.grakovne.sideload.kindle.notification.domain.NotificationKind
 import org.grakovne.sideload.kindle.notification.repository.SenderAddressAnnouncementDao
 import org.grakovne.sideload.kindle.user.preferences.repository.UserPreferencesDao
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
 import java.time.Instant
 
@@ -35,7 +36,11 @@ class SenderAddressAnnouncementService(
      * The very first run announces too — there is no "silent baseline" mode, because the address
      * users must whitelist is the one thing that must never be stale. What keeps that safe is the
      * spread, not suppression.
+     *
+     * Transactional because a claimed address that was never enqueued is unrecoverable: the row
+     * says "announced", so no later startup would ever retry it.
      */
+    @Transactional
     fun announceIfNeeded(): AnnouncementOutcome {
         val address = emailProperties.from
         val stored = announcementDao.find()
@@ -61,6 +66,7 @@ class SenderAddressAnnouncementService(
     }
 
     /** Re-announces the currently configured address, whatever the stored state says. */
+    @Transactional
     fun forceAnnounce(): AnnouncementOutcome {
         val address = emailProperties.from
         val stored = announcementDao.find()

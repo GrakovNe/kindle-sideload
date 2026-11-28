@@ -90,7 +90,7 @@ class UserDao(
     private fun UserRecord.toDomain(): User =
         User(
             id = id!!,
-            language = language!!,
+            language = language,
             type = Type.valueOf(type!!),
             lastActivityTimestamp = fromDb(lastActivityTimestamp)
         )

@@ -142,6 +142,34 @@ class UserNotificationSenderTest {
         verify(notificationService).markFailed(notification)
     }
 
+    @Test
+    fun `counts a transport exception as an attempt instead of retrying forever`() {
+        // TelegramBotClient wraps an IOException into a RuntimeException, so an unreachable
+        // Telegram surfaces as a throw, not as an Either.Left
+        val notification = notification()
+        whenever(userService.fetchUser("user-1")).thenReturn(user("en"))
+        whenever(messageSender.sendNotification(any(), any(), any<DomainMessage>(), any()))
+            .thenThrow(RuntimeException("java.net.SocketTimeoutException"))
+
+        val result = sut.send(notification)
+
+        assertEquals(NotificationSendResult.DEFERRED, result)
+        verify(notificationService).scheduleRetry(notification, 1, now.plusSeconds(300))
+    }
+
+    @Test
+    fun `gives up on transport exceptions once the attempts are exhausted`() {
+        val notification = notification(attempts = 2)
+        whenever(userService.fetchUser("user-1")).thenReturn(user("en"))
+        whenever(messageSender.sendNotification(any(), any(), any<DomainMessage>(), any()))
+            .thenThrow(RuntimeException("java.net.SocketTimeoutException"))
+
+        val result = sut.send(notification)
+
+        assertEquals(NotificationSendResult.FAILED, result)
+        verify(notificationService).markFailed(notification)
+    }
+
     private fun user(language: String) = User("user-1", language, Type.FREE_USER, null)
 
     private fun notification(

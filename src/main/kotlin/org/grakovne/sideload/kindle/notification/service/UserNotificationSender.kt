@@ -46,15 +46,23 @@ class UserNotificationSender(
             return fail(notification, "user is gone")
         }
 
-        val outcome = messageSender.sendNotification(
-            notification.userId,
-            user,
-            SenderAddressChangedMessage(address),
-            listOf(
-                listOf(StkSettingsScreenButton),
-                listOf(MainScreenButton),
-            ),
-        )
+        // The bot client wraps an IOException into a RuntimeException, so an unreachable Telegram
+        // surfaces as a throw. It has to consume an attempt like any other failure, otherwise the
+        // notification stays PENDING with a slot in the past and the worker retries it every tick.
+        val outcome = runCatching {
+            messageSender.sendNotification(
+                notification.userId,
+                user,
+                SenderAddressChangedMessage(address),
+                listOf(
+                    listOf(StkSettingsScreenButton),
+                    listOf(MainScreenButton),
+                ),
+            )
+        }.getOrElse {
+            logger.info { "Sending the notification to chat ${notification.userId} threw: ${it.message}" }
+            return handleFailure(notification, SendFailure.Retryable)
+        }
 
         return when (outcome) {
             is Either.Right -> {
