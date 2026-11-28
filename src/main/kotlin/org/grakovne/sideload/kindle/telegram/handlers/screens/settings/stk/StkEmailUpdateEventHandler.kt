@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.telegram.handlers.screens.settings.stk
 
 import arrow.core.Either
 import org.grakovne.sideload.kindle.common.FileUploadFailedError
+import org.grakovne.sideload.kindle.common.mail.EmailProperties
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.common.navigation.domain.Button
 import org.grakovne.sideload.kindle.events.core.EventProcessingError
@@ -21,7 +22,8 @@ class StkEmailUpdateEventHandler(
     userActivityStateService: UserActivityStateService,
     buttonService: ButtonService,
     private val messageSender: MessageWithNavigationSender,
-    private val userPreferencesService: UserPreferencesService
+    private val userPreferencesService: UserPreferencesService,
+    private val emailProperties: EmailProperties,
 ) : InputRequiredEventHandler<EventProcessingError>(userActivityStateService, buttonService) {
 
     override fun sendSuccessfulResponse(event: ButtonPressedEvent) {
@@ -29,7 +31,7 @@ class StkEmailUpdateEventHandler(
             .sendResponse(
                 event.update,
                 event.user,
-                UpdateEmailUpdatedMessage,
+                UpdateEmailUpdatedMessage(emailProperties.from),
                 listOf(
                     listOf(BackToSettingsButton),
                     listOf(MainScreenButton),

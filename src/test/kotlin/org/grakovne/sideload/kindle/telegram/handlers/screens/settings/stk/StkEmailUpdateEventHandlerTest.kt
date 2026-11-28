@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.runBlocking
+import org.grakovne.sideload.kindle.common.mail.EmailProperties
 import org.grakovne.sideload.kindle.common.navigation.ButtonService
 import org.grakovne.sideload.kindle.events.core.EventProcessingResult
 import org.grakovne.sideload.kindle.telegram.domain.ButtonPressedEvent
@@ -32,12 +33,14 @@ class StkEmailUpdateEventHandlerTest {
     private val buttonService: ButtonService = mock()
     private val messageSender: MessageWithNavigationSender = mock()
     private val preferencesService: UserPreferencesService = mock()
+    private val emailProperties = EmailProperties().apply { from = "sender@test.local" }
 
     private val handler = StkEmailUpdateEventHandler(
         stateService,
         buttonService,
         messageSender,
-        preferencesService
+        preferencesService,
+        emailProperties
     )
 
     private val user = User("user-1", "en", Type.FREE_USER, null)
@@ -96,7 +99,8 @@ class StkEmailUpdateEventHandlerTest {
 
         val messageCaptor = argumentCaptor<DomainMessage>()
         verify(messageSender).sendResponse(any<Update>(), eq(user), messageCaptor.capture(), any())
-        assertTrue(messageCaptor.firstValue is UpdateEmailUpdatedMessage)
+        val updated = messageCaptor.firstValue as UpdateEmailUpdatedMessage
+        assertEquals("sender@test.local", updated.senderEmail)
     }
 
     private fun prepareState() {

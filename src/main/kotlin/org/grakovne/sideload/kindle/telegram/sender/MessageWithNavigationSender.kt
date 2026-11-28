@@ -46,6 +46,24 @@ class MessageWithNavigationSender(
             responseSender.sendMessage(buildSendMessage(chatId, preparedMessage, preparedNavigation))
         }
 
+    /**
+     * [sendResponse] for a chat the app reaches out to on its own, with the send failure
+     * classified so the caller can tell "this user is unreachable" from "try again later".
+     */
+    fun <T : Message> sendNotification(
+        chatId: String,
+        user: User,
+        message: T,
+        navigation: List<List<Button>>
+    ): Either<SendFailure, Unit> = localize(message, user, navigation)
+        .mapLeft {
+            logger.error { "Unable to prepare the notification for chat $chatId: $it" }
+            SendFailure.Retryable
+        }
+        .flatMap { (preparedMessage, preparedNavigation) ->
+            responseSender.sendWithOutcome(buildSendMessage(chatId, preparedMessage, preparedNavigation))
+        }
+
     fun <T : Message> sendResponse(
         origin: Update,
         user: User,

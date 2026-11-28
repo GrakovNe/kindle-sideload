@@ -144,7 +144,7 @@
     "name": "UpdateEmailUpdatedMessage",
     "type": "HTML",
     "enablePreview": "false",
-    "template": "The E-Mail to which files will be sent after conversion has been updated\n\nClick the \"Send to email\" button to receive the files.\n\nDon't forget to add the E-Mail booksend@grakovne.org to the trusted list so that books arrive automatically.\n\nYou can read more about how to do this here: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
+    "template": "The E-Mail to which files will be sent after conversion has been updated\n\nClick the \"Send to email\" button to receive the files.\n\nDon't forget to add the E-Mail ${senderEmail} to the trusted list so that books arrive automatically.\n\nYou can read more about how to do this here: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
   },
   {
     "name": "UpdateEmailUpdateFailedMessage",
@@ -181,5 +181,11 @@
     "name": "ActivityMetricsMessage",
     "type": "HTML",
     "template": "Application Metrics\n\n<b>Active Users</b>:\n\nToday: ${usersToday}\nLast Week: ${usersWeekly}\nLast Year: ${usersYearly}\n\n<b>File converted</b>:\n\nToday: ${fileConvertationsToday}\nLast Week: ${fileConvertationsWeekly}\nLast Year: ${fileConvertationsYearly}"
+  },
+  {
+    "name": "SenderAddressChangedMessage",
+    "type": "HTML",
+    "enablePreview": "false",
+    "template": "The E-Mail we send your books from has changed\n\nWe now send files from ${senderEmail}\n\nAdd it to the trusted list so that books arrive automatically\n\nYou can read more about how to do this here: \n\nhttps://www.amazon.com/gp/help/customer/display.html?nodeId=GX9XLEVV8G4DB28H"
   }
 ]

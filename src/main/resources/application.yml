@@ -95,6 +95,16 @@ shelf:
   web:
     host-name: "http://192.168.1.12:8080/"
 
+notifications:
+  enabled: true
+  # One campaign is stretched over this long: the enqueue step divides it by the audience size and
+  # stamps every notification with its own slot, so this is the knob and the message rate is only
+  # its consequence. 72h keeps a full-base announcement far below Telegram's limits.
+  spread-over: 72h
+  # Ceiling per worker tick, as a guard against a mistyped spread-over, not as the pacer.
+  max-per-tick: 3
+  max-attempts: 3
+
 admin:
   token: "CHANGE_ME_metrics_admin_token"
 

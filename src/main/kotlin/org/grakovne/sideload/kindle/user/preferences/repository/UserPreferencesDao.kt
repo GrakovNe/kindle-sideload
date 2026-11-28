@@ -48,6 +48,17 @@ class UserPreferencesDao(
     fun findAll(): List<UserPreferences> =
         dsl.selectFrom(USER_PREFERENCES).fetch().map { it.toDomain() }
 
+    /**
+     * Everyone who configured a Send-to-Kindle address. Distinct because user_id has no unique
+     * constraint (V6), so a duplicate row would otherwise enqueue the same user twice.
+     */
+    fun findUserIdsWithEmail(): List<String> =
+        dsl.selectDistinct(USER_PREFERENCES.USER_ID)
+            .from(USER_PREFERENCES)
+            .where(USER_PREFERENCES.EMAIL.isNotNull)
+            .fetch(USER_PREFERENCES.USER_ID)
+            .filterNotNull()
+
     fun count(): Int = dsl.fetchCount(USER_PREFERENCES)
 
     fun deleteAll() = dsl.deleteFrom(USER_PREFERENCES).execute()

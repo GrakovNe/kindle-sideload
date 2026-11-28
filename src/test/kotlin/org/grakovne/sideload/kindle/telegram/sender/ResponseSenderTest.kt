@@ -2,6 +2,7 @@ package org.grakovne.sideload.kindle.telegram.sender
 
 import arrow.core.Either
 import com.pengrad.telegrambot.TelegramBot
+import com.pengrad.telegrambot.model.ResponseParameters
 import com.pengrad.telegrambot.request.AnswerCallbackQuery
 import com.pengrad.telegrambot.request.EditMessageText
 import com.pengrad.telegrambot.request.SendMessage
@@ -13,6 +14,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.Duration
 import kotlin.test.assertEquals
 
 class ResponseSenderTest {
@@ -90,6 +92,74 @@ class ResponseSenderTest {
         val result = sut.editMessage(EditMessageText("chat-1", 7, "edited"))
 
         assertEquals(Either.Left(UnableSendResponse), result)
+    }
+
+    @Test
+    fun `classifies a blocked bot as undeliverable`() {
+        val response = mock<SendResponse>()
+        whenever(response.isOk).thenReturn(false)
+        whenever(response.errorCode()).thenReturn(403)
+        whenever(response.description()).thenReturn("Forbidden: bot was blocked by the user")
+        whenever(bot.execute(any<SendMessage>())).thenReturn(response)
+
+        val result = sut.sendWithOutcome(SendMessage("chat-1", "hello"))
+
+        assertEquals(Either.Left(SendFailure.Undeliverable), result)
+    }
+
+    @Test
+    fun `classifies a missing chat as undeliverable even without a 403`() {
+        val response = mock<SendResponse>()
+        whenever(response.isOk).thenReturn(false)
+        whenever(response.errorCode()).thenReturn(400)
+        whenever(response.description()).thenReturn("Bad Request: chat not found")
+        whenever(bot.execute(any<SendMessage>())).thenReturn(response)
+
+        val result = sut.sendWithOutcome(SendMessage("chat-1", "hello"))
+
+        assertEquals(Either.Left(SendFailure.Undeliverable), result)
+    }
+
+    @Test
+    fun `honours the retry_after of a rate limited send`() {
+        val parameters = mock<ResponseParameters>()
+        whenever(parameters.retryAfter()).thenReturn(42)
+        val response = mock<SendResponse>()
+        whenever(response.isOk).thenReturn(false)
+        whenever(response.errorCode()).thenReturn(429)
+        whenever(response.description()).thenReturn("Too Many Requests: retry after 42")
+        whenever(response.parameters()).thenReturn(parameters)
+        whenever(bot.execute(any<SendMessage>())).thenReturn(response)
+
+        val result = sut.sendWithOutcome(SendMessage("chat-1", "hello"))
+
+        assertEquals(Either.Left(SendFailure.RateLimited(Duration.ofSeconds(42))), result)
+    }
+
+    @Test
+    fun `falls back to a default backoff when a 429 carries no retry_after`() {
+        val response = mock<SendResponse>()
+        whenever(response.isOk).thenReturn(false)
+        whenever(response.errorCode()).thenReturn(429)
+        whenever(response.description()).thenReturn("Too Many Requests")
+        whenever(bot.execute(any<SendMessage>())).thenReturn(response)
+
+        val result = sut.sendWithOutcome(SendMessage("chat-1", "hello"))
+
+        assertEquals(Either.Left(SendFailure.RateLimited(Duration.ofSeconds(60))), result)
+    }
+
+    @Test
+    fun `classifies a server error as retryable`() {
+        val response = mock<SendResponse>()
+        whenever(response.isOk).thenReturn(false)
+        whenever(response.errorCode()).thenReturn(502)
+        whenever(response.description()).thenReturn("Bad Gateway")
+        whenever(bot.execute(any<SendMessage>())).thenReturn(response)
+
+        val result = sut.sendWithOutcome(SendMessage("chat-1", "hello"))
+
+        assertEquals(Either.Left(SendFailure.Retryable), result)
     }
 
     @Test

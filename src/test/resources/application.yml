@@ -60,6 +60,13 @@ shelf:
   web:
     host-name: "http://localhost:8080/"
 
+notifications:
+  enabled: false
+  spread-over: 72h
+  max-per-tick: 3
+  max-attempts: 3
+
+
 admin:
   token: "test-admin-token"
 
